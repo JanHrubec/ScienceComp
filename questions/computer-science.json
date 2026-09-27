@@ -1,0 +1,594 @@
+{
+  "subject": "computer-science",
+  "tracks": {
+    "11–13": [
+      {
+        "type": "multiple-choice",
+        "prompt": "Which device is primarily used to enter text into a computer?",
+        "choices": [
+          "Monitor",
+          "Speaker",
+          "Keyboard",
+          "Projector"
+        ],
+        "correctIndex": 2,
+        "id": "computer-science-11-01",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "An algorithm is…",
+        "choices": [
+          "Only a picture",
+          "A precise sequence of steps to solve a task",
+          "Always a physical machine",
+          "A random guess"
+        ],
+        "correctIndex": 1,
+        "id": "computer-science-11-02",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "In binary, each digit has how many possible values?",
+        "numericAnswer": 2,
+        "tolerance": 0,
+        "id": "computer-science-11-03",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What three-letter word means one binary digit?",
+        "acceptedAnswers": [
+          "bit"
+        ],
+        "id": "computer-science-11-04",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "What value is printed? Assignments happen in the order shown.\nx = 3\ny = x\nx = x + 4\nPRINT y",
+        "numericAnswer": 3,
+        "tolerance": 0,
+        "id": "computer-science-11-05",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which is an example of an input to a weather-monitoring program?",
+        "choices": [
+          "A warning sound",
+          "A temperature reading from a sensor",
+          "A printed weather report",
+          "A graph on the screen"
+        ],
+        "correctIndex": 1,
+        "id": "computer-science-11-06",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "What is printed?\na = 5\nb = 2\na = a + b\nPRINT a * b",
+        "numericAnswer": 14,
+        "tolerance": 0,
+        "id": "computer-science-11-07",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A program should repeat an instruction ten times. Which structure is most suitable?",
+        "choices": [
+          "A filename",
+          "A comment",
+          "A password",
+          "A loop"
+        ],
+        "correctIndex": 3,
+        "id": "computer-science-11-08",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What five-letter verb means to find and fix errors in a program?",
+        "acceptedAnswers": [
+          "debug"
+        ],
+        "id": "computer-science-11-09",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "What is the decimal value of binary 101?",
+        "numericAnswer": 5,
+        "tolerance": 0,
+        "id": "computer-science-11-10",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "How many times is HELLO printed in total?\nPRINT \"HELLO\"\nREPEAT 4 TIMES\n  PRINT \"HELLO\"",
+        "numericAnswer": 5,
+        "tolerance": 0,
+        "id": "computer-science-11-11",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which password is hardest to guess among these choices?",
+        "choices": [
+          "password",
+          "school",
+          "river!Cobalt7!Moon",
+          "123456"
+        ],
+        "correctIndex": 2,
+        "id": "computer-science-11-12",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "What is printed?\nx = 5\nIF x > 5 THEN\n  PRINT x - 2\nELSE\n  PRINT x + 2",
+        "numericAnswer": 7,
+        "tolerance": 0,
+        "id": "computer-science-11-13",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A file contains 24 bits, not bytes. There are 8 bits per byte. How many bytes does it contain?",
+        "numericAnswer": 3,
+        "tolerance": 0,
+        "id": "computer-science-11-14",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A list is sorted from smallest to largest. Which item belongs in the gap: 2, 5, __, 11?",
+        "choices": [
+          "8",
+          "15",
+          "1",
+          "4"
+        ],
+        "correctIndex": 0,
+        "id": "computer-science-11-15",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "What is printed? Both loop endpoints are included.\ntotal = 1\nFOR i FROM 1 TO 4 INCLUSIVE\n  total = total + i\nPRINT total",
+        "numericAnswer": 11,
+        "tolerance": 0,
+        "id": "computer-science-11-16",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A robot starts at position 2 on a number line. It repeats “move right 3, then left 1” four times. What is its final position?",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "computer-science-11-17",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A program uses IF age >= 12. Which input tests the exact boundary?",
+        "choices": [
+          "20",
+          "0",
+          "11",
+          "12"
+        ],
+        "correctIndex": 3,
+        "id": "computer-science-11-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "What is printed?\nx = 1\nREPEAT 3 TIMES\n  x = x * 2\n  x = x + 1\nPRINT x",
+        "numericAnswer": 15,
+        "tolerance": 0,
+        "id": "computer-science-11-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A linear search checks [4, 9, 2, 7, 5] from left to right and stops at 7. How many items does it check?",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "computer-science-11-20",
+        "reward": 10
+      }
+    ],
+    "14–16": [
+      {
+        "type": "multiple-choice",
+        "prompt": "A variable stores the text \"false\", including the quotation marks shown in the code. What type is this value?",
+        "choices": [
+          "Boolean",
+          "String",
+          "Integer",
+          "Floating-point number"
+        ],
+        "correctIndex": 1,
+        "id": "computer-science-14-01",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Binary 1101 is an unsigned integer. What decimal value results after adding binary 1?",
+        "numericAnswer": 14,
+        "tolerance": 0,
+        "id": "computer-science-14-02",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the usual name of a reusable named block of code that can accept inputs and return a result?",
+        "acceptedAnswers": [
+          "function"
+        ],
+        "id": "computer-science-14-03",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Using zero-based indexing, what is printed?\nvalues = [10, 20, 30, 40]\ni = 1\nPRINT values[i + 1] - values[i]",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "computer-science-14-04",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Evaluate NOT (TRUE AND FALSE). Parentheses are evaluated first.",
+        "choices": [
+          "TRUE",
+          "FALSE",
+          "Both",
+          "Neither"
+        ],
+        "correctIndex": 0,
+        "id": "computer-science-14-05",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "MOD gives the remainder; DIV gives the whole-number quotient. What is printed?\nx = 17 DIV 5\ny = 17 MOD 5\nPRINT x + y",
+        "numericAnswer": 5,
+        "tolerance": 0,
+        "id": "computer-science-14-06",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "What is printed?\ntotal = 0\nFOR i FROM 0 TO 6 INCLUSIVE\n  IF i MOD 2 = 0 THEN\n    total = total + i\nPRINT total",
+        "numericAnswer": 12,
+        "tolerance": 0,
+        "id": "computer-science-14-07",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A page uses HTTPS with a valid certificate. Which statement is supported by this fact alone?",
+        "choices": [
+          "Its content must be truthful",
+          "Its connection uses TLS encryption",
+          "Its operator cannot be malicious",
+          "Its downloads cannot contain malware"
+        ],
+        "correctIndex": 1,
+        "id": "computer-science-14-08",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An unsigned 4-bit integer can represent 16 distinct values, including zero. What is its largest value?",
+        "numericAnswer": 15,
+        "tolerance": 0,
+        "id": "computer-science-14-09",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What data structure follows last in, first out?",
+        "acceptedAnswers": [
+          "stack",
+          "a stack"
+        ],
+        "id": "computer-science-14-10",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An uncompressed 10 × 10 pixel image uses 24 bits per pixel plus a 20-byte header. How many bytes does the whole file need?",
+        "numericAnswer": 320,
+        "tolerance": 0,
+        "id": "computer-science-14-11",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "An array is sorted by student name. You want to binary-search it by student ID. What is required first?",
+        "choices": [
+          "Sort or index it by ID",
+          "Reverse its current name order",
+          "Remove every repeated first name",
+          "Convert each ID to text"
+        ],
+        "correctIndex": 0,
+        "id": "computer-science-14-12",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "What is printed?\nx = 1\ncount = 0\nWHILE x <= 8\n  x = x * 2\n  count = count + 1\nPRINT count",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "computer-science-14-13",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A connection transfers 2000 bits per second. A file is 2000 bytes. Use 8 bits per byte and ignore overhead. How many seconds does the transfer take?",
+        "numericAnswer": 8,
+        "tolerance": 0,
+        "id": "computer-science-14-14",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which database field constraint ensures that every row has a unique identifier?",
+        "choices": [
+          "Image width",
+          "Sort colour",
+          "Primary key",
+          "Font size"
+        ],
+        "correctIndex": 2,
+        "id": "computer-science-14-15",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "What does double(double(3) + 1) return?\nFUNCTION double(x)\n  RETURN 2 * x",
+        "numericAnswer": 14,
+        "tolerance": 0,
+        "id": "computer-science-14-16",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A loop checks pairs (i, j), where i runs from 0 to 4 inclusive and j runs from 1 to 3 inclusive. How many pairs have i = j?",
+        "numericAnswer": 3,
+        "tolerance": 0,
+        "id": "computer-science-14-17",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A program divides by x − 1. Which input x must it reject to avoid division by zero?",
+        "choices": [
+          "−1",
+          "0",
+          "1",
+          "2"
+        ],
+        "correctIndex": 2,
+        "id": "computer-science-14-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A sorted array has 15 items. Binary search checks the middle item each time. If the target is the first middle item checked, how many item comparisons does this search use?",
+        "numericAnswer": 1,
+        "tolerance": 0,
+        "id": "computer-science-14-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Assignments update the array immediately. What is printed?\na = [2, 4, 6]\nFOR i FROM 1 TO 2 INCLUSIVE\n  a[i] = a[i] + a[i - 1]\nPRINT a[2]",
+        "numericAnswer": 12,
+        "tolerance": 0,
+        "id": "computer-science-14-20",
+        "reward": 10
+      }
+    ],
+    "17–18": [
+      {
+        "type": "multiple-choice",
+        "prompt": "Which describes an abstraction in programming?",
+        "choices": [
+          "Showing essential details while hiding irrelevant implementation details",
+          "Encrypting every variable",
+          "Removing all functions",
+          "Choosing random outputs"
+        ],
+        "correctIndex": 0,
+        "id": "computer-science-17-01",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An unsigned integer has hexadecimal value 2F. After adding 1, what is its decimal value?",
+        "numericAnswer": 48,
+        "tolerance": 0,
+        "id": "computer-science-17-02",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "Items A, B and C are inserted in that order. Removal returns A first, then B. Name the data structure whose removal rule is demonstrated.",
+        "acceptedAnswers": [
+          "queue",
+          "a queue"
+        ],
+        "id": "computer-science-17-03",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An unsigned 8-bit counter contains 255. It is incremented by 2 using arithmetic modulo 256. What value is stored?",
+        "numericAnswer": 1,
+        "tolerance": 0,
+        "id": "computer-science-17-04",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "An algorithm scans all n items, then scans all n items again. Each item check takes constant time. What is its tight asymptotic time complexity?",
+        "choices": [
+          "Θ(1)",
+          "Θ(log n)",
+          "Θ(n)",
+          "Θ(n²)"
+        ],
+        "correctIndex": 2,
+        "id": "computer-science-17-05",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "How many times is f called in total when evaluating f(4), including the initial call and the base-case call?\nFUNCTION f(n)\n  IF n = 0 THEN RETURN 1\n  RETURN n * f(n - 1)",
+        "numericAnswer": 5,
+        "tolerance": 0,
+        "id": "computer-science-17-06",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Why use a parameterised SQL query for user input?",
+        "choices": [
+          "To remove the need for backups",
+          "To make all data public",
+          "To prevent input from being interpreted as SQL code",
+          "To guarantee zero latency"
+        ],
+        "correctIndex": 2,
+        "id": "computer-science-17-07",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Treat 11111110 as an 8-bit two’s-complement value. Add decimal 3 and give the signed decimal result.",
+        "numericAnswer": 1,
+        "tolerance": 0,
+        "id": "computer-science-17-08",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A fixed-length binary code must represent 64 data symbols and one separate end-of-message symbol. What is the minimum number of bits per symbol?",
+        "numericAnswer": 7,
+        "tolerance": 0,
+        "id": "computer-science-17-09",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "In a relational database, what two-word term describes a field that references another table’s primary key?",
+        "acceptedAnswers": [
+          "foreign key"
+        ],
+        "id": "computer-science-17-10",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "For each i from 0 to 11 inclusive, a loop checks every j from 0 to 11 inclusive except j = i. How many checks occur in total?",
+        "numericAnswer": 132,
+        "tolerance": 0,
+        "id": "computer-science-17-11",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which property of a database transaction means either all its updates happen or none do?",
+        "choices": [
+          "Typography",
+          "Compression",
+          "Recursion",
+          "Atomicity"
+        ],
+        "correctIndex": 3,
+        "id": "computer-science-17-12",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A cache lookup always takes 2 ms. In 10% of requests it misses, adding a further 20 ms. What is the mean total time per request, in milliseconds?",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "computer-science-17-13",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Uncompressed stereo audio uses 8000 samples per second per channel, 16 bits per sample and two channels for 5 seconds. How many bytes are needed, excluding headers?",
+        "numericAnswer": 160000,
+        "tolerance": 0,
+        "id": "computer-science-17-14",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Two processes each read a balance of 10, each add 1, and each write 11. What problem occurred?",
+        "choices": [
+          "A syntax error",
+          "Lossless compression",
+          "A lost update",
+          "A successful atomic increment"
+        ],
+        "correctIndex": 2,
+        "id": "computer-science-17-15",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A graph has directed edges A→B (2), B→D (3), A→C (1), D→C (1), and C→B (1). What is the total weight of the shortest path from C to D? Follow the arrow directions.",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "computer-science-17-16",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "What is printed? A loop with its start larger than its end runs zero times.\ncount = 0\nFOR i FROM 1 TO 4 INCLUSIVE\n  FOR j FROM 1 TO i - 1 INCLUSIVE\n    count = count + 1\nPRINT count",
+        "numericAnswer": 6,
+        "tolerance": 0,
+        "id": "computer-science-17-17",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A hash-table collision occurs for two different keys. Which conclusion follows?",
+        "choices": [
+          "The keys have identical text",
+          "They map to the same array index",
+          "The table must be full",
+          "One key must be deleted permanently"
+        ],
+        "correctIndex": 1,
+        "id": "computer-science-17-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Each of two independent servers has availability 0.9. A service needs both servers working. What is its availability? Enter a decimal from 0 to 1.",
+        "numericAnswer": 0.81,
+        "tolerance": 0,
+        "id": "computer-science-17-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A program originally takes 100 s. A part taking 80 s is made four times faster; the other 20 s is unchanged. By what percentage is the total running time reduced?",
+        "numericAnswer": 60,
+        "tolerance": 0,
+        "id": "computer-science-17-20",
+        "reward": 10
+      }
+    ]
+  }
+}

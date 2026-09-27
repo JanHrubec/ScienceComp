@@ -1,0 +1,617 @@
+{
+  "subject": "chemistry",
+  "tracks": {
+    "11–13": [
+      {
+        "type": "multiple-choice",
+        "prompt": "Water is poured into a differently shaped open container without spilling. Its volume stays the same but its shape changes. What state of matter is this?",
+        "choices": [
+          "Liquid",
+          "Gas",
+          "Plasma only",
+          "Solid"
+        ],
+        "correctIndex": 0,
+        "id": "chemistry-11-01",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the chemical symbol for oxygen?",
+        "acceptedAnswers": [
+          "O"
+        ],
+        "id": "chemistry-11-02",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which change forms a new substance?",
+        "choices": [
+          "Cutting paper",
+          "Melting ice",
+          "Boiling water",
+          "Rusting iron"
+        ],
+        "correctIndex": 3,
+        "id": "chemistry-11-03",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "How many hydrogen atoms are present in three molecules of H₂O?",
+        "numericAnswer": 6,
+        "tolerance": 0,
+        "id": "chemistry-11-04",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "An element contains…",
+        "choices": [
+          "Exactly two atoms",
+          "Only liquid particles",
+          "No protons",
+          "Only one type of atom, defined by proton number"
+        ],
+        "correctIndex": 3,
+        "id": "chemistry-11-05",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the name of the change from a liquid to a solid?",
+        "acceptedAnswers": [
+          "freezing",
+          "solidification"
+        ],
+        "id": "chemistry-11-06",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A solution contains 5 g of salt and 95 g of water. Then 20 g of water evaporates without any salt being lost. What is the mass of the remaining solution, in grams?",
+        "numericAnswer": 80,
+        "tolerance": 0,
+        "id": "chemistry-11-07",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which method best separates insoluble sand from water?",
+        "choices": [
+          "Magnetism for all sand",
+          "Freezing the entire mixture",
+          "Filtration",
+          "Melting"
+        ],
+        "correctIndex": 2,
+        "id": "chemistry-11-08",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "A solution with pH 2 is acidic, neutral or alkaline?",
+        "acceptedAnswers": [
+          "acidic",
+          "acid"
+        ],
+        "id": "chemistry-11-09",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "When salt dissolves in water, the salt…",
+        "choices": [
+          "Disappears from existence",
+          "Spreads through the water as dissolved particles",
+          "Turns into pure water",
+          "Always becomes a gas"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-11-10",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "How many oxygen atoms, rather than total atoms, are present in two molecules of CO₂?",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "chemistry-11-11",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which mixture can be separated most directly with a magnet?",
+        "choices": [
+          "Sugar and water",
+          "Oxygen and nitrogen",
+          "Iron filings and sand",
+          "Salt and water"
+        ],
+        "correctIndex": 2,
+        "id": "chemistry-11-12",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An electrically neutral atom contains 6 protons and 8 neutrons. How many electrons does it contain?",
+        "numericAnswer": 6,
+        "tolerance": 0,
+        "id": "chemistry-11-13",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What gas is produced when many metals react with dilute hydrochloric acid?",
+        "acceptedAnswers": [
+          "hydrogen",
+          "hydrogen gas",
+          "H2",
+          "H₂"
+        ],
+        "id": "chemistry-11-14",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "What usually happens to the particles of a gas when it is heated at fixed volume?",
+        "choices": [
+          "They lose all mass",
+          "Their average kinetic energy increases",
+          "They stop moving",
+          "They become larger atoms"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-11-15",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "In a sealed container, 12 g of carbon reacts completely with 32 g of oxygen to form only carbon dioxide. The empty container has mass 100 g. What is the mass of carbon dioxide alone, in grams?",
+        "numericAnswer": 44,
+        "tolerance": 0,
+        "id": "chemistry-11-16",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which observation is evidence of a gas being produced in a liquid reaction?",
+        "choices": [
+          "The beaker has a label",
+          "The liquid is initially clear",
+          "The balance is switched off",
+          "Bubbles form throughout the liquid"
+        ],
+        "correctIndex": 3,
+        "id": "chemistry-11-17",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A recipe uses 4 g of salt per 100 mL of final solution. How many grams are needed for 0.25 L of final solution at the same concentration?",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "chemistry-11-18",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Why can evaporation separate dissolved salt from water?",
+        "choices": [
+          "Salt evaporates before water in all cases",
+          "Water evaporates while the salt remains under these conditions",
+          "Salt becomes a magnet",
+          "Water becomes an element"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-11-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A reaction uses 2 hydrogen molecules for every oxygen molecule. You have 14 hydrogen molecules and 10 oxygen molecules. After all hydrogen reacts, how many oxygen molecules remain?",
+        "numericAnswer": 3,
+        "tolerance": 0,
+        "id": "chemistry-11-20",
+        "reward": 10
+      }
+    ],
+    "14–16": [
+      {
+        "type": "multiple-choice",
+        "prompt": "An ion contains 11 protons, 12 neutrons and 10 electrons. What is its atomic number?",
+        "choices": [
+          "10",
+          "11",
+          "12",
+          "23"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-14-01",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An ion has mass number 23, atomic number 11 and charge +1. How many neutrons does it have?",
+        "numericAnswer": 12,
+        "tolerance": 0,
+        "id": "chemistry-14-02",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What name is given to atoms of the same element with different numbers of neutrons?",
+        "acceptedAnswers": [
+          "isotopes",
+          "isotope"
+        ],
+        "id": "chemistry-14-03",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A neutral atom has 12 electrons. It forms a 2+ ion without changing its nucleus. How many electrons does the ion have?",
+        "choices": [
+          "10",
+          "12",
+          "14",
+          "2"
+        ],
+        "correctIndex": 0,
+        "id": "chemistry-14-04",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Balance __H₂ + __O₂ → __H₂O using the smallest whole-number coefficients. What is the sum of all three coefficients?",
+        "numericAnswer": 5,
+        "tolerance": 0,
+        "id": "chemistry-14-05",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A covalent bond involves…",
+        "choices": [
+          "A shared pair of electrons",
+          "Transfer of protons",
+          "Destruction of nuclei",
+          "Only gravitational attraction"
+        ],
+        "correctIndex": 0,
+        "id": "chemistry-14-06",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Using relative atomic masses H = 1 and O = 16, find the relative molecular mass of H₂O₂, rather than H₂O.",
+        "numericAnswer": 34,
+        "tolerance": 0,
+        "id": "chemistry-14-07",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the name of the reaction between an acid and a base that forms salt and water?",
+        "acceptedAnswers": [
+          "neutralisation",
+          "neutralization"
+        ],
+        "id": "chemistry-14-08",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A gas has molar mass 44 g/mol. A full container has mass 122 g; the empty container has mass 100 g. How many moles of gas are inside?",
+        "numericAnswer": 0.5,
+        "tolerance": 0,
+        "id": "chemistry-14-09",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Why does increasing temperature usually increase reaction rate?",
+        "choices": [
+          "More collisions have enough energy to react",
+          "Particles stop moving",
+          "Activation energy always becomes zero",
+          "Mass is created"
+        ],
+        "correctIndex": 0,
+        "id": "chemistry-14-10",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A solution contains 0.2 mol of solute in 500 cm³ of final solution. What is its concentration in mol/dm³?",
+        "numericAnswer": 0.4,
+        "tolerance": 0,
+        "id": "chemistry-14-11",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Two aqueous solutions at the same temperature have pH 2 and pH 5. Which is more acidic?",
+        "choices": [
+          "pH 2",
+          "pH 5",
+          "They are equally acidic",
+          "Neither can be acidic below pH 7"
+        ],
+        "correctIndex": 0,
+        "id": "chemistry-14-12",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the name of a substance that increases reaction rate without being consumed overall?",
+        "acceptedAnswers": [
+          "catalyst",
+          "a catalyst"
+        ],
+        "id": "chemistry-14-13",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "For Mg + 2HCl → MgCl₂ + H₂, 0.3 mol Mg is mixed with 0.4 mol HCl. Assuming reaction goes as far as possible, how many moles of H₂ form?",
+        "numericAnswer": 0.2,
+        "tolerance": 0,
+        "id": "chemistry-14-14",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A reaction warms its surroundings without an external heater. Relative to the reacting system, which description is correct?",
+        "choices": [
+          "Energy is transferred out; exothermic",
+          "Energy is transferred in; exothermic",
+          "Energy is transferred out; endothermic",
+          "No energy transfer occurs"
+        ],
+        "correctIndex": 0,
+        "id": "chemistry-14-15",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A solution is prepared by mixing 10 g of solute with 190 g of water. What is the solute’s mass percentage in the final solution?",
+        "numericAnswer": 5,
+        "tolerance": 0,
+        "id": "chemistry-14-16",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Solid sodium chloride does not conduct electricity but molten sodium chloride does. Which change explains this?",
+        "choices": [
+          "Ions become able to move",
+          "Sodium atoms become neutral",
+          "All covalent bonds disappear",
+          "Protons leave their nuclei"
+        ],
+        "correctIndex": 0,
+        "id": "chemistry-14-17",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 25 mL sample of 0.1 mol/dm³ HCl is neutralised with 0.05 mol/dm³ NaOH in a 1:1 mole ratio. What volume of NaOH is needed, in mL?",
+        "numericAnswer": 50,
+        "tolerance": 0,
+        "id": "chemistry-14-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A reaction’s theoretical yield is 8 g. A dish plus dry product has mass 26 g; the empty dish has mass 20 g. What is the percentage yield?",
+        "numericAnswer": 75,
+        "tolerance": 0,
+        "id": "chemistry-14-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A compound contains 24 g carbon and 4 g hydrogen. Use C = 12 g/mol and H = 1 g/mol. Its empirical formula is CH₂ and its molar mass is 28 g/mol. How many hydrogen atoms are in one molecule?",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "chemistry-14-20",
+        "reward": 10
+      }
+    ],
+    "17–18": [
+      {
+        "type": "multiple-choice",
+        "prompt": "One mole of O₂ contains approximately how many oxygen atoms?",
+        "choices": [
+          "6.02 × 10^23",
+          "1.204 × 10^24",
+          "3.01 × 10^23",
+          "32"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-17-01",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 5.85 g NaCl sample dissolves completely. Use molar mass 58.5 g/mol and assume complete dissociation. How many moles of ions in total are produced?",
+        "numericAnswer": 0.2,
+        "tolerance": 0,
+        "id": "chemistry-17-02",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What term describes the energy needed to remove one electron from each atom in one mole of gaseous atoms, forming gaseous 1+ ions?",
+        "acceptedAnswers": [
+          "first ionisation energy",
+          "first ionization energy"
+        ],
+        "id": "chemistry-17-03",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Across a period, atomic radius generally decreases mainly because…",
+        "choices": [
+          "Every atom gains an extra main shell",
+          "Electron mass increases",
+          "Nuclear charge increases while electrons enter the same main shell",
+          "Protons disappear"
+        ],
+        "correctIndex": 2,
+        "id": "chemistry-17-04",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 25 cm³ sample of 0.20 mol/dm³ solution is diluted to a final volume of 100 cm³. Find its new concentration in mol/dm³.",
+        "numericAnswer": 0.05,
+        "tolerance": 0,
+        "id": "chemistry-17-05",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Ammonia, NH₃, has three bonding pairs and one lone pair around nitrogen. What is the shape formed by its atoms?",
+        "choices": [
+          "Tetrahedral",
+          "Trigonal pyramidal",
+          "Trigonal planar",
+          "Linear"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-17-06",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "For N₂ + 3H₂ → 2NH₃, 2 mol N₂ and 3 mol H₂ react as far as possible. How many moles of N₂ remain?",
+        "numericAnswer": 1,
+        "tolerance": 0,
+        "id": "chemistry-17-07",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "In Fe²⁺ → Fe³⁺ + e⁻, iron’s oxidation number increases. Name the process undergone by the iron ion.",
+        "acceptedAnswers": [
+          "oxidation"
+        ],
+        "id": "chemistry-17-08",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "What is the oxidation number of sulfur in SO₃²⁻? Each oxygen has oxidation number −2.",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "chemistry-17-09",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A strong monoprotic acid initially has [H⁺] = 1.0 × 10^-2 mol/dm³. A sample is diluted to ten times its initial volume. Neglect water’s ionisation. What is the final pH?",
+        "numericAnswer": 3,
+        "tolerance": 0,
+        "id": "chemistry-17-10",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A catalyst is added to a closed reaction mixture already at equilibrium at fixed temperature. What changes?",
+        "choices": [
+          "The equilibrium constant increases",
+          "Only the forward rate increases",
+          "Forward and reverse rates increase, but equilibrium composition stays the same",
+          "The overall enthalpy change becomes zero"
+        ],
+        "correctIndex": 2,
+        "id": "chemistry-17-11",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A reaction warms 100 g of solution from 20 °C to 25 °C. Use c = 4.2 J/(g °C) and neglect heat loss. Find the energy change of the reacting system in kJ, including its sign.",
+        "numericAnswer": -2.1,
+        "tolerance": 0,
+        "id": "chemistry-17-12",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Bond energies are H–H = 436, Cl–Cl = 243 and H–Cl = 431 kJ/mol. For H₂ + Cl₂ → 2HCl, estimate ΔH per mole of HCl produced, in kJ/mol.",
+        "numericAnswer": -91.5,
+        "tolerance": 0,
+        "id": "chemistry-17-13",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "For an exothermic forward reaction, temperature is raised while other conditions are fixed. Which pair of changes is expected?",
+        "choices": [
+          "Equilibrium shifts to products; K increases",
+          "Equilibrium shifts to reactants; K decreases",
+          "Equilibrium shifts to reactants; K increases",
+          "Equilibrium stays unchanged; both rates stop"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-17-14",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "For A ⇌ 2B, Kc = [B]²/[A]. At equilibrium [B] = 0.6 and [A] = 0.2 mol/dm³. Find the numerical value of Kc.",
+        "numericAnswer": 1.8,
+        "tolerance": 0,
+        "id": "chemistry-17-15",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the name of a solution that resists pH changes when small amounts of acid or base are added?",
+        "acceptedAnswers": [
+          "buffer",
+          "buffer solution",
+          "a buffer"
+        ],
+        "id": "chemistry-17-16",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "For a first-order reaction, rate = k[A], with k = 0.2 s⁻¹. A 0.5 mol/dm³ solution is diluted to twice its volume. What is the immediate reaction rate after dilution, in mol/(dm³ s)?",
+        "numericAnswer": 0.05,
+        "tolerance": 0,
+        "id": "chemistry-17-17",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A galvanic cell has standard reduction potentials +0.34 V at its cathode and −0.76 V at its anode. Find E°cell in millivolts.",
+        "numericAnswer": 1100,
+        "tolerance": 0,
+        "id": "chemistry-17-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Use ΔG = ΔH − TΔS. If ΔH = −40 kJ/mol, ΔS = −100 J/(mol K), and T = 300 K, find ΔG in kJ/mol.",
+        "numericAnswer": -10,
+        "tolerance": 0,
+        "id": "chemistry-17-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 20.0 mL sample of H₂SO₄ is exactly neutralised by 40.0 mL of 0.100 mol/dm³ NaOH. The mole ratio is 1 acid : 2 NaOH. Find the mass of H₂SO₄ in the original sample, in grams. Use molar mass 98 g/mol.",
+        "numericAnswer": 0.196,
+        "tolerance": 0,
+        "id": "chemistry-17-20",
+        "reward": 10
+      }
+    ]
+  }
+}

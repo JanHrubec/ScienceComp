@@ -1,0 +1,587 @@
+{
+  "subject": "physics",
+  "tracks": {
+    "11–13": [
+      {
+        "type": "multiple-choice",
+        "prompt": "A student wants to measure how hot water is, rather than how much water there is. Which instrument should they use?",
+        "choices": [
+          "Ruler",
+          "Balance",
+          "Thermometer",
+          "Stopwatch"
+        ],
+        "correctIndex": 2,
+        "id": "physics-11-01",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which is the SI unit of force?",
+        "choices": [
+          "Watt",
+          "Metre",
+          "Joule",
+          "Newton"
+        ],
+        "correctIndex": 3,
+        "id": "physics-11-02",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A runner covers 60 m in 10 s, then stands still for 2 s. What is the average speed over the whole 12 s, in m/s?",
+        "numericAnswer": 5,
+        "tolerance": 0,
+        "id": "physics-11-03",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What force pulls objects toward Earth?",
+        "acceptedAnswers": [
+          "gravity",
+          "gravitational force",
+          "gravitation"
+        ],
+        "id": "physics-11-04",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A book rests on a table. Which upward force balances its weight?",
+        "choices": [
+          "Air resistance",
+          "Friction",
+          "Magnetic force",
+          "Support force from the table"
+        ],
+        "correctIndex": 3,
+        "id": "physics-11-05",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A cyclist moves at 4 m/s for 15 s, then waits for 5 s. How far does the cyclist travel in total, in metres?",
+        "numericAnswer": 60,
+        "tolerance": 0,
+        "id": "physics-11-06",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which material is usually a good electrical conductor?",
+        "choices": [
+          "Rubber",
+          "Copper",
+          "Glass",
+          "Dry wood"
+        ],
+        "correctIndex": 1,
+        "id": "physics-11-07",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the name of the change from liquid water to water vapour at the surface, below boiling temperature?",
+        "acceptedAnswers": [
+          "evaporation"
+        ],
+        "id": "physics-11-08",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A block has mass 120 g. Submerging it raises a measuring cylinder reading from 30 to 70 cm³. What is its density in g/cm³?",
+        "numericAnswer": 3,
+        "tolerance": 0,
+        "id": "physics-11-09",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Two identical bulbs are in series with a battery. One bulb is removed, leaving a gap. What happens to the other?",
+        "choices": [
+          "It goes out",
+          "It flashes continuously",
+          "It becomes brighter",
+          "It stays equally bright"
+        ],
+        "correctIndex": 0,
+        "id": "physics-11-10",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 6 N force moves a box 300 cm in the force’s direction. Work = force × distance in metres. How much work does this force do, in joules?",
+        "numericAnswer": 18,
+        "tolerance": 0,
+        "id": "physics-11-11",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Light travels from a lamp to your eye through a vacuum. What does this demonstrate?",
+        "choices": [
+          "Light requires air",
+          "Light can travel without matter",
+          "Light is a sound wave",
+          "Light moves only through solids"
+        ],
+        "correctIndex": 1,
+        "id": "physics-11-12",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A machine transfers 240 J of energy in 8 s. Power = energy / time. What is its power in watts?",
+        "numericAnswer": 30,
+        "tolerance": 0,
+        "id": "physics-11-13",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "An ice cube melts in a warm room. In which direction is net thermal energy transferred?",
+        "choices": [
+          "In neither direction",
+          "Only from the floor to the ceiling",
+          "From ice to room",
+          "From room to ice"
+        ],
+        "correctIndex": 3,
+        "id": "physics-11-14",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An object has mass 2000 g. Use g = 10 N/kg and W = mg. What is its weight in newtons?",
+        "numericAnswer": 20,
+        "tolerance": 0,
+        "id": "physics-11-15",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An object speeds up from 2 m/s to 10 m/s in 4 s. What is its average acceleration in m/s²?",
+        "numericAnswer": 2,
+        "tolerance": 0,
+        "id": "physics-11-16",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Two forces act horizontally: 9 N right and 4 N left. In which direction is the resultant force?",
+        "choices": [
+          "There is no resultant force",
+          "Left",
+          "Right",
+          "Up"
+        ],
+        "correctIndex": 2,
+        "id": "physics-11-17",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A lever is balanced. A 6 N force acts 20 cm from the pivot on one side. What force, in newtons, must act 30 cm from the pivot on the other side?",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "physics-11-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A wave has frequency 5 Hz and wavelength 2 m. Speed = frequency × wavelength. What is its speed in m/s?",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "physics-11-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A device takes in 200 J. Of this, 50 J is wasted. What percentage of the input energy is transferred usefully?",
+        "numericAnswer": 75,
+        "tolerance": 0,
+        "id": "physics-11-20",
+        "reward": 10
+      }
+    ],
+    "14–16": [
+      {
+        "type": "multiple-choice",
+        "prompt": "A bus moves east at constant speed on a straight road. Its engine provides 600 N of forward force. What is the resultant horizontal force?",
+        "choices": [
+          "600 N east",
+          "600 N west",
+          "0 N",
+          "1200 N east"
+        ],
+        "correctIndex": 2,
+        "id": "physics-14-01",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A car covers 150 m in 10 s, then stops for 5 s. What is its average speed over the whole journey, in m/s?",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "physics-14-02",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the SI unit of electrical resistance? Give its name, not its symbol.",
+        "acceptedAnswers": [
+          "ohm",
+          "ohms"
+        ],
+        "id": "physics-14-03",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 3 kg trolley accelerates at 2 m/s². Friction is 4 N opposite its motion. What forward pulling force is required, in newtons?",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "physics-14-04",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A student walks 3 m east and then 3 m west. Which quantity for the whole journey is zero?",
+        "choices": [
+          "Distance travelled",
+          "Elapsed time",
+          "Displacement",
+          "Average speed"
+        ],
+        "correctIndex": 2,
+        "id": "physics-14-05",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 12 V supply is connected across a 4 Ω resistor. Using V = IR, find the current in milliamperes.",
+        "numericAnswer": 3000,
+        "tolerance": 0,
+        "id": "physics-14-06",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 500 g mass is lifted from 1 m to 3 m above the floor. Use g = 10 m/s². What is its gain in gravitational potential energy, in joules?",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "physics-14-07",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A 3 Ω resistor and a 6 Ω resistor are connected in parallel to the same ideal battery. Which statement is correct?",
+        "choices": [
+          "The currents are equal",
+          "The 6 Ω resistor carries twice the current",
+          "The 3 Ω resistor carries twice the current",
+          "Their potential differences are in a 1:2 ratio"
+        ],
+        "correctIndex": 2,
+        "id": "physics-14-08",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 2 kg ball speeds up from 3 m/s to 5 m/s. Using E = ½mv², find the increase in kinetic energy, in joules.",
+        "numericAnswer": 16,
+        "tolerance": 0,
+        "id": "physics-14-09",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "Water waves spread after passing through a narrow gap without changing medium. Name this spreading effect, rather than bending caused by a change of wave speed.",
+        "acceptedAnswers": [
+          "diffraction"
+        ],
+        "id": "physics-14-10",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Sound travels at 340 m/s with frequency 170 Hz. What is its wavelength in centimetres?",
+        "numericAnswer": 200,
+        "tolerance": 0,
+        "id": "physics-14-11",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 20 N force acts normally over 50 cm². There are 10000 cm² in 1 m². What is the pressure in pascals?",
+        "numericAnswer": 4000,
+        "tolerance": 0,
+        "id": "physics-14-12",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A metal spoon and a wooden spoon are in the same room overnight. The metal feels colder because it…",
+        "choices": [
+          "Reflects all heat",
+          "Has a lower temperature",
+          "Conducts thermal energy away from your hand faster",
+          "Contains no thermal energy"
+        ],
+        "correctIndex": 2,
+        "id": "physics-14-13",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 2 kg trolley travels at 4 m/s and then at 1 m/s in the same direction. What is the magnitude of its momentum decrease, in kg m/s?",
+        "numericAnswer": 6,
+        "tolerance": 0,
+        "id": "physics-14-14",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 60 W lamp is on for 2 minutes. How much energy does it transfer, in kilojoules?",
+        "numericAnswer": 7.2,
+        "tolerance": 0,
+        "id": "physics-14-15",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A radioactive sample’s half-life is 10 minutes. What fraction of the original unstable nuclei has decayed after 20 minutes?",
+        "choices": [
+          "One quarter",
+          "One half",
+          "Three quarters",
+          "All"
+        ],
+        "correctIndex": 2,
+        "id": "physics-14-16",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 500 g sample warms from 18 °C to 22 °C. Its specific heat capacity is 800 J/(kg °C). Find the energy transferred in joules.",
+        "numericAnswer": 1600,
+        "tolerance": 0,
+        "id": "physics-14-17",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 6 Ω resistor and a 3 Ω resistor are in series across 18 V. What is the potential difference across the 3 Ω resistor, in volts?",
+        "numericAnswer": 6,
+        "tolerance": 0,
+        "id": "physics-14-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 2 kg trolley at +3 m/s sticks to a 1 kg trolley at −3 m/s. Neglect external horizontal forces. What is their common velocity in m/s, using the same sign convention?",
+        "numericAnswer": 1,
+        "tolerance": 0,
+        "id": "physics-14-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An ideal transformer has 200 primary turns and 50 secondary turns. Its primary voltage is 240 V. A 30 Ω resistor is connected across the secondary. What current flows through it, in amperes?",
+        "numericAnswer": 2,
+        "tolerance": 0,
+        "id": "physics-14-20",
+        "reward": 10
+      }
+    ],
+    "17–18": [
+      {
+        "type": "multiple-choice",
+        "prompt": "On a velocity–time graph, velocity is negative but the line slopes upward toward zero. Which statement describes the motion?",
+        "choices": [
+          "Negative acceleration, increasing speed",
+          "Positive acceleration, decreasing speed",
+          "Positive acceleration, increasing speed",
+          "Zero acceleration, constant speed"
+        ],
+        "correctIndex": 1,
+        "id": "physics-17-01",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A runner’s velocity changes from −3 m/s to +9 m/s in 4 s. Find the average acceleration in m/s², including its sign.",
+        "numericAnswer": 3,
+        "tolerance": 0,
+        "id": "physics-17-02",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What conserved quantity equals mass × velocity?",
+        "acceptedAnswers": [
+          "momentum",
+          "linear momentum"
+        ],
+        "id": "physics-17-03",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 4 kg body is pulled east by 10 N while friction acts west with 4 N. What is its acceleration toward the east, in m/s²?",
+        "numericAnswer": 1.5,
+        "tolerance": 0,
+        "id": "physics-17-04",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "An object moves in a circle at constant speed. Its acceleration points…",
+        "choices": [
+          "Nowhere: it is zero",
+          "Along the velocity",
+          "Away from the centre",
+          "Toward the centre"
+        ],
+        "correctIndex": 3,
+        "id": "physics-17-05",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A spring has k = 200 N/m. Its extension increases from 10 cm to 20 cm, within its elastic limit. Using E = ½kx², find the increase in stored energy, in joules.",
+        "numericAnswer": 3,
+        "tolerance": 0,
+        "id": "physics-17-06",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A current of 4 mA flows for 3 s. What charge passes a point, in coulombs?",
+        "numericAnswer": 0.012,
+        "tolerance": 0,
+        "id": "physics-17-07",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Two coherent waves of equal amplitude reach a point with a path difference of half a wavelength. They began in phase. What occurs at that point?",
+        "choices": [
+          "Maximum constructive interference",
+          "Complete destructive interference",
+          "A doubling of frequency",
+          "A halving of wave speed"
+        ],
+        "correctIndex": 1,
+        "id": "physics-17-08",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 12 V source supplies 2 A for 5 s. A motor converts 75% of that electrical energy into useful work. How much useful work is done, in joules?",
+        "numericAnswer": 90,
+        "tolerance": 0,
+        "id": "physics-17-09",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 500 g object moves at 4 m/s in a circle of diameter 4 m. Using F = mv²/r, find the resultant force in newtons.",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "physics-17-10",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the name of the effect in which light above a threshold frequency ejects electrons from a metal surface?",
+        "acceptedAnswers": [
+          "photoelectric effect",
+          "the photoelectric effect"
+        ],
+        "id": "physics-17-11",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An ideal gas is compressed isothermally from 6 L to 2 L. Its initial absolute pressure is 100 kPa. Find the increase in pressure, in kPa.",
+        "numericAnswer": 200,
+        "tolerance": 0,
+        "id": "physics-17-12",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A wave has a period of 4 milliseconds and travels at 20 m/s. Find its wavelength in centimetres.",
+        "numericAnswer": 8,
+        "tolerance": 0,
+        "id": "physics-17-13",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A satellite is in a circular orbit with engines off. Why does it not move in a straight line?",
+        "choices": [
+          "Space pushes it forward",
+          "Its mass changes continuously",
+          "There is no gravity",
+          "Gravity provides centripetal acceleration"
+        ],
+        "correctIndex": 3,
+        "id": "physics-17-14",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Resistors of 6 Ω and 3 Ω are in parallel. That combination is in series with a 4 Ω resistor across a 12 V battery. Find the total current from the battery, in amperes.",
+        "numericAnswer": 2,
+        "tolerance": 0,
+        "id": "physics-17-15",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Light has wavelength 600 nm. Use c = 3.00 × 10^8 m/s, h = 6.63 × 10^-34 J s, and E = hc/λ. Express the photon energy as a coefficient × 10^-19 J; enter only the coefficient.",
+        "numericAnswer": 3.315,
+        "tolerance": 0.005,
+        "id": "physics-17-16",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A heat engine rejects 500 J per cycle and does 300 J of work per cycle. What is its efficiency as a percentage?",
+        "numericAnswer": 37.5,
+        "tolerance": 0,
+        "id": "physics-17-17",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A detector initially reads 850 counts/min, including a constant background of 50 counts/min. After 18 hours it reads 150 counts/min. Treat count rate as proportional to undecayed nuclei. Find the half-life in hours.",
+        "numericAnswer": 6,
+        "tolerance": 0,
+        "id": "physics-17-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 2 kg trolley at +5 m/s sticks to a 3 kg trolley at −1 m/s. Neglect external horizontal forces. How much kinetic energy is lost in the collision, in joules?",
+        "numericAnswer": 21.6,
+        "tolerance": 0.01,
+        "id": "physics-17-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Light passes from air (n = 1.00) into glass (n = 1.50). Its incident ray makes an angle of 60° with the surface. Use n₁ sin θ₁ = n₂ sin θ₂, with angles measured from the normal. Find the refracted angle to the normal in degrees, to one decimal place.",
+        "numericAnswer": 19.5,
+        "tolerance": 0.1,
+        "id": "physics-17-20",
+        "reward": 10
+      }
+    ]
+  }
+}

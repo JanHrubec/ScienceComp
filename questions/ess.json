@@ -1,0 +1,628 @@
+{
+  "subject": "ess",
+  "tracks": {
+    "11–13": [
+      {
+        "type": "multiple-choice",
+        "prompt": "Which is a living component of a pond ecosystem?",
+        "choices": [
+          "Dissolved oxygen",
+          "Algae",
+          "Sunlight",
+          "Water temperature"
+        ],
+        "correctIndex": 1,
+        "id": "ess-11-01",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What term means all the individuals of one species living in an area at a given time?",
+        "acceptedAnswers": [
+          "population",
+          "a population"
+        ],
+        "id": "ess-11-02",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "In most terrestrial food webs, the original energy source is…",
+        "choices": [
+          "Soil minerals",
+          "Decomposers",
+          "Plastic",
+          "Sunlight"
+        ],
+        "correctIndex": 3,
+        "id": "ess-11-03",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A pond has 15 frogs. Five arrive, two leave and three die. There are no births. How many frogs remain?",
+        "numericAnswer": 15,
+        "tolerance": 0,
+        "id": "ess-11-04",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which resource is renewable on human timescales if managed within its regeneration rate?",
+        "choices": [
+          "Natural gas",
+          "A growing forest",
+          "Coal",
+          "Crude oil"
+        ],
+        "correctIndex": 1,
+        "id": "ess-11-05",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What process changes liquid water into water vapour in the water cycle?",
+        "acceptedAnswers": [
+          "evaporation"
+        ],
+        "id": "ess-11-06",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which is an abiotic factor in a woodland?",
+        "choices": [
+          "Oak trees",
+          "Fungi",
+          "Deer",
+          "Soil pH"
+        ],
+        "correctIndex": 3,
+        "id": "ess-11-07",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A school uses 1000 L of water per day and reduces this by 20%. How many litres does it still use per day?",
+        "numericAnswer": 800,
+        "tolerance": 0,
+        "id": "ess-11-08",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "If all other conditions stay the same, removing a predator may initially cause its prey population to…",
+        "choices": [
+          "Stop reproducing",
+          "Increase",
+          "Always disappear",
+          "Become a different species immediately"
+        ],
+        "correctIndex": 1,
+        "id": "ess-11-09",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What term describes the variety of life, including species, genes and ecosystems?",
+        "acceptedAnswers": [
+          "biodiversity",
+          "biological diversity"
+        ],
+        "id": "ess-11-10",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Five equal-area quadrats contain 3, 5, 4, 8 and 0 plants. Including the empty quadrat, what is the mean count per quadrat?",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "ess-11-11",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which gas contributes to the greenhouse effect?",
+        "choices": [
+          "Carbon dioxide",
+          "Helium",
+          "Argon",
+          "Neon"
+        ],
+        "correctIndex": 0,
+        "id": "ess-11-12",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Why can fertiliser runoff harm a lake?",
+        "choices": [
+          "It stops every microorganism growing",
+          "It can stimulate algal growth and later oxygen depletion",
+          "It always removes all nutrients",
+          "It turns water into oil"
+        ],
+        "correctIndex": 1,
+        "id": "ess-11-13",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A tank starts with 20 L. It receives 12 L/min and loses 9 L/min for 5 minutes. What is its final volume in litres?",
+        "numericAnswer": 35,
+        "tolerance": 0,
+        "id": "ess-11-14",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What term means the place where an organism lives?",
+        "acceptedAnswers": [
+          "habitat",
+          "a habitat"
+        ],
+        "id": "ess-11-15",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which sampling approach best avoids choosing only places with many flowers?",
+        "choices": [
+          "Place quadrats using random coordinates",
+          "Choose the brightest flower patches",
+          "Sample only beside the path",
+          "Ask people to pick the prettiest spot"
+        ],
+        "correctIndex": 0,
+        "id": "ess-11-16",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A fish population has 30 births and 10 natural deaths each month. A fisher catches 25 fish in that month. With no migration, what is the net population change? Include a minus sign for a decrease.",
+        "numericAnswer": -5,
+        "tolerance": 0,
+        "id": "ess-11-17",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A dark surface replaces reflective ice. More sunlight is absorbed, warming the area and melting more ice. This is…",
+        "choices": [
+          "No feedback",
+          "A closed material cycle",
+          "Positive feedback",
+          "Negative feedback"
+        ],
+        "correctIndex": 2,
+        "id": "ess-11-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A school produces 200 kg of waste. Of this, 50 kg is recycled. What percentage is not recycled?",
+        "numericAnswer": 75,
+        "tolerance": 0,
+        "id": "ess-11-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A habitat’s nesting bird population falls from 80 pairs to 60 pairs. How many individual nesting birds have been lost, if every pair contains two birds?",
+        "numericAnswer": 40,
+        "tolerance": 0,
+        "id": "ess-11-20",
+        "reward": 10
+      }
+    ],
+    "14–16": [
+      {
+        "type": "multiple-choice",
+        "prompt": "A sealed transparent terrarium receives sunlight and gives off heat, but exchanges no matter with its surroundings. In this model it is…",
+        "choices": [
+          "Open to matter and energy",
+          "Closed to matter but open to energy",
+          "Isolated from both matter and energy",
+          "Open to matter but closed to energy"
+        ],
+        "correctIndex": 1,
+        "id": "ess-14-01",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What term describes the maximum population that an environment can sustain over time under given conditions?",
+        "acceptedAnswers": [
+          "carrying capacity"
+        ],
+        "id": "ess-14-02",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A forest initially stores 120 tonnes of carbon. Over a year it takes up 15 tonnes and releases 9 tonnes. What is the net annual change in its carbon stock, in tonnes?",
+        "numericAnswer": 6,
+        "tolerance": 0,
+        "id": "ess-14-03",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A forest carries out photosynthesis and respiration at the same time. When does it act as a net carbon sink?",
+        "choices": [
+          "When photosynthetic carbon uptake exceeds total carbon release",
+          "Whenever any tree respires",
+          "Only when respiration is zero",
+          "Whenever there is no sunlight"
+        ],
+        "correctIndex": 0,
+        "id": "ess-14-04",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Producers store 20000 kJ, herbivores receive 2000 kJ, and carnivores receive 200 kJ. What percentage of the producers’ energy reaches the carnivores?",
+        "numericAnswer": 1,
+        "tolerance": 0,
+        "id": "ess-14-05",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "After an algal bloom dies, dissolved oxygen drops sharply. Which process most directly uses up the oxygen?",
+        "choices": [
+          "Aerobic decomposition of dead algae",
+          "Settling of mineral particles alone",
+          "Photosynthesis by surviving algae",
+          "Evaporation of pure water alone"
+        ],
+        "correctIndex": 0,
+        "id": "ess-14-06",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What term describes a non-native species that spreads and causes ecological harm?",
+        "acceptedAnswers": [
+          "invasive species",
+          "invasive alien species"
+        ],
+        "id": "ess-14-07",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A square quadrat with sides of 0.5 m contains 8 plants. Estimate abundance in 100 m² of uniform habitat.",
+        "numericAnswer": 3200,
+        "tolerance": 0,
+        "id": "ess-14-08",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Warming increases evaporation from a wet surface; the evaporation removes heat and reduces the initial warming. What feedback is described?",
+        "choices": [
+          "Positive, because evaporation increases",
+          "Negative, because it opposes the initial change",
+          "Positive, because heat is involved",
+          "No feedback, because water moves"
+        ],
+        "correctIndex": 1,
+        "id": "ess-14-09",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A reservoir starts with 5000 m³. Annual inflow is 1200 m³ and evaporation is 200 m³. What is the maximum annual withdrawal, in m³, that keeps its volume unchanged?",
+        "numericAnswer": 1000,
+        "tolerance": 0,
+        "id": "ess-14-10",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Fish contain a pollutant at 2 mg/kg and fish-eating birds at 20 mg/kg. Which term describes the increase between these trophic levels?",
+        "choices": [
+          "Biomagnification",
+          "Only dilution",
+          "Primary succession",
+          "Only the concentration increase within one individual over time"
+        ],
+        "correctIndex": 0,
+        "id": "ess-14-11",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the name of the gradual change in a community’s species composition over time, such as vegetation developing on bare rock?",
+        "acceptedAnswers": [
+          "ecological succession",
+          "succession"
+        ],
+        "id": "ess-14-12",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A town’s annual emissions fall by 20%, then rise by 20% of the reduced amount. Starting from 500 tonnes/year, what is the final annual value in tonnes/year?",
+        "numericAnswer": 480,
+        "tolerance": 0,
+        "id": "ess-14-13",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A high biological oxygen demand in river water often indicates…",
+        "choices": [
+          "Pure distilled water",
+          "An absence of decomposition",
+          "Much biodegradable organic matter",
+          "No microorganisms"
+        ],
+        "correctIndex": 2,
+        "id": "ess-14-14",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A study marks 50 fish. Later, 10 marked and 40 unmarked fish are caught. Use N = (initially marked × total caught later) / marked recaptured. Estimate population size.",
+        "numericAnswer": 250,
+        "tolerance": 0,
+        "id": "ess-14-15",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Why can habitat corridors help isolated populations?",
+        "choices": [
+          "They permit movement and gene flow",
+          "They make every species identical",
+          "They eliminate all predators",
+          "They prevent any immigration"
+        ],
+        "correctIndex": 0,
+        "id": "ess-14-16",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A population of 800 has 100 births, 60 deaths, 20 immigrants and 40 emigrants. What is its percentage change over the year?",
+        "numericAnswer": 2.5,
+        "tolerance": 0,
+        "id": "ess-14-17",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What term describes benefits people obtain from ecosystems, such as pollination and water purification?",
+        "acceptedAnswers": [
+          "ecosystem services",
+          "ecosystem service"
+        ],
+        "id": "ess-14-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A fish stock starts at 1000 tonnes. First 150 tonnes are caught. The remaining stock then grows by 12%. What stock remains at the end, in tonnes?",
+        "numericAnswer": 952,
+        "tolerance": 0,
+        "id": "ess-14-19",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "Site A has 4 species with 25 individuals each. Site B has the same 4 species with counts 97, 1, 1, 1. Which site has greater species richness, not evenness? Enter A, B or equal.",
+        "id": "ess-14-20",
+        "reward": 10,
+        "acceptedAnswers": [
+          "equal",
+          "same",
+          "neither",
+          "both"
+        ]
+      }
+    ],
+    "17–18": [
+      {
+        "type": "multiple-choice",
+        "prompt": "Which quantity is a stock, rather than a flow?",
+        "choices": [
+          "200 tonnes of carbon stored in a forest",
+          "20 tonnes of carbon absorbed per year",
+          "10 tonnes of carbon released per year",
+          "5 tonnes of carbon harvested per month"
+        ],
+        "correctIndex": 0,
+        "id": "ess-17-01",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What term means the proportion of incoming solar radiation reflected by a surface?",
+        "acceptedAnswers": [
+          "albedo"
+        ],
+        "id": "ess-17-02",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An ecosystem has GPP = 2400 and producer respiration = 1400 kJ/m²/year. What is annual NPP for an area of 5000 m², expressed in megajoules?",
+        "numericAnswer": 5000,
+        "tolerance": 0,
+        "id": "ess-17-03",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Why is energy flow through ecosystems not a closed cycle?",
+        "choices": [
+          "Energy is dissipated as heat and new input is needed",
+          "Atoms are destroyed by respiration",
+          "Decomposers recreate sunlight",
+          "All energy stays permanently in predators"
+        ],
+        "correctIndex": 0,
+        "id": "ess-17-04",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A carbon stock contains 600 tonnes. Carbon leaves at 2.5 tonnes/month. Estimate mean residence time as stock / outflow, in years.",
+        "numericAnswer": 20,
+        "tolerance": 0,
+        "id": "ess-17-05",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A lake changes abruptly to a persistent turbid state once nutrient loading passes a threshold. What does the threshold represent?",
+        "choices": [
+          "A tipping point",
+          "A random sampling error by definition",
+          "A guarantee of immediate recovery",
+          "A fixed maximum number of species"
+        ],
+        "correctIndex": 0,
+        "id": "ess-17-06",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Use annual growth = rN(1 − N/K), with r = 0.2, N = 500 and K = 1000. After that growth, 60 individuals are harvested. What is the final population?",
+        "numericAnswer": 490,
+        "tolerance": 0,
+        "id": "ess-17-07",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What two-word term describes a shared resource for which excluding users is difficult and one user’s consumption reduces availability to others? Use the term ending in “resource”.",
+        "acceptedAnswers": [
+          "common-pool resource",
+          "common pool resource"
+        ],
+        "id": "ess-17-08",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "What is a major limitation of setting catches at a modelled maximum sustainable yield?",
+        "choices": [
+          "Fishing never affects food webs",
+          "Population estimates and environmental conditions are uncertain",
+          "Models guarantee no collapse",
+          "All fish reproduce at a constant rate forever"
+        ],
+        "correctIndex": 1,
+        "id": "ess-17-09",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Use growth = rN(1 − N/K), with r = 0.4/year and K = 1000 tonnes. At the start of a year the stock is 250 tonnes. What harvest would exactly equal that year’s modelled growth, in tonnes?",
+        "numericAnswer": 75,
+        "tolerance": 0,
+        "id": "ess-17-10",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Use Simpson’s diversity index D = 1 − Σ[n(n−1)]/[N(N−1)]. Counts of three species are 4, 1 and 1, so N = 6. Calculate D.",
+        "numericAnswer": 0.6,
+        "tolerance": 0,
+        "id": "ess-17-11",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "In life-cycle assessment, comparing electric and petrol cars fairly requires…",
+        "choices": [
+          "A common functional unit and stated system boundaries",
+          "Ignoring electricity production",
+          "Counting only paint colour",
+          "Comparing unrelated journey distances"
+        ],
+        "correctIndex": 0,
+        "id": "ess-17-12",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Electricity source A emits 500 g CO₂e/kWh and B emits 50 g CO₂e/kWh. A household uses 10 kWh, with 60% from A and 40% from B. Find total emissions in kg CO₂e.",
+        "numericAnswer": 3.2,
+        "tolerance": 0,
+        "id": "ess-17-13",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "Seawater pH falls from 8.2 to 8.1 because it absorbs atmospheric CO₂. It is still alkaline. What is the name of this process?",
+        "acceptedAnswers": [
+          "ocean acidification"
+        ],
+        "id": "ess-17-14",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A persistent, fat-soluble pollutant has low concentration in water but high concentration in a long-lived fish. Which explanation is most plausible?",
+        "choices": [
+          "Uptake over time exceeds the fish’s elimination of the pollutant",
+          "The pollutant must have zero toxicity",
+          "Low water concentration prevents all uptake",
+          "The pollutant is necessarily created by the fish"
+        ],
+        "correctIndex": 0,
+        "id": "ess-17-15",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A population falls by 10% in each of two successive years. What is the total percentage decrease from the original population?",
+        "numericAnswer": 19,
+        "tolerance": 0,
+        "id": "ess-17-16",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An intervention costs 120000 currency units and prevents 3000 tonnes of CO₂e emissions, but its construction emits 600 tonnes of CO₂e. Find cost per net tonne avoided.",
+        "numericAnswer": 50,
+        "tolerance": 0,
+        "id": "ess-17-17",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A lake remains turbid even after nutrient input returns to its former level. What concept describes dependence on the system’s history?",
+        "choices": [
+          "Evaporation",
+          "Primary productivity",
+          "Hysteresis",
+          "Random sampling"
+        ],
+        "correctIndex": 2,
+        "id": "ess-17-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 2 km² catchment receives 1000 mm of annual precipitation. Evapotranspiration is 600 mm and runoff is 350 mm. Assuming no other flows, find its annual increase in water storage in m³. Use 1 km² = 1000000 m².",
+        "numericAnswer": 100000,
+        "tolerance": 0,
+        "id": "ess-17-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A fish stock starts at 800 tonnes. Fleet A catches 100 tonnes first. Growth is then 0.5N(1 − N/1000), using the post-catch stock. Fleet B finally catches 100 tonnes. What is the final stock in tonnes?",
+        "numericAnswer": 705,
+        "tolerance": 0,
+        "id": "ess-17-20",
+        "reward": 10
+      }
+    ]
+  }
+}

@@ -1,0 +1,625 @@
+{
+  "subject": "biology",
+  "tracks": {
+    "11–13": [
+      {
+        "type": "multiple-choice",
+        "prompt": "What is the smallest unit that can carry out the basic processes of life?",
+        "choices": [
+          "Organ system",
+          "Organ",
+          "Cell",
+          "Tissue"
+        ],
+        "correctIndex": 2,
+        "id": "biology-11-01",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "Which green pigment absorbs light for photosynthesis?",
+        "acceptedAnswers": [
+          "chlorophyll"
+        ],
+        "id": "biology-11-02",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which structure controls what enters and leaves an animal cell, even though that cell has no cell wall?",
+        "choices": [
+          "Cell wall",
+          "Chloroplast",
+          "Vacuole only",
+          "Cell membrane"
+        ],
+        "correctIndex": 3,
+        "id": "biology-11-03",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A microscope has a 10× eyepiece. Its 4× objective is replaced by a 10× objective. What is the new total magnification?",
+        "numericAnswer": 100,
+        "tolerance": 0,
+        "id": "biology-11-04",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which gas do humans take from the air for aerobic respiration?",
+        "choices": [
+          "Carbon monoxide",
+          "Nitrogen",
+          "Oxygen",
+          "Helium"
+        ],
+        "correctIndex": 2,
+        "id": "biology-11-05",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What organ pumps blood around the human body?",
+        "acceptedAnswers": [
+          "heart",
+          "the heart"
+        ],
+        "id": "biology-11-06",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A plant is kept in darkness. Which process directly loses its energy source?",
+        "choices": [
+          "Respiration",
+          "Diffusion",
+          "Water absorption",
+          "Photosynthesis"
+        ],
+        "correctIndex": 3,
+        "id": "biology-11-07",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A plant grows from 12 cm to 190 mm tall. What is its increase in height, in centimetres?",
+        "numericAnswer": 7,
+        "tolerance": 0,
+        "id": "biology-11-08",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "In the food chain grass → rabbit → fox, which organism is the producer?",
+        "choices": [
+          "All three",
+          "Grass",
+          "Rabbit",
+          "Fox"
+        ],
+        "correctIndex": 1,
+        "id": "biology-11-09",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the name of the process by which a seed begins to grow into a seedling?",
+        "acceptedAnswers": [
+          "germination"
+        ],
+        "id": "biology-11-10",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Why do cells need respiration?",
+        "choices": [
+          "To create matter from nothing",
+          "To stop all chemical reactions",
+          "To make sunlight",
+          "To release usable energy from nutrients"
+        ],
+        "correctIndex": 3,
+        "id": "biology-11-11",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A population starts with 20 bacteria. Every bacterium divides into two, then every resulting bacterium divides into two again. None die. How many bacteria are present?",
+        "numericAnswer": 80,
+        "tolerance": 0,
+        "id": "biology-11-12",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which feature increases the surface area for absorption in the small intestine?",
+        "choices": [
+          "Hair shafts",
+          "Villi",
+          "Thick enamel",
+          "Hard bone"
+        ],
+        "correctIndex": 1,
+        "id": "biology-11-13",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What term means an organism that breaks down dead organic matter?",
+        "acceptedAnswers": [
+          "decomposer",
+          "a decomposer"
+        ],
+        "id": "biology-11-14",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Of 50 seeds, 10 do not germinate. What percentage germinates?",
+        "numericAnswer": 80,
+        "tolerance": 0,
+        "id": "biology-11-15",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Two identical plants get the same water and soil, but different light levels. Which variable is deliberately changed?",
+        "choices": [
+          "Light level",
+          "Plant species",
+          "Soil type",
+          "Water amount"
+        ],
+        "correctIndex": 0,
+        "id": "biology-11-16",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A red blood cell is specialised mainly to transport which gas from lungs to tissues?",
+        "choices": [
+          "Hydrogen",
+          "Oxygen",
+          "Nitrogen",
+          "Helium"
+        ],
+        "correctIndex": 1,
+        "id": "biology-11-17",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 500 mL pond sample contains 12 water fleas. Assuming uniform distribution, how many would you expect in 2 L?",
+        "numericAnswer": 48,
+        "tolerance": 0,
+        "id": "biology-11-18",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "An insect resembles the leaves it rests on. How can this help it survive?",
+        "choices": [
+          "It no longer needs food",
+          "It becomes a plant",
+          "It stops reproducing",
+          "Predators may be less likely to notice it"
+        ],
+        "correctIndex": 3,
+        "id": "biology-11-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A population starts with 100 rabbits. There are 25 births and 10 deaths, and 5 rabbits leave. None arrive. What is the final population?",
+        "numericAnswer": 110,
+        "tolerance": 0,
+        "id": "biology-11-20",
+        "reward": 10
+      }
+    ],
+    "14–16": [
+      {
+        "type": "multiple-choice",
+        "prompt": "A root cell from a flowering plant has no chloroplasts. Which organelle can still produce most of its ATP during aerobic respiration?",
+        "choices": [
+          "Cell wall",
+          "Mitochondrion",
+          "Nucleus",
+          "Central vacuole"
+        ],
+        "correctIndex": 1,
+        "id": "biology-14-01",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What molecule stores hereditary information in cells? Give its three-letter abbreviation.",
+        "acceptedAnswers": [
+          "DNA"
+        ],
+        "id": "biology-14-02",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A cell image is 2 cm long. The actual cell is 50 micrometres long. There are 1000 micrometres in 1 mm. What is the magnification?",
+        "numericAnswer": 400,
+        "tolerance": 0,
+        "id": "biology-14-03",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A dissolved substance is evenly distributed across a membrane permeable to it. Its particles are still moving. Which statement describes diffusion at this point?",
+        "choices": [
+          "Particles have stopped crossing",
+          "Equal average movement occurs in both directions",
+          "All particles move to one side",
+          "Net movement continues toward the higher concentration"
+        ],
+        "correctIndex": 1,
+        "id": "biology-14-04",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the term for the net movement of water through a partially permeable membrane from higher to lower water potential?",
+        "acceptedAnswers": [
+          "osmosis"
+        ],
+        "id": "biology-14-05",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which products are formed in aerobic respiration of glucose?",
+        "choices": [
+          "Nitrogen and starch",
+          "Only oxygen",
+          "Carbon dioxide and water",
+          "Oxygen and glucose"
+        ],
+        "correctIndex": 2,
+        "id": "biology-14-06",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "In a double-stranded DNA sample, 30% of bases are adenine. What percentage are guanine?",
+        "numericAnswer": 20,
+        "tolerance": 0,
+        "id": "biology-14-07",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "An enzyme works slowly at 5 °C, then regains its original activity on warming to 30 °C. What is the best explanation?",
+        "choices": [
+          "It was permanently denatured at 5 °C",
+          "Lower temperature reduced collision frequency",
+          "Its amino-acid sequence changed back",
+          "The enzyme was consumed and then recreated"
+        ],
+        "correctIndex": 1,
+        "id": "biology-14-08",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "In Aa × aa, allele A is completely dominant. Out of 80 offspring, how many are expected to show the recessive phenotype?",
+        "numericAnswer": 40,
+        "tolerance": 0,
+        "id": "biology-14-09",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What type of cell division produces two genetically identical daughter cells, ignoring mutation?",
+        "acceptedAnswers": [
+          "mitosis"
+        ],
+        "id": "biology-14-10",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which blood component is primarily involved in clotting?",
+        "choices": [
+          "Red blood cells",
+          "Glucose",
+          "Antibodies",
+          "Platelets"
+        ],
+        "correctIndex": 3,
+        "id": "biology-14-11",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Heart rate is 75 beats/min and stroke volume is 80 mL/beat. How many litres of blood does the heart pump in 2 minutes?",
+        "numericAnswer": 12,
+        "tolerance": 0,
+        "id": "biology-14-12",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Why does a vaccine often provide protection against a later infection?",
+        "choices": [
+          "It replaces red blood cells",
+          "It induces immune memory",
+          "It prevents all mutations",
+          "It kills every microbe forever"
+        ],
+        "correctIndex": 1,
+        "id": "biology-14-13",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A square quadrat has sides of 0.5 m and contains 6 daisies. Estimate their abundance in 10 m² of uniform habitat.",
+        "numericAnswer": 240,
+        "tolerance": 0,
+        "id": "biology-14-14",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What term describes maintaining a stable internal environment within limits?",
+        "acceptedAnswers": [
+          "homeostasis"
+        ],
+        "id": "biology-14-15",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A plant is kept in darkness overnight. Which statement about its living cells is correct?",
+        "choices": [
+          "Photosynthesis and respiration both stop",
+          "Respiration continues although photosynthesis stops",
+          "Photosynthesis continues but respiration stops",
+          "Neither process needs a supply of energy-rich molecules"
+        ],
+        "correctIndex": 1,
+        "id": "biology-14-16",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Producers store 8000 kJ. Primary consumers receive 10% of that energy, and secondary consumers receive 10% of the primary consumers’ energy. How many kJ reach the secondary consumers?",
+        "numericAnswer": 80,
+        "tolerance": 0,
+        "id": "biology-14-17",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A resistant bacterial variant is present before an antibiotic is applied. After treatment it is common. Which explanation fits natural selection?",
+        "choices": [
+          "Treatment caused every bacterium to make the same useful mutation",
+          "Susceptible bacteria converted into resistant bacteria on purpose",
+          "The existing resistant variant left more descendants",
+          "The resistant variant no longer needs to reproduce"
+        ],
+        "correctIndex": 2,
+        "id": "biology-14-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A species has 24 chromosomes in each diploid body cell. Two normal gametes fuse. How many chromosomes are in the resulting zygote?",
+        "numericAnswer": 24,
+        "tolerance": 0,
+        "id": "biology-14-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A population increases from 200 to 250 organisms, then returns to 200. What is the percentage decrease during the second change?",
+        "numericAnswer": 20,
+        "tolerance": 0,
+        "id": "biology-14-20",
+        "reward": 10
+      }
+    ],
+    "17–18": [
+      {
+        "type": "multiple-choice",
+        "prompt": "A cell can transcribe a gene normally but cannot translate its mRNA. Which structure is directly responsible for the blocked step?",
+        "choices": [
+          "Nucleus",
+          "Ribosome",
+          "Cell membrane",
+          "Mitochondrial outer membrane"
+        ],
+        "correctIndex": 1,
+        "id": "biology-17-01",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What three-letter abbreviation names the main immediate energy-transfer molecule used by cells?",
+        "acceptedAnswers": [
+          "ATP"
+        ],
+        "id": "biology-17-02",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A double-stranded DNA molecule contains 1000 base pairs. Guanine makes up 20% of all bases. How many adenine bases are present?",
+        "numericAnswer": 600,
+        "tolerance": 0,
+        "id": "biology-17-03",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A phospholipid bilayer forms because phospholipids have…",
+        "choices": [
+          "Hydrophilic heads and hydrophobic tails",
+          "Only hydrophilic parts",
+          "Only hydrophobic parts",
+          "No interaction with water"
+        ],
+        "correctIndex": 0,
+        "id": "biology-17-04",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An enzyme reaction contains 6 micromoles of product at 1 minute and 18 micromoles at 3 minutes. Find the average rate between these readings in micromoles per second.",
+        "numericAnswer": 0.1,
+        "tolerance": 0,
+        "id": "biology-17-05",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "A cell produces an RNA copy of a DNA gene, before any protein is made. Name this copying process.",
+        "acceptedAnswers": [
+          "transcription"
+        ],
+        "id": "biology-17-06",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "For a reversible competitive inhibitor, what happens to maximum reaction rate when substrate concentration can become arbitrarily high?",
+        "choices": [
+          "The same maximum can still be approached",
+          "The maximum must become zero",
+          "The maximum doubles",
+          "The enzyme’s amino-acid sequence changes"
+        ],
+        "correctIndex": 0,
+        "id": "biology-17-07",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "In Aa × Aa, A is completely dominant. Among only the offspring with the dominant phenotype, what fraction is expected to be heterozygous? Give a decimal to two decimal places.",
+        "numericAnswer": 0.67,
+        "tolerance": 0.005,
+        "id": "biology-17-08",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "During meiosis I, which exchange can create new allele combinations on a chromosome?",
+        "choices": [
+          "Exchange between non-sister chromatids of homologous chromosomes",
+          "Exchange of entire ribosomes",
+          "Replication of a chromosome without exchange",
+          "Separation of identical sister chromatids alone"
+        ],
+        "correctIndex": 0,
+        "id": "biology-17-09",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A diploid cell has 12 chromosomes before DNA replication. After replication, how many chromosomes does it have before any chromatids separate? Count chromosomes by centromeres.",
+        "numericAnswer": 12,
+        "tolerance": 0,
+        "id": "biology-17-10",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "What is the term for programmed cell death?",
+        "acceptedAnswers": [
+          "apoptosis"
+        ],
+        "id": "biology-17-11",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "At Hardy–Weinberg equilibrium, the frequency of recessive homozygotes is 0.04. Let q² = 0.04 and p + q = 1. What proportion of the population is heterozygous (2pq)?",
+        "numericAnswer": 0.32,
+        "tolerance": 0,
+        "id": "biology-17-12",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Which change would shift the oxygen–haemoglobin dissociation curve to the right, supporting oxygen release to active tissues?",
+        "choices": [
+          "Decreased carbon dioxide concentration",
+          "Increased carbon dioxide concentration",
+          "Decreased temperature",
+          "Increased pH"
+        ],
+        "correctIndex": 1,
+        "id": "biology-17-13",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A population contains 40 AA, 40 Aa and 20 aa individuals. What is the frequency of allele a, rather than genotype aa? Enter a decimal.",
+        "numericAnswer": 0.4,
+        "tolerance": 0,
+        "id": "biology-17-14",
+        "reward": 10
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A respirometer absorbs CO₂ and shows a falling gas volume. A student warms it during the measurement. Why can volume change no longer be attributed only to oxygen uptake?",
+        "choices": [
+          "Gas volume also depends on temperature",
+          "Warming guarantees oxygen production",
+          "CO₂ absorption stops all respiration",
+          "Temperature changes the number of chromosomes"
+        ],
+        "correctIndex": 0,
+        "id": "biology-17-15",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An ecosystem has GPP = 1500 and producer respiration = 600 kJ/m²/year. What is its annual net primary production over 2 m², in kJ?",
+        "numericAnswer": 1800,
+        "tolerance": 0,
+        "id": "biology-17-16",
+        "reward": 10
+      },
+      {
+        "type": "text",
+        "prompt": "A storm kills beetles regardless of their colour. By chance, a colour allele becomes more frequent among survivors. Name the evolutionary mechanism.",
+        "acceptedAnswers": [
+          "genetic drift"
+        ],
+        "id": "biology-17-17",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "A study marks 40 animals and releases them. A later random sample contains 50 animals, of which 10 are marked. Assume perfect mixing and no births, deaths or migration. Estimate the number of unmarked animals in the entire population.",
+        "numericAnswer": 160,
+        "tolerance": 0,
+        "id": "biology-17-18",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "An mRNA has 960 nucleotides: 60 in untranslated regions and the rest in one coding region that includes a stop codon. Each codon uses 3 nucleotides. How many amino acids are encoded?",
+        "numericAnswer": 299,
+        "tolerance": 0,
+        "id": "biology-17-19",
+        "reward": 10
+      },
+      {
+        "type": "numerical",
+        "prompt": "Two genes assort independently and A and B are completely dominant. In AaBb × aabb, what fraction of offspring is expected to show exactly one dominant phenotype (A only or B only)? Enter a decimal.",
+        "numericAnswer": 0.5,
+        "tolerance": 0,
+        "id": "biology-17-20",
+        "reward": 10
+      }
+    ]
+  }
+}
