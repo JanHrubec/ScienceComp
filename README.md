@@ -1,6 +1,6 @@
 # Science competition
 
-Vue 3 + TypeScript + Vite, with an Express server and SQLite. Includes 300 questions, team access codes, admin controls, independent subject progress, Research, three team-wide skips and a shared 12×12 diamond-mining prototype. No individual student accounts or external services.
+Vue 3 + TypeScript + Vite, with an Express server and SQLite. Includes 300 questions in English and Czech, team access codes, admin controls, independent subject progress, Research, three team-wide skips and a shared 12×12 diamond-mining prototype. No individual student accounts or external services.
 
 ## Run locally
 
@@ -74,9 +74,11 @@ There is **one JSON file per subject**, each containing all age categories:
 
 Each has `subject` and `tracks`, with keys `11–13`, `14–16`, `17–18` (en dashes). Array order is competition order. There are 20 questions in each supplied track. More or fewer are supported. Read [questions/README.md](questions/README.md) for the schema and examples.
 
-193 questions have been revised with more careful-reading and multi-step tasks, mainly in the two older categories, while preserving all IDs and order.
+All 300 questions have been rebalanced: easier openings in every age/subject track, followed by a substantial ramp toward multi-step final questions. Careful reading of units, directions and requested quantities still matters. English content and its Czech translation live together under each stable question ID.
 
-Restart the server after edits. Validation runs before it listens and rejects missing fields, wrong types, invalid choice indexes, duplicate IDs, unknown properties and empty tracks. Preserve IDs and ordering during an event: progress is stored as a completed-question count. Prefer content changes between events followed by an admin reset. Subject leads should review their file before the event for local curriculum fit and desired difficulty.
+Use the **English / Čeština** selector in the header to change language. It translates questions, choices and interface controls immediately, preserving the current draft and attempts. The preference is saved on that browser; teammates may choose different languages. Either language’s explicitly listed text answers are accepted, and numerical answers accept a decimal point or comma. UI translations live in `src/i18n.ts`; question translations are the `cs` fields in the subject files. Booklet PDFs use the existing links in either language.
+
+Restart the server after edits. Validation runs before it listens and rejects missing fields, wrong types, missing Czech translations, mismatched translated choices, invalid choice indexes, duplicate IDs, unknown properties and empty tracks. Preserve IDs and ordering during an event: progress is stored as a completed-question count. Prefer content changes between events followed by an admin reset. Subject leads should review their file before the event for local curriculum fit and desired difficulty.
 
 ## Development and verification
 
@@ -88,7 +90,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-API tests use temporary SQLite files and verify schema validation, answer normalisation, all retry tiers and penalties, negative balances, legacy database migration, global skips, concurrent same/different-subject answers, resource spending, concurrent mining/depletion, diamond persistence/reset, the standings freeze and live admin totals, age tracks, waiting/start/expiry enforcement, admin actions, session/timer persistence and a real server/database restart. Browser tests use an isolated in-memory server on port 3101, exercise three separate browser contexts and save desktop/mobile screenshots in `test-results/`. Run `npm run build` before browser tests so the production UI exists.
+API tests use temporary SQLite files and verify bilingual schema validation, private answer projection, English/Czech answer normalisation, decimal comma input, all retry tiers and penalties, negative balances, legacy database migration, global skips, concurrent same/different-subject answers, resource spending, concurrent mining/depletion, diamond persistence/reset, the standings freeze and live admin totals, age tracks, waiting/start/expiry enforcement, admin actions, session/timer persistence and a real server/database restart. Browser tests use an isolated in-memory server on port 3101, exercise separate browser contexts, language switching without draft/attempt loss, Czech text and numerical submissions, independent device preferences, and save desktop/mobile screenshots in `test-results/`. Run `npm run build` before browser tests so the production UI exists.
 
 For a manual event rehearsal:
 
@@ -99,7 +101,8 @@ For a manual event rehearsal:
 5. Submit correct answers in different subjects on two devices at once; check both rewards/progress remain.
 6. Compare age-category questions. Move and mine in Game; observe the position, stock and diamond score from the other team's device.
 7. Stop and restart the server; reload both sessions and check balances, progress, positions, diamond scores and remaining stock.
-8. Check the Booklet link opens a separate tab and ESS has none. Check reset returns everyone to waiting, and test invalid-code/offline feedback before admitting students.
+8. Switch English/Čeština while an answer is selected or typed. Check the draft remains, the question translates, a teammate’s language stays independent, and the preference survives reload.
+9. Check the Booklet link opens a separate tab and ESS has none. Check reset returns everyone to waiting, and test invalid-code/offline feedback before admitting students.
 
 To back up, stop the server and copy `data/competition.sqlite`. While the server is running, SQLite also uses `-wal`/`-shm` files; don't copy only the main database as a live backup. Keep `.env` private and out of version control.
 

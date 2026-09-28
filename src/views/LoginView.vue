@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
+import { t } from '../i18n'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { api, errorMessage } from '../api'
@@ -14,17 +16,17 @@ async function join() {
 }
 </script>
 <template>
-  <div class="landing"><header class="login-header"><CompetitionTimer /></header>
+  <div class="landing"><header class="login-header"><CompetitionTimer /><LanguageSwitcher /></header>
     <main class="join">
       <form @submit.prevent="join">
-        <label for="code">Team code</label>
+        <label for="code">{{ t('Team code') }}</label>
         <div class="join-controls">
           <input id="code" v-model="code" class="code-input" maxlength="8" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
-          <button :disabled="busy || !code.trim()">{{ busy ? 'Joining…' : 'Join' }}</button>
+          <button :disabled="busy || !code.trim()">{{ t(busy ? 'Joining…' : 'Join') }}</button>
         </div>
       </form>
-      <p v-if="error" role="alert" class="error">{{ error }}</p>
+      <p v-if="error" role="alert" class="error">{{ t(error) }}</p>
     </main>
-    <footer><RouterLink to="/admin">Admin</RouterLink></footer>
+    <footer><RouterLink to="/admin">{{ t('Admin') }}</RouterLink></footer>
   </div>
 </template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
+import { t } from '../i18n'
 import { onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '../api'
@@ -17,20 +19,20 @@ async function leave() { try { await api('/team/logout', {}); clearState(); rout
 <template>
   <div class="participant">
     <header class="play-shell">
-      <nav class="main-tabs" aria-label="Main">
-        <RouterLink to="/play/questions">Questions</RouterLink>
-        <RouterLink to="/play/game">Game</RouterLink>
-        <RouterLink to="/play/standings">Standings</RouterLink>
+      <nav class="main-tabs" :aria-label="t('Main')">
+        <RouterLink to="/play/questions">{{ t('Questions') }}</RouterLink>
+        <RouterLink to="/play/game">{{ t('Game') }}</RouterLink>
+        <RouterLink to="/play/standings">{{ t('Standings') }}</RouterLink>
       </nav>
       <div v-if="teamState" class="team-heading">
         <span class="team-name">{{ teamState.team.name }}</span>
-        <CompetitionTimer /><strong class="research" aria-live="polite">{{ teamState.team.research }} <span>Research</span></strong>
+        <CompetitionTimer /><LanguageSwitcher /><strong class="research" aria-live="polite">{{ teamState.team.research }} <span>{{ t('Research') }}</span></strong>
       </div>
-      <button class="text-button leave-button" @click="leave">Leave</button>
+      <button class="text-button leave-button" @click="leave">{{ t('Leave') }}</button>
     </header>
-    <p v-if="connectionError" class="connection" role="alert">{{ connectionError }} Reconnecting…</p>
-    <main v-if="teamState && competitionStatus !== 'running'" class="waiting-screen"><h1>{{ competitionStatus === 'finished' ? 'Competition over.' : 'Waiting for the start…' }}</h1></main>
+    <p v-if="connectionError" class="connection" role="alert">{{ t(connectionError) }} {{ t('Reconnecting…') }}</p>
+    <main v-if="teamState && competitionStatus !== 'running'" class="waiting-screen"><h1>{{ t(competitionStatus === 'finished' ? 'Competition over.' : 'Waiting for the start…') }}</h1></main>
     <RouterView v-else-if="teamState && teamState.competition.status === 'running'" v-slot="{ Component }"><KeepAlive><component :is="Component" /></KeepAlive></RouterView>
-    <p v-else class="loading">Loading…</p>
+    <p v-else class="loading">{{ t('Loading…') }}</p>
   </div>
 </template>

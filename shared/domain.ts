@@ -3,7 +3,8 @@ export type Subject = typeof subjects[number]
 export const subjectNames: Record<Subject, string> = { physics: 'Physics', 'computer-science': 'Computer Science', biology: 'Biology', chemistry: 'Chemistry', ess: 'ESS' }
 export const ages = ['11–13', '14–16', '17–18'] as const
 export type AgeCategory = typeof ages[number]
-export interface PublicQuestion { id: string; prompt: string; type: 'multiple-choice' | 'text' | 'numerical'; choices?: string[]; reward: number }
+export type Language = 'en' | 'cs'
+export interface PublicQuestion { cs: { prompt: string; choices?: string[] }; id: string; prompt: string; type: 'multiple-choice' | 'text' | 'numerical'; choices?: string[]; reward: number }
 export interface QuestionProgress { completed: number; total: number; attempts: number; question: PublicQuestion | null }
 export interface Team { id: string; name: string; age: AgeCategory; research: number; earned: number; skipsUsed: number; color: string }
 export interface GameState {

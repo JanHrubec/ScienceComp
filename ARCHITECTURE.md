@@ -16,8 +16,10 @@ One Vue client and one Express process share TypeScript domain types. SQLite is 
 | `server/questions.ts` | Strict question schema, loading, private grading, public projection |
 | `server/app.ts` | Authentication, team/admin API, atomic question actions, static hosting |
 | `server/game/grid.ts` | Replaceable grid state, stock setup, movement and mining rules |
+| `src/i18n.ts` | English/Czech UI strings and browser-local language preference |
+| `src/components/LanguageSwitcher.vue` | Compact shared language selector |
 | `src/state.ts` | Shared snapshot and stale-poll protection |
-| `src/views/ParticipantView.vue` | Persistent header, Questions/Game tabs, polling |
+| `src/views/ParticipantView.vue` | Persistent header, Questions/Game/Standings tabs, polling |
 | `src/views/QuestionsView.vue` | Subject switching, answers, feedback, skips |
 | `src/components/GridGame.vue` | Replaceable grid and mining UI |
 | `src/views/StandingsView.vue` | Third tab with all team scores and freeze indicator |
@@ -70,6 +72,14 @@ All endpoints below are prefixed by `/api`. POST/PUT/DELETE requests send JSON a
 | `DELETE /admin/teams/:id` | Remove a team and related data |
 | `POST /admin/reset` | `{confirmation:"RESET"}` → clear competition play state and return to waiting |
 
+## Questions and language
+
+Each subject JSON file contains all three ordered age tracks. English fields remain at the top of each question; a required `cs` object carries the Czech prompt and, for multiple choice, choices in the same order. Text questions define separate explicit `acceptedAnswers` arrays in each language. Numerical values/tolerances, IDs and rewards are shared. `server/questions.ts` validates the entire bank before startup and uses an explicit whitelist to expose only both languages' prompts and choices, plus ID/type/reward.
+
+The browser chooses which public prompt/choices to display; it never grades answers. There is no language parameter on answer submissions: multiple choice sends a stable index, text is checked against both explicit accepted-answer lists, and numbers accept a decimal point or comma. Changing the language cannot create a new question or reset attempts. Case and whitespace are normalized; accents are preserved unless an explicit accentless variant is listed.
+
+`src/i18n.ts` stores only a device's UI preference (`science-language`) in localStorage, updates the document language, and translates UI labels and routine errors. The language selector is shared by login, participant and admin headers. Answer drafts are keyed to question ID, so language switching retains selected choices and typed text. Teammates can independently select languages while sharing the same authoritative progress and scores. No translation service or extra package is required. See `questions/README.md` for the editable format.
+
 ## Concurrency and synchronisation
 
 The server uses short synchronous `BEGIN IMMEDIATE` SQLite transactions, with no asynchronous work inside them. Every play transaction first checks that the competition is running. An answer action reads current progress, verifies the supplied question ID, grades privately, applies the retry-dependent reward/penalty and increments the subject only if correct. Incorrect third-and-later multiple-choice submissions also deduct 5. Research and net score may become negative; game spending still requires sufficient Research. Attempts and awards commit together. Two different-subject submissions preserve both increments. Two correct submissions for the same displayed question produce one success and one 409; the browser reloads its snapshot. Attempts and the three-skip allowance are shared across devices.
@@ -78,7 +88,7 @@ All question, skip and game actions are rejected before start and at/after the 4
 
 Participant state and public competition state poll every 1.5 seconds; admin teams every 2 seconds. Standings are included in the team snapshot and therefore use the existing poll. The countdown advances locally using monotonic elapsed time since the last server timestamp, so device wall-clock differences do not affect it. Newer server timestamps replace older ones. Start/expiry/reset automatically switch participants between waiting, play and finished screens; hidden play views are unmounted. The finished screen only says “Competition over.”; diamond totals remain visible in admin for the organizer to announce winners. A client polls again only after the prior poll finishes. Successful actions replace the snapshot immediately. A generation counter prevents an older pending poll from overwriting a newer action response or logout. Errors leave the screen usable, show connection feedback, and retry automatically. Requests time out after eight seconds. A timed-out mutation may have committed; clients refresh before retrying, and question IDs/expected coordinates guard against ordinary duplicate submissions. Requests are not queued offline.
 
-The participant router keeps both views mounted in KeepAlive. Subject selection and draft inputs survive Game switching; question advancement clears obsolete inputs. Sessions are cookies, not localStorage secrets. Polling is intentionally sufficient for a classroom event; it can later be replaced with SSE/WebSockets around the same state/action boundary.
+The participant router keeps play views mounted in KeepAlive. Subject selection and draft inputs survive Game switching; question advancement clears obsolete inputs. Sessions are cookies, not localStorage secrets. Polling is intentionally sufficient for a classroom event; it can later be replaced with SSE/WebSockets around the same state/action boundary.
 
 ## Standings freeze
 

@@ -1,6 +1,6 @@
 # Question bank format
 
-The five subject JSON files are the source of truth. All three age tracks live in the subject's file. Questions appear in array order, with no randomisation. The supplied tracks progress from foundation concepts to calculations or multi-step reasoning.
+The five subject JSON files are the source of truth. All three age tracks live in the subject's file. Questions appear in array order, with no randomisation. All 300 supplied questions include English and Czech. Each track starts with accessible foundations (1–5), then applies one idea (6–10), adds unit or wording details (11–15), and ends with more demanding combined reasoning (16–20). Formulas are supplied where specialist recall would obscure the reasoning. The final questions are intended to separate teams, while the opening questions let everyone make progress.
 
 ```json
 {
@@ -13,6 +13,10 @@ The five subject JSON files are the source of truth. All three age tracks live i
         "prompt": "Which is the SI unit of force?",
         "choices": ["Joule", "Newton", "Watt", "Pascal"],
         "correctIndex": 1,
+        "cs": {
+          "prompt": "Která jednotka je jednotkou síly v SI?",
+          "choices": ["Joule", "Newton", "Watt", "Pascal"]
+        },
         "reward": 10
       }
     ],
@@ -32,12 +36,16 @@ Exact text question:
   "type": "text",
   "prompt": "Which organelle is the main site of aerobic ATP production in eukaryotic cells?",
   "acceptedAnswers": ["mitochondrion", "mitochondria"],
+  "cs": {
+    "prompt": "Která organela je hlavním místem aerobní tvorby ATP v eukaryotických buňkách?",
+    "acceptedAnswers": ["mitochondrie"]
+  },
   "ignorePunctuation": false,
   "reward": 10
 }
 ```
 
-Matching ignores case, leading/trailing whitespace and repeated whitespace. Only the explicit variants are accepted. `ignorePunctuation` optionally removes Unicode punctuation from both the submission and accepted answers; it defaults to false. No stemming, semantic matching or LLM is involved. Case-insensitive matching also applies to chemical symbols; prefer names if case is meaningful in your question.
+Matching ignores case, leading/trailing whitespace and repeated whitespace. Only the explicit English **or Czech** variants are accepted, regardless of the selected UI language. Accents are not removed automatically: add accentless forms to `cs.acceptedAnswers` if desired. Chemical symbols, abbreviations and intentionally English code terms may be identical in both lists. `ignorePunctuation` optionally removes Unicode punctuation from both the submission and accepted answers; it defaults to false. No stemming, semantic matching or LLM is involved. Case-insensitive matching also applies to chemical symbols; prefer names if case is meaningful in your question.
 
 Numerical question:
 
@@ -46,16 +54,21 @@ Numerical question:
   "id": "physics-17-example",
   "type": "numerical",
   "prompt": "Enter Earth's approximate gravitational acceleration in m/s², to two decimal places.",
+  "cs": {
+    "prompt": "Zadejte přibližné tíhové zrychlení na Zemi v m/s² na dvě desetinná místa."
+  },
   "numericAnswer": 9.81,
   "tolerance": 0.02,
   "reward": 10
 }
 ```
 
-Tolerance is an inclusive absolute difference, not a percentage. It defaults to zero. A tiny floating-point allowance handles representation errors. Students enter numbers without units; `5`, `5.0`, `+5` and `5e0` match the same value. Negative numbers, decimal points and scientific notation are supported. Commas, fractions such as `1/2`, units, infinity, hex and empty strings are rejected without counting an attempt. State units and rounding in the prompt. Put nonzero tolerance on approximate calculations.
+Tolerance is an inclusive absolute difference, not a percentage. It defaults to zero. A tiny floating-point allowance handles representation errors. Students enter numbers without units; `5`, `5.0`, `+5` and `5e0` match the same value. Negative numbers, a decimal point **or comma**, and scientific notation are supported. `5,0` is also 5; `0,5` is 0.5. A single comma is always a decimal separator, never a thousands separator. Mixed separators, fractions such as `1/2`, units, infinity, hex and empty strings are rejected without counting an attempt. JSON `numericAnswer` and `tolerance` still use JSON numbers with decimal points. State units and rounding in the prompt. Put nonzero tolerance on approximate calculations.
+
+Every question requires a `cs.prompt`. Multiple choice also requires `cs.choices` in **exactly the same order and count** as the English choices; one shared `correctIndex` applies to both. Text requires `cs.acceptedAnswers`. Numerical translations share the same numeric answer and tolerance. Startup validation rejects missing translations or mismatched choice counts. Only prompts and choices in both languages reach the browser; all accepted answers stay on the server.
 
 Prompts are plain text, not HTML or Markdown. `\n` creates a line break, useful for pseudocode. Type-specific fields cannot be mixed. The runtime validator is in `server/questions.ts`.
 
-Editing checklist: ensure one precise answer, explicit assumptions/units, no prose grading, valid distractors, and an age-appropriate difficulty progression. Keep accepted variants intentional. Reordering/removing questions during an event can change which question a stored progress index points at; edit between events and reset.
+Editing checklist: ensure one precise answer, explicit assumptions/units, no prose grading, valid distractors, and an age-appropriate difficulty progression. Keep accepted variants intentional. Review both languages together for identical numbers, units, assumptions and answer-choice order. Pseudocode keywords stay the same in both languages, with Czech explanations where needed. Reordering/removing questions during an event can change which question a stored progress index points at; edit between events and reset.
 
 The revised bank uses explicit units, reference quantities and operation order to distinguish careful reasoning from rushed answers. Distractors target common misconceptions. Numerical tolerances still apply to the requested final quantity, not an intermediate calculation.
