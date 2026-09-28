@@ -1,6 +1,12 @@
 # Question bank format
 
-The five subject JSON files are the source of truth. All three age tracks live in the subject's file. Questions appear in array order, with no randomisation. All 300 supplied questions include English and Czech. Each track starts with accessible foundations (1–5), then applies one idea (6–10), adds unit or wording details (11–15), and ends with more demanding combined reasoning (16–20). Formulas are supplied where specialist recall would obscure the reasoning. The final questions are intended to separate teams, while the opening questions let everyone make progress.
+The five subject JSON files are the source of truth. All three age tracks live in the subject's file. Questions appear in array order, with no randomisation. All 300 supplied questions include English and Czech. The bank retains the original competition’s subject matter, but is ordered and edited against the same age-relative progression in all 15 tracks. IDs remain stable identifiers; their numeric suffix is **not** the displayed question number. Array position determines the displayed number.
+
+Difficulty should rise gradually from the very first question. There is no designated warm-up block, fixed breakpoint at question 5, or automatic difficulty band. Even the first question should require interpreting evidence, distinguishing quantities, applying a concept or performing a short calculation; recognising an obvious word alone should not be enough.
+
+As a track progresses, build on that starting level by gradually combining more conditions, operations, unit conversions and competing explanations. Keep late questions demanding without introducing a sudden dependence on obscure terminology. A conceptual question can be as demanding as a numerical one: compare the reasoning required, not prompt length or answer type. Retain useful formulas where they prevent specialist recall from dominating, but avoid hints that effectively state the answer.
+
+Use the same age-relative standard across subjects. Compare neighbouring questions and equivalent positions in other tracks when editing, including the opening items; there is no special status for question 5. English and Czech must preserve the same reasoning and constraints. Difficulty remains an editorial judgement until tested with representative teams; rehearsal timings, errors and skips can reveal local dips or spikes.
 
 ```json
 {

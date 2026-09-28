@@ -1,3 +1,4 @@
+import { TEAM_SKIP_LIMIT } from '../shared/domain.js'
 import { DatabaseSync } from 'node:sqlite'
 import { mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
@@ -8,7 +9,7 @@ export function openDatabase(path: string) {
     CREATE TABLE IF NOT EXISTS teams (
       id TEXT PRIMARY KEY, name TEXT NOT NULL, age TEXT NOT NULL, code TEXT NOT NULL UNIQUE COLLATE NOCASE,
       research REAL NOT NULL DEFAULT 0, earned REAL NOT NULL DEFAULT 0,
-      skips_used INTEGER NOT NULL DEFAULT 0 CHECK(skips_used BETWEEN 0 AND 3), color TEXT NOT NULL
+      skips_used INTEGER NOT NULL DEFAULT 0 CHECK(skips_used BETWEEN 0 AND ${TEAM_SKIP_LIMIT}), color TEXT NOT NULL
     );
     CREATE TABLE IF NOT EXISTS progress (
       team_id TEXT NOT NULL REFERENCES teams(id) ON DELETE CASCADE, subject TEXT NOT NULL,
@@ -34,7 +35,7 @@ export function openDatabase(path: string) {
         db.exec(`CREATE TABLE teams_updated (
           id TEXT PRIMARY KEY, name TEXT NOT NULL, age TEXT NOT NULL, code TEXT NOT NULL UNIQUE COLLATE NOCASE,
           research REAL NOT NULL DEFAULT 0, earned REAL NOT NULL DEFAULT 0,
-          skips_used INTEGER NOT NULL DEFAULT 0 CHECK(skips_used BETWEEN 0 AND 3), color TEXT NOT NULL
+          skips_used INTEGER NOT NULL DEFAULT 0 CHECK(skips_used BETWEEN 0 AND ${TEAM_SKIP_LIMIT}), color TEXT NOT NULL
         );
         INSERT INTO teams_updated SELECT * FROM teams;
         DROP TABLE teams;

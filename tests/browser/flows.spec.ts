@@ -72,7 +72,7 @@ test('real browser: admin, multiple sessions, subject progress, shared game and 
   await a.getByRole('link', { name: 'Questions', exact: true }).click(); await expect(a.getByRole('heading', { level: 1 })).toHaveText(bank.physics['11–13'][1].prompt)
   await a.setViewportSize({ width: 390, height: 844 }); await a.screenshot({ path: testInfo.outputPath('questions-mobile.png'), fullPage: true })
   expect(await a.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-  await a.getByRole('button', { name: 'Skip question', exact: true }).scrollIntoViewIfNeeded(); expect(await a.locator('.research').evaluate(el => el.getBoundingClientRect().top)).toBeGreaterThanOrEqual(0); await a.getByRole('button', { name: 'Skip question', exact: true }).click(); await a.getByRole('button', { name: 'Yes, skip' }).click(); await expect(a.getByText('2 team skips left')).toBeVisible()
+  await a.getByRole('button', { name: 'Skip question', exact: true }).scrollIntoViewIfNeeded(); expect(await a.locator('.research').evaluate(el => el.getBoundingClientRect().top)).toBeGreaterThanOrEqual(0); await a.getByRole('button', { name: 'Skip question', exact: true }).click(); await a.getByRole('button', { name: 'Yes, skip' }).click(); await expect(a.getByText('4 team skips left')).toBeVisible()
   await a.getByRole('link', { name: 'Game', exact: true }).click(); await a.screenshot({ path: testInfo.outputPath('game-mobile.png'), fullPage: true }); expect(await a.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await expect(page.getByRole('row', { name: /Photon Pigeons/ }).getByRole('cell').nth(2)).toHaveText('29')
   await expect(page.getByRole('row', { name: /Photon Pigeons/ }).getByRole('cell').nth(3)).toHaveText('3')

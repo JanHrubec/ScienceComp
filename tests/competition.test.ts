@@ -8,7 +8,7 @@ import { answerReward } from '../shared/scoring.js'
 import { createApp } from '../server/app.js'
 import { openDatabase } from '../server/db.js'
 import { loadQuestions, isCorrect, parseNumber, publicQuestion, type Question } from '../server/questions.js'
-import { subjects, ages, type TeamState, type AdminTeam, type CompetitionState } from '../shared/domain.js'
+import { TEAM_SKIP_LIMIT, subjects, ages, type TeamState, type AdminTeam, type CompetitionState } from '../shared/domain.js'
 const bank = loadQuestions('./questions')
 const answerFor = (q: Question) => q.type === 'multiple-choice' ? String(q.correctIndex) : q.type === 'text' ? q.acceptedAnswers[0] : String(q.numericAnswer)
 test('bank has 300 unique, valid questions and all answer types in every track', () => {
@@ -133,8 +133,16 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     await answer('physics', bank.physics['11–13'][3], a.cookie, 'friction')
     await answer('physics', bank.physics['11–13'][3], b.cookie, 'magnetism')
     assert.equal((await answer('physics', bank.physics['11–13'][3], a.cookie, '  GRAVITY  ')).body.awarded, 0)
-    for (let i = 0; i < 3; i++) assert.equal((await request('/team/skip', b.cookie, { subject: 'ess', questionId: bank.ess['11–13'][i].id })).status, 200)
-    assert.equal((await request('/team/skip', a.cookie, { subject: 'ess', questionId: bank.ess['11–13'][3].id })).status, 400)
+    for (let i = 0; i < TEAM_SKIP_LIMIT - 1; i++) assert.equal((await request('/team/skip', b.cookie, { subject: 'ess', questionId: bank.ess['11–13'][i].id })).status, 200)
+    // The last shared skip is contested by two devices in different subjects.
+    const lastSkip = await Promise.all([
+      request('/team/skip', a.cookie, { subject: 'ess', questionId: bank.ess['11–13'][4].id }),
+      request('/team/skip', b.cookie, { subject: 'chemistry', questionId: bank.chemistry['11–13'][1].id }),
+    ])
+    assert.deepEqual(lastSkip.map(r => r.status).sort(), [200, 400])
+    const afterSkips = (await request<TeamState>('/team/state', a.cookie)).body
+    assert.equal(afterSkips.team.skipsUsed, 5)
+    assert.equal((await request('/team/skip', b.cookie, { subject: 'ess', questionId: afterSkips.progress.ess.question!.id })).status, 400)
     current = (await request<TeamState>('/team/state', a.cookie)).body
     const beforeMove = current.team.research
     assert.equal((await request('/team/game/move', a.cookie, { x: 1, y: 1, fromX: 0, fromY: 0 })).status, 400)
@@ -242,28 +250,46 @@ test('legacy database migration preserves teams, progress, sessions and position
 
 test('revised numerical questions use the requested units and quantities', () => {
   const checks: [typeof subjects[number], typeof ages[number], number, number][] = [
-    ['physics', '11–13', 20, (200 - 50) / 200 * 100],
-    ['physics', '14–16', 15, 50 * 2 * 60 / 1000],
-    ['physics', '14–16', 20, (2 * 10 * 3) / 2 / .5],
-    ['physics', '17–18', 16, .5 * 4 ** 2 / (2 / 2)],
-    ['physics', '17–18', 18, 12 / 2],
-    ['physics', '17–18', 19, (2 * 3 + 1 * -3) / 3],
-    ['physics', '17–18', 20, 100 * 5 * .6 / (5 * 10)],
-    ['biology', '17–18', 14, (20 * 2 + 20) / (50 * 2)],
-    ['biology', '17–18', 18, 40 * 50 / 10 - 40],
-    ['biology', '17–18', 19, (330 - 30) / 3 - 1],
-    ['biology', '17–18', 20, .67],
-    ['chemistry', '14–16', 20, 20 * .8 * 44 / 100],
-    ['chemistry', '17–18', 16, (20 / 1000 * .1 * 2) / .2 * 1000],
-    ['chemistry', '17–18', 18, -(100 * 4 * 5) / 1000 / .1],
-    ['chemistry', '17–18', 20, 14 + Math.log10((.020 * .1 - .010 * .1) / .100)],
-    ['ess', '14–16', 18, (1000 - 800) * 1000 / 2000],
-    ['ess', '17–18', 17, 100 * 6 * .25 / 1000],
-    ['ess', '17–18', 19, 500 + .4 * 500 * (1 - 500 / 1000) - 120],
-    ['ess', '17–18', 20, 60 / (10 * .5 - 1)],
-    ['computer-science', '17–18', 20, 100 / (80 / 4 + 20)],
+    ['physics', '11–13', 3, 60 / (10 + 2)],
+    ['physics', '11–13', 13, (300 - 60) / 8],
+    ['computer-science', '11–13', 3, 2 ** 2],
+    ['computer-science', '11–13', 14, (16 + 8) / 8],
+    ['computer-science', '14–16', 19, 2],
+    ['biology', '14–16', 19, 24 / 2 + (24 / 2 + 1)],
+    ['chemistry', '11–13', 11, 2 * 2 + 2],
+    ['chemistry', '11–13', 13, 6 + 2],
+    ['chemistry', '17–18', 3, 1200 * .5],
+    ['physics', '11–13', 20, (2000 - 500) / 2000 * 100],
+    ['physics', '14–16', 6, 8 / (12 / 3)],
+    ['physics', '17–18', 7, (.004 * 3) + (.002 * 2)],
+    ['computer-science', '11–13', 20, 3 + 4 * 2],
+    ['computer-science', '14–16', 2, 13 * 2 - 2],
+    ['computer-science', '14–16', 17, 1 + 2 + 3],
+    ['computer-science', '17–18', 19, .8 * (1 - .1 ** 2) * 100],
+    ['biology', '11–13', 4, 10 * 10 - 10 * 4],
+    ['biology', '11–13', 20, (25 - 10 - 5) / 80 * 100],
+    ['biology', '14–16', 20, (250 * .8 - 10 - 200) / 200 * 100],
+    ['ess', '11–13', 17, (2 * (30 - 10) - 25 - 35) / 200 * 100],
+    ['ess', '14–16', 13, (500 * .8 * 1.2 - 500) / 500 * 100],
+    ['physics', '14–16', 12, 20 / (50 / 10000)],
+    ['physics', '17–18', 6, .5 * 200 * (.2 ** 2 - .1 ** 2)],
+    ['physics', '17–18', 19, .5 * 2 * 5 ** 2 + .5 * 3 * 1 ** 2 - .5 * 5 * 1.4 ** 2],
+    ['biology', '17–18', 3, 1000 * 2 * .3],
+    ['biology', '17–18', 5, (18 - 6) / (2 * 60)],
+    ['biology', '17–18', 8, 2 / 3],
+    ['biology', '17–18', 19, (960 - 60) / 3 - 1],
+    ['chemistry', '17–18', 13, (436 + 243 - 2 * 431) / 2],
+    ['chemistry', '17–18', 20, .04 * .1 / 2 * 98],
+    ['ess', '14–16', 19, (1000 - 150) * 1.12],
+    ['ess', '17–18', 19, (1000 - 600 - 350) / 1000 * 2 * 1000000],
+    ['ess', '17–18', 20, 700 + .5 * 700 * (1 - 700 / 1000) - 100],
   ]
-  for (const [subject, age, number, answer] of checks) assert(isCorrect(bank[subject][age][number - 1], String(answer)), `${subject} ${age} Q${number}`)
+  for (const [subject, age, number, answer] of checks) {
+    const id = `${subject}-${age.slice(0, 2)}-${String(number).padStart(2, '0')}`
+    const question = bank[subject][age].find(q => q.id === id)
+    assert(question, id)
+    assert(isCorrect(question, String(answer)), id)
+  }
 })
 
 test('standings freeze before the first post-cutoff action, persist across restart, and keep admin live', async () => {

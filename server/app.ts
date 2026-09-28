@@ -5,7 +5,7 @@ import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
 import { z } from 'zod'
 import type { DatabaseSync } from 'node:sqlite'
-import { ages, subjects, type Team, type TeamState, type Subject, type AgeCategory } from '../shared/domain.js'
+import { TEAM_SKIP_LIMIT, ages, subjects, type Team, type TeamState, type Subject, type AgeCategory } from '../shared/domain.js'
 import { ApiError, transaction } from './db.js'
 import { isCorrect, parseNumber, publicQuestion, type QuestionBank } from './questions.js'
 import { gameState, move, moveSchema, mine, mineSchema, initializeGrid, createTeamGame, resetTeamGame, resetGame } from './game/grid.js'
@@ -103,7 +103,7 @@ export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: s
       const team = teamRow(id), p = progress(id, input.subject), q = bank[input.subject][team.age][p.completed]
       if (!q || q.id !== input.questionId) throw new ApiError(409, 'A teammate has already advanced this subject. The latest question is now shown.')
       if (action === 'skip') {
-        if (team.skips_used >= 3) throw new ApiError(400, 'Your team has used all three skips.')
+        if (team.skips_used >= TEAM_SKIP_LIMIT) throw new ApiError(400, 'Your team has used all available skips.')
         db.prepare('UPDATE teams SET skips_used = skips_used + 1 WHERE id = ?').run(id)
         db.prepare('UPDATE progress SET completed = completed + 1, attempts = 0 WHERE team_id = ? AND subject = ?').run(id, input.subject)
         return { skipped: true, awarded: 0 }

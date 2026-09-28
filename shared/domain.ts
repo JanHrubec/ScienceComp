@@ -1,3 +1,4 @@
+export const TEAM_SKIP_LIMIT = 5
 export const subjects = ['physics', 'computer-science', 'biology', 'chemistry', 'ess'] as const
 export type Subject = typeof subjects[number]
 export const subjectNames: Record<Subject, string> = { physics: 'Physics', 'computer-science': 'Computer Science', biology: 'Biology', chemistry: 'Chemistry', ess: 'ESS' }

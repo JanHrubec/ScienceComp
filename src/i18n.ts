@@ -107,7 +107,7 @@ const czech: Record<string, string> = {
   "That code was not found. Check it and try again.": "Kód nebyl nalezen. Zkontrolujte ho a zkuste to znovu.",
   "Incorrect password.": "Nesprávné heslo.",
   "A teammate has already advanced this subject. The latest question is now shown.": "Spoluhráč už v tomto předmětu postoupil. Nyní vidíte aktuální otázku.",
-  "Your team has used all three skips.": "Váš tým už využil všechna tři přeskočení.",
+  "Your team has used all available skips.": "Váš tým už využil všechna dostupná přeskočení.",
   "Enter an answer first.": "Nejprve zadejte odpověď.",
   "Choose one answer.": "Vyberte jednu odpověď.",
   "Enter a number without units, using a decimal point or comma if needed.": "Zadejte číslo bez jednotek. Můžete použít desetinnou tečku nebo čárku.",

@@ -1,6 +1,6 @@
 # Science competition
 
-Vue 3 + TypeScript + Vite, with an Express server and SQLite. Includes 300 questions in English and Czech, team access codes, admin controls, independent subject progress, Research, three team-wide skips and a shared 12×12 diamond-mining prototype. No individual student accounts or external services.
+Vue 3 + TypeScript + Vite, with an Express server and SQLite. Includes 300 questions in English and Czech, team access codes, admin controls, independent subject progress, Research, five team-wide skips and a shared 12×12 diamond-mining prototype. No individual student accounts or external services.
 
 ## Run locally
 
@@ -47,7 +47,7 @@ For an internet deployment, terminate HTTPS at a reverse proxy and set secure co
 - Multiple choice: correct on the first attempt earns **+10 Research**; the second attempt earns **0**. **Every valid submission from the third onward costs 5 Research**, whether correct or incorrect. Incorrect answers on the first two attempts cost nothing. Only a correct answer advances.
 - Text and numerical: correct on the first attempt earns the configured reward (default 10), the second earns half, and later attempts earn zero. Incorrect answers earn zero and never advance or reveal the answer. Malformed numerical input is rejected without counting an attempt.
 - Attempts are shared by the whole team. Penalties can take Research below zero; teams must earn their way back to at least 1 Research to move. Multiple-choice scoring is fixed; per-question `reward` configures only open answers.
-- Three skips per team across all subjects. A skip advances without reward and cannot be reversed.
+- Five skips per team across all subjects (`TEAM_SKIP_LIMIT` in `shared/domain.ts`). A skip advances without reward and cannot be reversed.
 - The admin sees Research (spendable balance) and Diamonds (game score). Net question score, subject progress and skip usage expand within each row.
 - Grid moves cost 1 Research, are orthogonal and allow overlapping teams. Each square starts with **3 diamonds**, shown as a number. **Mine 1 diamond** takes one from your current square and adds one to your team, for free. Stock is shared and does not regenerate during a round.
 - Most diamonds wins when the timer expires. The third tab, **Standings**, lists every team by diamonds. It freezes with **5 minutes remaining** (40 minutes into the 45-minute round), and stays frozen across refreshes, new logins and server restarts. Mining continues; your own Game counter and the admin diamond totals stay live. The end screen only says “Competition over.”; organizers announce winners using diamond totals in admin. Diamonds are points, not spendable Research. Both stock and scores survive server restarts.
@@ -74,7 +74,9 @@ There is **one JSON file per subject**, each containing all age categories:
 
 Each has `subject` and `tracks`, with keys `11–13`, `14–16`, `17–18` (en dashes). Array order is competition order. There are 20 questions in each supplied track. More or fewer are supported. Read [questions/README.md](questions/README.md) for the schema and examples.
 
-All 300 questions have been rebalanced: easier openings in every age/subject track, followed by a substantial ramp toward multi-step final questions. Careful reading of units, directions and requested quantities still matters. English content and its Czech translation live together under each stable question ID.
+All 15 tracks rise gradually in age-relative difficulty from the first question. There is no warm-up block or fixed jump at question 5: opening items already require interpretation or a short calculation, and later items progressively combine more concepts, conditions and steps. Obvious recall-only questions have been strengthened while retaining the more demanding final questions. English and Czech are kept aligned. See the editing guidance in [questions/README.md](questions/README.md).
+
+Question IDs remain stable even when their position changes; progress follows array order. Start a fresh round after loading this reordered bank.
 
 Use the **English / Čeština** selector in the header to change language. It translates questions, choices and interface controls immediately, preserving the current draft and attempts. The preference is saved on that browser; teammates may choose different languages. Either language’s explicitly listed text answers are accepted, and numerical answers accept a decimal point or comma. UI translations live in `src/i18n.ts`; question translations are the `cs` fields in the subject files. Booklet PDFs use the existing links in either language.
 

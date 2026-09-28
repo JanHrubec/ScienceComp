@@ -4,69 +4,71 @@
     "11–13": [
       {
         "type": "multiple-choice",
-        "prompt": "Which instrument measures temperature?",
+        "prompt": "Equal masses of water at 20 °C and 40 °C are mixed. No heat escapes and the container absorbs no heat. What is the final temperature?",
         "choices": [
-          "Ruler",
-          "Thermometer",
-          "Balance",
-          "Stopwatch"
+          "20 °C",
+          "30 °C",
+          "40 °C",
+          "60 °C"
         ],
         "correctIndex": 1,
-        "cs": {
-          "prompt": "Který přístroj měří teplotu?",
-          "choices": [
-            "Pravítko",
-            "Teploměr",
-            "Váhy",
-            "Stopky"
-          ]
-        },
         "id": "physics-11-01",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Smícháme stejná množství vody o stejné hmotnosti při 20 °C a 40 °C. Teplo neuniká a nádoba žádné nepohltí. Jaká je konečná teplota?",
+          "choices": [
+            "20 °C",
+            "30 °C",
+            "40 °C",
+            "60 °C"
+          ]
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "Which is the SI unit of force?",
+        "prompt": "A scale labels a parcel “2 kg”, while a force meter reads “20 N”. Which statement correctly describes the readings?",
         "choices": [
-          "Newton",
-          "Metre",
-          "Second",
-          "Kilogram"
+          "Both measure mass in different units",
+          "2 kg is a force and 20 N is a mass",
+          "2 kg is mass and 20 N is a force",
+          "The readings disagree because 2 does not equal 20"
         ],
-        "correctIndex": 0,
-        "cs": {
-          "prompt": "Která jednotka SI se používá pro sílu?",
-          "choices": [
-            "Newton",
-            "Metr",
-            "Sekunda",
-            "Kilogram"
-          ]
-        },
+        "correctIndex": 2,
         "id": "physics-11-02",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Váha označí balík údajem „2 kg“, zatímco siloměr ukazuje „20 N“. Které tvrzení správně popisuje údaje?",
+          "choices": [
+            "Oba měří hmotnost v různých jednotkách",
+            "2 kg je síla a 20 N je hmotnost",
+            "2 kg je hmotnost a 20 N je síla",
+            "Údaje si odporují, protože 2 není 20"
+          ]
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A runner covers 60 m in 12 s. What is the average speed in m/s?",
+        "prompt": "A runner covers 60 m in 10 s, then waits for 2 s. What is the average speed over the whole 12 s, in m/s?",
         "numericAnswer": 5,
         "tolerance": 0,
-        "cs": {
-          "prompt": "Běžec uběhne 60 m za 12 s. Jaká je jeho průměrná rychlost v m/s?"
-        },
         "id": "physics-11-03",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Běžec uběhne 60 m za 10 s a pak 2 s stojí. Jaká je průměrná rychlost za celých 12 s v m/s?"
+        }
       },
       {
         "type": "text",
-        "prompt": "What force pulls a falling apple toward Earth?",
+        "prompt": "A ball is thrown vertically upward. After it leaves the hand, it slows down even if air resistance is ignored. Name the force causing this slowing.",
         "acceptedAnswers": [
           "gravity",
           "gravitational force",
           "gravitation"
         ],
+        "id": "physics-11-04",
+        "reward": 10,
         "cs": {
-          "prompt": "Jaká síla přitahuje padající jablko k Zemi?",
+          "prompt": "Míč vyhodíme svisle vzhůru. Po opuštění ruky zpomaluje, i když zanedbáme odpor vzduchu. Pojmenujte sílu způsobující toto zpomalování.",
           "acceptedAnswers": [
             "gravitace",
             "gravitační síla",
@@ -74,822 +76,828 @@
             "tíhová síla",
             "tihova sila"
           ]
-        },
-        "id": "physics-11-04",
-        "reward": 10
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "A lamp is connected to a battery by a complete circuit. What happens if a wire is disconnected?",
+        "prompt": "Two identical bulbs are in series with a battery. One bulb is removed, leaving a gap. What happens to the other?",
         "choices": [
-          "Its colour must change",
           "It goes out",
+          "It flashes continuously",
           "It becomes brighter",
           "It stays equally bright"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
+        "id": "physics-11-10",
+        "reward": 10,
         "cs": {
-          "prompt": "Žárovka je připojena k baterii v uzavřeném obvodu. Co se stane, když jeden vodič odpojíme?",
+          "prompt": "Dvě stejné žárovky jsou zapojeny sériově k baterii. Jednu vyjmeme a vznikne mezera. Co se stane s druhou?",
           "choices": [
-            "Musí změnit barvu",
             "Zhasne",
+            "Bude nepřetržitě blikat",
             "Bude svítit jasněji",
             "Bude svítit stejně"
           ]
-        },
-        "id": "physics-11-05",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A cyclist travels at 3 m/s for 10 s. How far does the cyclist travel, in metres?",
-        "numericAnswer": 30,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Cyklista jede rychlostí 3 m/s po dobu 10 s. Jakou vzdálenost ujede v metrech?"
-        },
-        "id": "physics-11-06",
-        "reward": 10
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "Which object usually conducts electricity best?",
+        "prompt": "A 5 N book rests on a table. A hand presses down on it with another 3 N, but it stays still. What upward force does the table exert?",
         "choices": [
-          "Plastic ruler",
-          "Dry wooden stick",
-          "Rubber band",
-          "Copper wire"
+          "2 N",
+          "3 N",
+          "5 N",
+          "8 N"
         ],
         "correctIndex": 3,
+        "id": "physics-11-05",
+        "reward": 10,
         "cs": {
-          "prompt": "Který předmět obvykle nejlépe vede elektrický proud?",
+          "prompt": "Na stole leží kniha o tíze 5 N. Ruka na ni tlačí dalšími 3 N dolů, ale kniha zůstává v klidu. Jakou silou působí stůl vzhůru?",
           "choices": [
-            "Plastové pravítko",
-            "Suchá dřevěná tyčka",
-            "Gumička",
-            "Měděný drát"
+            "2 N",
+            "3 N",
+            "5 N",
+            "8 N"
           ]
-        },
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A copper wire and a plastic strip are the same size. Each is used in turn to close a battery-and-lamp circuit. Which result is expected?",
+        "choices": [
+          "The lamp lights with both",
+          "The lamp lights only with copper",
+          "The lamp lights only with plastic",
+          "Neither allows current"
+        ],
+        "correctIndex": 1,
         "id": "physics-11-07",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Měděný drát a plastový proužek mají stejnou velikost. Každým postupně uzavřeme obvod s baterií a žárovkou. Jaký výsledek očekáváme?",
+          "choices": [
+            "Žárovka svítí s oběma",
+            "Žárovka svítí jen s mědí",
+            "Žárovka svítí jen s plastem",
+            "Ani jeden nevede proud"
+          ]
+        }
       },
       {
         "type": "text",
-        "prompt": "A wet towel dries without boiling. What is the name of the change from liquid water to water vapour?",
+        "prompt": "A wet towel loses water in a warm room, although the water never boils. Name the change of state occurring at its surface.",
         "acceptedAnswers": [
           "evaporation"
         ],
+        "id": "physics-11-08",
+        "reward": 10,
         "cs": {
-          "prompt": "Mokrý ručník schne, aniž by voda vřela. Jak se nazývá přeměna kapalné vody na vodní páru?",
+          "prompt": "Mokrý ručník ztrácí vodu v teplé místnosti, přestože voda nevře. Pojmenujte změnu skupenství probíhající na jeho povrchu.",
           "acceptedAnswers": [
             "vypařování",
             "vyparovani",
             "odpařování",
             "odparovani"
           ]
-        },
-        "id": "physics-11-08",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A block has mass 60 g and volume 20 cm³. Density = mass / volume. Find its density in g/cm³.",
-        "numericAnswer": 3,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Kvádr má hmotnost 60 g a objem 20 cm³. Hustota = hmotnost / objem. Určete hustotu v g/cm³."
-        },
-        "id": "physics-11-09",
-        "reward": 10
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "A book lies still on a table. Which force from the table acts on the book?",
+        "prompt": "A lamp and a ringing bell are inside a sealed chamber. Air is removed. The lamp stays visible, but the bell becomes much harder to hear. Which explanation fits both observations?",
         "choices": [
-          "An upward support force",
-          "A downward support force",
-          "No force",
-          "Only a horizontal force"
-        ],
-        "correctIndex": 0,
-        "cs": {
-          "prompt": "Kniha leží v klidu na stole. Jakou silou působí stůl na knihu?",
-          "choices": [
-            "Podpěrnou silou vzhůru",
-            "Podpěrnou silou dolů",
-            "Žádnou silou",
-            "Pouze vodorovnou silou"
-          ]
-        },
-        "id": "physics-11-10",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A force of 5 N moves a box 2 m in the force’s direction. Work = force × distance. Find the work in joules.",
-        "numericAnswer": 10,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Síla 5 N posune krabici o 2 m ve směru síly. Práce = síla × dráha. Určete práci v joulech."
-        },
-        "id": "physics-11-11",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "An ice cube is placed in warmer water. Which way does thermal energy flow overall?",
-        "choices": [
-          "There is no transfer",
-          "Only from ice to air",
-          "From water to ice",
-          "From ice to water"
-        ],
-        "correctIndex": 2,
-        "cs": {
-          "prompt": "Kostku ledu vložíme do teplejší vody. Jakým směrem se celkově přenáší teplo?",
-          "choices": [
-            "Teplo se nepřenáší",
-            "Pouze z ledu do vzduchu",
-            "Z vody do ledu",
-            "Z ledu do vody"
-          ]
-        },
-        "id": "physics-11-12",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A device transfers 120 J in 4 s. Power = energy / time. Find its power in watts.",
-        "numericAnswer": 30,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Zařízení přenese 120 J za 4 s. Výkon = energie / čas. Určete výkon ve wattech."
-        },
-        "id": "physics-11-13",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A ball is thrown upward. After it leaves the hand, which way does gravity act, even while the ball rises?",
-        "choices": [
-          "Downward",
-          "Upward",
-          "In the direction of motion",
-          "It does not act until the ball falls"
-        ],
-        "correctIndex": 0,
-        "cs": {
-          "prompt": "Míč je vyhozen vzhůru. Jakým směrem působí gravitace po opuštění ruky, i když míč ještě stoupá?",
-          "choices": [
-            "Dolů",
-            "Vzhůru",
-            "Ve směru pohybu",
-            "Působí až při pádu míče"
-          ]
-        },
-        "id": "physics-11-14",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A mass of 500 g has weight W = mg. Use g = 10 N/kg. Find its weight in newtons.",
-        "numericAnswer": 5,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Těleso má hmotnost 500 g. Tíha W = mg. Použijte g = 10 N/kg. Určete tíhu v newtonech."
-        },
-        "id": "physics-11-15",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A cyclist travels 30 m in 5 s, then waits for 5 s. Find the average speed over all 10 s, in m/s.",
-        "numericAnswer": 3,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Cyklista ujede 30 m za 5 s a potom 5 s stojí. Určete průměrnou rychlost za celých 10 s v m/s."
-        },
-        "id": "physics-11-16",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A toy moves left. A force of 7 N acts right and 3 N acts left. Which way is the resultant force?",
-        "choices": [
-          "The resultant is zero",
-          "Right",
-          "Left",
-          "Up"
+          "Light and sound both need air",
+          "Sound needs a material medium, but light does not",
+          "Light needs air, but sound does not",
+          "Removing air stops all vibrations in the bell"
         ],
         "correctIndex": 1,
+        "id": "physics-11-12",
+        "reward": 10,
         "cs": {
-          "prompt": "Hračka se pohybuje doleva. Síla 7 N působí doprava a síla 3 N doleva. Jaký směr má výsledná síla?",
+          "prompt": "Lampa a zvonící zvonek jsou v uzavřené komoře. Odčerpáme vzduch. Lampa zůstává viditelná, ale zvonek je slyšet mnohem hůře. Co vysvětluje obě pozorování?",
           "choices": [
-            "Výslednice je nulová",
-            "Doprava",
+            "Světlo i zvuk potřebují vzduch",
+            "Zvuk potřebuje látkové prostředí, ale světlo ne",
+            "Světlo potřebuje vzduch, ale zvuk ne",
+            "Odčerpání vzduchu zastaví všechny vibrace zvonku"
+          ]
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Ice at 0 °C melts in water at 20 °C. While ice remains, which statement about the net heat transfer and the ice temperature is correct?",
+        "choices": [
+          "Heat flows from ice to water; ice warms",
+          "Heat flows from water to ice; ice stays at 0 °C while melting",
+          "No heat flows because ice stays at 0 °C",
+          "Heat flows from water to ice; ice immediately reaches 20 °C"
+        ],
+        "correctIndex": 1,
+        "id": "physics-11-14",
+        "reward": 10,
+        "cs": {
+          "prompt": "Led při 0 °C taje ve vodě při 20 °C. Dokud led zůstává, které tvrzení o celkovém přenosu tepla a teplotě ledu je správné?",
+          "choices": [
+            "Teplo přechází z ledu do vody; led se ohřívá",
+            "Teplo přechází z vody do ledu; led při tání zůstává na 0 °C",
+            "Teplo se nepřenáší, protože led zůstává na 0 °C",
+            "Teplo přechází z vody do ledu; led ihned dosáhne 20 °C"
+          ]
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A toy is moving left. Two forces act horizontally: 9 N right and 4 N left. In which direction is the resultant force?",
+        "choices": [
+          "There is no resultant force",
+          "Left",
+          "Right",
+          "Up"
+        ],
+        "correctIndex": 2,
+        "id": "physics-11-17",
+        "reward": 10,
+        "cs": {
+          "prompt": "Hračka se pohybuje doleva. Vodorovně působí dvě síly: 9 N doprava a 4 N doleva. Jaký směr má výsledná síla?",
+          "choices": [
+            "Výsledná síla je nulová",
             "Doleva",
+            "Doprava",
             "Vzhůru"
           ]
-        },
-        "id": "physics-11-17",
-        "reward": 10
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A lever balances when force × distance from the pivot is equal on both sides. A 6 N force acts 20 cm from the pivot. What force must act 30 cm away on the other side, in newtons?",
-        "numericAnswer": 4,
+        "prompt": "A machine receives 300 J in 8 s and wastes 60 J. Useful power = useful energy / time. What is its useful power in watts?",
+        "numericAnswer": 30,
         "tolerance": 0,
+        "id": "physics-11-13",
+        "reward": 10,
         "cs": {
-          "prompt": "Páka je v rovnováze, když je součin síly a vzdálenosti od osy na obou stranách stejný. Síla 6 N působí 20 cm od osy. Jaká síla musí působit na druhé straně ve vzdálenosti 30 cm? Odpovězte v newtonech."
-        },
-        "id": "physics-11-18",
-        "reward": 10
+          "prompt": "Stroj přijme 300 J za 8 s a 60 J promarní. Užitečný výkon = užitečná energie / čas. Jaký je užitečný výkon ve wattech?"
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A wave has frequency 4 Hz and wavelength 50 cm. Speed = frequency × wavelength in metres. Find its speed in m/s.",
+        "prompt": "A cyclist moves at 4 m/s for 15 s, then waits for 5 s. How far does the cyclist travel in total, in metres? While moving, distance = speed × time.",
+        "numericAnswer": 60,
+        "tolerance": 0,
+        "id": "physics-11-06",
+        "reward": 10,
+        "cs": {
+          "prompt": "Cyklista jede rychlostí 4 m/s po dobu 15 s a pak 5 s stojí. Jakou celkovou vzdálenost ujede v metrech? Při pohybu platí dráha = rychlost × čas."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 6 N force moves a box 300 cm in the force’s direction. Work = force × distance in metres. How much work does this force do, in joules?",
+        "numericAnswer": 18,
+        "tolerance": 0,
+        "id": "physics-11-11",
+        "reward": 10,
+        "cs": {
+          "prompt": "Síla 6 N posune krabici o 300 cm ve směru síly. Práce = síla × dráha v metrech. Jakou práci síla vykoná v joulech?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "An object has mass 2000 g. Use g = 10 N/kg and W = mg. What is its weight in newtons?",
+        "numericAnswer": 20,
+        "tolerance": 0,
+        "id": "physics-11-15",
+        "reward": 10,
+        "cs": {
+          "prompt": "Těleso má hmotnost 2000 g. Použijte g = 10 N/kg a W = mg. Jaká je jeho tíha v newtonech?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "An object speeds up from 2 m/s to 10 m/s in 4 s. What is its average acceleration in m/s²? Acceleration = change in velocity / time.",
         "numericAnswer": 2,
         "tolerance": 0,
+        "id": "physics-11-16",
+        "reward": 10,
         "cs": {
-          "prompt": "Vlna má frekvenci 4 Hz a vlnovou délku 50 cm. Rychlost = frekvence × vlnová délka v metrech. Určete rychlost v m/s."
-        },
-        "id": "physics-11-19",
-        "reward": 10
+          "prompt": "Těleso zrychlí z 2 m/s na 10 m/s za 4 s. Jaké je jeho průměrné zrychlení v m/s²? Zrychlení = změna rychlosti / čas."
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A machine takes in 200 J and wastes 50 J. Efficiency = useful energy / input energy × 100%. What is its efficiency as a percentage?",
+        "prompt": "A block has mass 120 g. Submerging it raises a measuring cylinder reading from 30 to 70 cm³. What is its density in g/cm³? Density = mass / volume; the object’s volume is the rise in the cylinder reading.",
+        "numericAnswer": 3,
+        "tolerance": 0,
+        "id": "physics-11-09",
+        "reward": 10,
+        "cs": {
+          "prompt": "Kvádr má hmotnost 120 g. Po ponoření stoupne údaj v odměrném válci z 30 na 70 cm³. Jaká je hustota kvádru v g/cm³? Hustota = hmotnost / objem; objem tělesa odpovídá přírůstku údaje ve válci."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A lever is balanced. A 6 N force acts 20 cm from the pivot on one side. What force, in newtons, must act 30 cm from the pivot on the other side?",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "physics-11-18",
+        "reward": 10,
+        "cs": {
+          "prompt": "Páka je v rovnováze. Na jedné straně působí síla 6 N ve vzdálenosti 20 cm od osy. Jaká síla v newtonech musí působit 30 cm od osy na druhé straně?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A wave has frequency 5 Hz and wavelength 200 cm. Speed = frequency × wavelength in metres. What is its speed in m/s?",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "physics-11-19",
+        "reward": 10,
+        "cs": {
+          "prompt": "Vlna má frekvenci 5 Hz a vlnovou délku 200 cm. Rychlost = frekvence × vlnová délka v metrech. Jaká je její rychlost v m/s?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A device receives 2 kJ of energy and wastes 500 J. Efficiency = useful energy / input energy × 100%. Find its efficiency as a percentage.",
         "numericAnswer": 75,
         "tolerance": 0,
-        "cs": {
-          "prompt": "Stroj přijme 200 J a z toho 50 J nevyužije užitečně. Účinnost = užitečná energie / přijatá energie × 100 %. Jaká je účinnost v procentech?"
-        },
         "id": "physics-11-20",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Zařízení přijme 2 kJ energie a promarní 500 J. Účinnost = užitečná energie / vstupní energie × 100 %. Určete účinnost v procentech."
+        }
       }
     ],
     "14–16": [
       {
-        "type": "multiple-choice",
-        "prompt": "A car is standing still on a level road. What is its speed?",
-        "choices": [
-          "It cannot be determined",
-          "0 m/s",
-          "1 m/s",
-          "Its mass in m/s"
-        ],
-        "correctIndex": 1,
-        "cs": {
-          "prompt": "Auto stojí na vodorovné silnici. Jaká je jeho rychlost?",
-          "choices": [
-            "Nelze ji určit",
-            "0 m/s",
-            "1 m/s",
-            "Jeho hmotnost v m/s"
-          ]
-        },
-        "id": "physics-14-01",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A swimmer covers 50 m in 25 s. Find the average speed in m/s.",
-        "numericAnswer": 2,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Plavec uplave 50 m za 25 s. Určete průměrnou rychlost v m/s."
-        },
-        "id": "physics-14-02",
-        "reward": 10
-      },
-      {
         "type": "text",
-        "prompt": "What is the SI unit of electrical resistance? Give its name.",
+        "prompt": "For a resistor, a student divides voltage in volts by current in amperes. Name the SI unit of the resulting quantity, not the quantity itself.",
         "acceptedAnswers": [
           "ohm",
           "ohms"
         ],
-        "cs": {
-          "prompt": "Jak se nazývá jednotka elektrického odporu v soustavě SI?",
-          "acceptedAnswers": [
-            "ohm"
-          ]
-        },
         "id": "physics-14-03",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A 2 kg trolley accelerates at 3 m/s². Use F = ma to find the resultant force in newtons.",
-        "numericAnswer": 6,
-        "tolerance": 0,
+        "reward": 10,
         "cs": {
-          "prompt": "Vozík o hmotnosti 2 kg zrychluje se zrychlením 3 m/s². Pomocí F = ma určete výslednou sílu v newtonech."
-        },
-        "id": "physics-14-04",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A student walks 5 m east and returns to the starting point. What is the final displacement?",
-        "choices": [
-          "10 m west",
-          "0 m",
-          "5 m east",
-          "10 m east"
-        ],
-        "correctIndex": 1,
-        "cs": {
-          "prompt": "Student jde 5 m na východ a vrátí se do výchozího bodu. Jaké je jeho výsledné posunutí?",
-          "choices": [
-            "10 m na západ",
-            "0 m",
-            "5 m na východ",
-            "10 m na východ"
+          "prompt": "U rezistoru student vydělí napětí ve voltech proudem v ampérech. Pojmenujte jednotku SI výsledné veličiny, nikoli veličinu samotnou.",
+          "acceptedAnswers": [
+            "ohm",
+            "ohmy"
           ]
-        },
-        "id": "physics-14-05",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A 6 V battery is connected across a 3 Ω resistor. Use V = IR. Find the current in amperes.",
-        "numericAnswer": 2,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Na rezistoru 3 Ω je napětí 6 V. Použijte V = IR. Určete proud v ampérech."
-        },
-        "id": "physics-14-06",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A 2 kg mass is lifted by 3 m. Use E = mgh and g = 10 m/s². Find its gain in potential energy in joules.",
-        "numericAnswer": 60,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Těleso o hmotnosti 2 kg zvedneme o 3 m. Použijte E = mgh a g = 10 m/s². Určete přírůstek polohové energie v joulech."
-        },
-        "id": "physics-14-07",
-        "reward": 10
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "Two bulbs are connected in parallel to one battery. Which quantity is the same across both bulbs?",
+        "prompt": "A student walks 3 m east and 3 m west, returning to the start after 6 s. Which pair gives average speed and average velocity for the complete trip?",
         "choices": [
-          "Resistance in every case",
-          "Power in every case",
-          "Voltage",
-          "Current in every case"
+          "0 m/s and 0 m/s",
+          "1 m/s and 1 m/s east",
+          "1 m/s and 0 m/s",
+          "6 m/s and 0 m/s"
         ],
         "correctIndex": 2,
+        "id": "physics-14-05",
+        "reward": 10,
         "cs": {
-          "prompt": "Dvě žárovky jsou zapojeny paralelně k jedné baterii. Která veličina je na obou žárovkách stejná?",
+          "prompt": "Student ujde 3 m na východ a 3 m na západ a za 6 s se vrátí na začátek. Která dvojice udává průměrnou velikost rychlosti (dráha/čas) a průměrnou vektorovou rychlost (posunutí/čas) za celou cestu?",
           "choices": [
-            "Odpor za všech okolností",
-            "Výkon za všech okolností",
-            "Napětí",
-            "Proud za všech okolností"
+            "0 m/s a 0 m/s",
+            "1 m/s a 1 m/s na východ",
+            "1 m/s a 0 m/s",
+            "6 m/s a 0 m/s"
           ]
-        },
-        "id": "physics-14-08",
-        "reward": 10
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A 2 kg ball moves at 4 m/s. Use E = ½mv². Find its kinetic energy in joules.",
-        "numericAnswer": 16,
+        "prompt": "A resistor is connected across 12 V and carries 3 A. It is then connected across 8 V with its resistance unchanged. Use V = IR. Find the new current in amperes.",
+        "numericAnswer": 2,
         "tolerance": 0,
+        "id": "physics-14-06",
+        "reward": 10,
         "cs": {
-          "prompt": "Míč o hmotnosti 2 kg se pohybuje rychlostí 4 m/s. Použijte E = ½mv². Určete kinetickou energii v joulech."
-        },
-        "id": "physics-14-09",
-        "reward": 10
+          "prompt": "Rezistor připojený na 12 V vede proud 3 A. Pak jej připojíme na 8 V a odpor se nezmění. Použijte V = IR. Určete nový proud v ampérech."
+        }
       },
       {
         "type": "text",
-        "prompt": "A sound reflects from a wall and is heard again. What is this repeated sound called?",
+        "prompt": "Water waves enter a gap without changing speed. Beyond the gap, the wavefronts curve and spread into the region behind the barrier. Name the effect responsible for the spreading.",
         "acceptedAnswers": [
-          "echo",
-          "an echo"
+          "diffraction"
         ],
-        "cs": {
-          "prompt": "Zvuk se odrazí od stěny a znovu jej slyšíme. Jak se tento odražený zvuk nazývá?",
-          "acceptedAnswers": [
-            "ozvěna",
-            "ozvena"
-          ]
-        },
         "id": "physics-14-10",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "Sound travels at 300 m/s with frequency 150 Hz. Use wavelength = speed / frequency. Find the wavelength in metres.",
-        "numericAnswer": 2,
-        "tolerance": 0,
+        "reward": 10,
         "cs": {
-          "prompt": "Zvuk se šíří rychlostí 300 m/s a má frekvenci 150 Hz. Vlnová délka = rychlost / frekvence. Určete vlnovou délku v metrech."
-        },
-        "id": "physics-14-11",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A force of 20 N acts normally on 0.5 m². Pressure = force / area. Find the pressure in pascals.",
-        "numericAnswer": 40,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Síla 20 N působí kolmo na plochu 0,5 m². Tlak = síla / plocha. Určete tlak v pascalech."
-        },
-        "id": "physics-14-12",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A metal spoon and a wooden spoon have the same temperature, below that of your hand. Why does the metal feel colder?",
-        "choices": [
-          "It has a lower mass in every case",
-          "It conducts heat away from your hand faster",
-          "It must actually be colder",
-          "It contains no thermal energy"
-        ],
-        "correctIndex": 1,
-        "cs": {
-          "prompt": "Kovová a dřevěná lžíce mají stejnou teplotu, nižší než vaše ruka. Proč kov působí chladněji?",
-          "choices": [
-            "Má vždy menší hmotnost",
-            "Rychleji odvádí teplo z ruky",
-            "Ve skutečnosti musí být chladnější",
-            "Neobsahuje žádnou tepelnou energii"
+          "prompt": "Vodní vlny vstoupí do štěrbiny, aniž se změní jejich rychlost. Za štěrbinou se vlnoplochy zakřiví a rozšíří do oblasti za překážkou. Pojmenujte jev způsobující toto rozšíření.",
+          "acceptedAnswers": [
+            "difrakce",
+            "ohyb",
+            "ohyb vlnění",
+            "ohyb vlneni"
           ]
-        },
-        "id": "physics-14-13",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A 500 g trolley moves at 4 m/s. Momentum = mass in kg × velocity. Find its momentum magnitude in kg m/s.",
-        "numericAnswer": 2,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Vozík o hmotnosti 500 g jede rychlostí 4 m/s. Hybnost = hmotnost v kg × rychlost. Určete velikost hybnosti v kg m/s."
-        },
-        "id": "physics-14-14",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A 50 W lamp runs for 2 minutes. Energy = power × time in seconds. Find the transferred energy in kilojoules.",
-        "numericAnswer": 6,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Žárovka o příkonu 50 W svítí 2 minuty. Energie = příkon × čas v sekundách. Určete přenesenou energii v kilojoulech."
-        },
-        "id": "physics-14-15",
-        "reward": 10
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "A sample halves every 10 minutes. What fraction of its original undecayed nuclei has decayed after 20 minutes?",
+        "prompt": "A bus moves east at constant speed on a straight road. Its engine provides 600 N of forward force. What is the resultant horizontal force?",
         "choices": [
-          "One half",
-          "All",
-          "Three quarters",
-          "One quarter"
+          "600 N east",
+          "600 N west",
+          "0 N",
+          "1200 N east"
         ],
         "correctIndex": 2,
+        "id": "physics-14-01",
+        "reward": 10,
         "cs": {
-          "prompt": "Počet nerozpadlých jader ve vzorku se každých 10 minut sníží na polovinu. Jaká část původních jader se rozpadla za 20 minut?",
+          "prompt": "Autobus jede po přímé silnici na východ stálou rychlostí. Motor působí dopřednou silou 600 N. Jaká je výsledná vodorovná síla?",
           "choices": [
-            "Jedna polovina",
-            "Všechna",
-            "Tři čtvrtiny",
-            "Jedna čtvrtina"
+            "600 N na východ",
+            "600 N na západ",
+            "0 N",
+            "1200 N na východ"
           ]
-        },
-        "id": "physics-14-16",
-        "reward": 10
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A 500 g sample warms from 20 °C to 24 °C. Use Q = mcΔT, with c = 800 J/(kg °C). Find Q in joules.",
+        "prompt": "A 3 kg trolley accelerates at 2 m/s². Friction is 4 N opposite its motion. What forward pulling force is required, in newtons? Resultant force = ma and equals pulling force minus friction.",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "physics-14-04",
+        "reward": 10,
+        "cs": {
+          "prompt": "Vozík o hmotnosti 3 kg zrychluje o 2 m/s². Proti pohybu působí tření 4 N. Jaká dopředná tažná síla je potřeba v newtonech? Výsledná síla = ma a odpovídá tažné síle minus tření."
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A 3 Ω resistor and a 6 Ω resistor are connected in parallel to the same ideal battery. Which statement is correct? Parallel branches have equal voltage; I = V/R.",
+        "choices": [
+          "The currents are equal",
+          "The 6 Ω resistor carries twice the current",
+          "The 3 Ω resistor carries twice the current",
+          "Their potential differences are in a 1:2 ratio"
+        ],
+        "correctIndex": 2,
+        "id": "physics-14-08",
+        "reward": 10,
+        "cs": {
+          "prompt": "Rezistory 3 Ω a 6 Ω jsou zapojeny paralelně ke stejné ideální baterii. Které tvrzení je správné? Paralelní větve mají stejné napětí; I = V/R.",
+          "choices": [
+            "Proudy jsou stejné",
+            "Rezistorem 6 Ω prochází dvojnásobný proud",
+            "Rezistorem 3 Ω prochází dvojnásobný proud",
+            "Napětí jsou v poměru 1:2"
+          ]
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A metal spoon and a wooden spoon are in the same room overnight. The metal feels colder because it…",
+        "choices": [
+          "Reflects all heat",
+          "Has a lower temperature",
+          "Conducts thermal energy away from your hand faster",
+          "Contains no thermal energy"
+        ],
+        "correctIndex": 2,
+        "id": "physics-14-13",
+        "reward": 10,
+        "cs": {
+          "prompt": "Kovová a dřevěná lžíce jsou přes noc ve stejné místnosti. Kovová působí chladněji, protože…",
+          "choices": [
+            "Odráží veškeré teplo",
+            "Má nižší teplotu",
+            "Rychleji odvádí teplo z ruky",
+            "Neobsahuje žádnou tepelnou energii"
+          ]
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A car covers 150 m in 10 s, then stops for 5 s. What is its average speed over the whole journey, in m/s? Average speed = total distance / total time.",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "physics-14-02",
+        "reward": 10,
+        "cs": {
+          "prompt": "Auto ujede 150 m za 10 s a pak na 5 s zastaví. Jaká je průměrná rychlost za celou cestu v m/s? Průměrná rychlost = celková dráha / celkový čas."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 500 g mass is lifted from 1 m to 3 m above the floor. Use g = 10 m/s². What is its gain in gravitational potential energy, in joules? ΔE = mgΔh; use mass in kg.",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "physics-14-07",
+        "reward": 10,
+        "cs": {
+          "prompt": "Těleso o hmotnosti 500 g zvedneme z výšky 1 m do 3 m nad podlahou. Použijte g = 10 m/s². O kolik joulů vzroste jeho gravitační potenciální energie? ΔE = mgΔh; hmotnost zadejte v kg."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 2 kg ball speeds up from 3 m/s to 5 m/s. Using E = ½mv², find the increase in kinetic energy, in joules.",
+        "numericAnswer": 16,
+        "tolerance": 0,
+        "id": "physics-14-09",
+        "reward": 10,
+        "cs": {
+          "prompt": "Míč o hmotnosti 2 kg zrychlí z 3 m/s na 5 m/s. Pomocí E = ½mv² určete přírůstek kinetické energie v joulech."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "Sound travels at 340 m/s with frequency 170 Hz. What is its wavelength in centimetres? Wavelength = speed / frequency.",
+        "numericAnswer": 200,
+        "tolerance": 0,
+        "id": "physics-14-11",
+        "reward": 10,
+        "cs": {
+          "prompt": "Zvuk se šíří rychlostí 340 m/s a má frekvenci 170 Hz. Jaká je jeho vlnová délka v centimetrech? Vlnová délka = rychlost / frekvence."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 20 N force acts normally over 50 cm². There are 10000 cm² in 1 m². What is the pressure in pascals? Pressure = force / area in m².",
+        "numericAnswer": 4000,
+        "tolerance": 0,
+        "id": "physics-14-12",
+        "reward": 10,
+        "cs": {
+          "prompt": "Síla 20 N působí kolmo na plochu 50 cm². V 1 m² je 10000 cm². Jaký je tlak v pascalech? Tlak = síla / plocha v m²."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 2 kg trolley travels at 4 m/s and then at 1 m/s in the same direction. What is the magnitude of its momentum decrease, in kg m/s?",
+        "numericAnswer": 6,
+        "tolerance": 0,
+        "id": "physics-14-14",
+        "reward": 10,
+        "cs": {
+          "prompt": "Vozík o hmotnosti 2 kg jede nejprve rychlostí 4 m/s a pak 1 m/s stejným směrem. O kolik se zmenší velikost jeho hybnosti v kg m/s?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 60 W lamp is on for 2 minutes. How much energy does it transfer, in kilojoules?",
+        "numericAnswer": 7.2,
+        "tolerance": 0,
+        "id": "physics-14-15",
+        "reward": 10,
+        "cs": {
+          "prompt": "Žárovka o příkonu 60 W svítí 2 minuty. Kolik energie přenese v kilojoulech?"
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A radioactive sample’s half-life is 10 minutes. What fraction of the original unstable nuclei has decayed after 20 minutes?",
+        "choices": [
+          "One quarter",
+          "One half",
+          "Three quarters",
+          "All"
+        ],
+        "correctIndex": 2,
+        "id": "physics-14-16",
+        "reward": 10,
+        "cs": {
+          "prompt": "Radioaktivní vzorek má poločas přeměny 10 minut. Jaká část původních nestabilních jader se přeměnila po 20 minutách?",
+          "choices": [
+            "Jedna čtvrtina",
+            "Jedna polovina",
+            "Tři čtvrtiny",
+            "Všechna"
+          ]
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 500 g sample warms from 18 °C to 22 °C. Its specific heat capacity is 800 J/(kg °C). Find the energy transferred in joules.",
         "numericAnswer": 1600,
         "tolerance": 0,
-        "cs": {
-          "prompt": "Vzorek o hmotnosti 500 g se ohřeje z 20 °C na 24 °C. Použijte Q = mcΔT, kde c = 800 J/(kg °C). Určete Q v joulech."
-        },
         "id": "physics-14-17",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A 2 Ω resistor and a 4 Ω resistor are in series across 12 V. Use V = IR. Find the voltage across the 4 Ω resistor, in volts.",
-        "numericAnswer": 8,
-        "tolerance": 0,
+        "reward": 10,
         "cs": {
-          "prompt": "Rezistory 2 Ω a 4 Ω jsou zapojeny sériově ke zdroji 12 V. Použijte V = IR. Určete napětí na rezistoru 4 Ω ve voltech."
-        },
-        "id": "physics-14-18",
-        "reward": 10
+          "prompt": "Vzorek o hmotnosti 500 g se ohřeje z 18 °C na 22 °C. Jeho měrná tepelná kapacita je 800 J/(kg °C). Určete přenesenou energii v joulech."
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A 2 kg trolley moving at +3 m/s sticks to a stationary 1 kg trolley. Total momentum is conserved: m₁v₁ + m₂v₂ = (m₁ + m₂)v. Find their final velocity in m/s.",
+        "prompt": "A 6 Ω resistor and a 3 Ω resistor are in series across 18 V. What is the potential difference across the 3 Ω resistor, in volts?",
+        "numericAnswer": 6,
+        "tolerance": 0,
+        "id": "physics-14-18",
+        "reward": 10,
+        "cs": {
+          "prompt": "Rezistory 6 Ω a 3 Ω jsou zapojeny sériově na napětí 18 V. Jaké je napětí na rezistoru 3 Ω ve voltech?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 2 kg trolley at +3 m/s sticks to a 1 kg trolley at −3 m/s. Neglect external horizontal forces. What is their common velocity in m/s, using the same sign convention? Use total momentum before = total momentum after, with momentum = mass × signed velocity.",
+        "numericAnswer": 1,
+        "tolerance": 0,
+        "id": "physics-14-19",
+        "reward": 10,
+        "cs": {
+          "prompt": "Vozík 2 kg s rychlostí +3 m/s se srazí s vozíkem 1 kg s rychlostí −3 m/s a spojí se. Zanedbejte vnější vodorovné síly. Jaká je jejich společná rychlost v m/s při stejné volbě znamének? Použijte celková hybnost před srážkou = celková hybnost po srážce; hybnost = hmotnost × rychlost se znaménkem."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "An ideal transformer has 200 primary turns and 50 secondary turns. Its primary voltage is 240 V. A 30 Ω resistor is connected across the secondary. What current flows through it, in amperes? Use Vsecondary/Vprimary = Nsecondary/Nprimary and V = IR.",
         "numericAnswer": 2,
         "tolerance": 0,
-        "cs": {
-          "prompt": "Vozík o hmotnosti 2 kg s rychlostí +3 m/s se spojí se stojícím vozíkem o hmotnosti 1 kg. Hybnost se zachovává: m₁v₁ + m₂v₂ = (m₁ + m₂)v. Určete výslednou rychlost v m/s."
-        },
-        "id": "physics-14-19",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A motor lifts 2 kg by 3 m in 2 s. Use g = 10 m/s². Useful power = mgh / time. Its efficiency is 50%. What electrical input power does it need, in watts?",
-        "numericAnswer": 60,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Motor zvedne 2 kg o 3 m za 2 s. Použijte g = 10 m/s². Užitečný výkon = mgh / čas. Účinnost motoru je 50 %. Jaký elektrický příkon potřebuje ve wattech?"
-        },
         "id": "physics-14-20",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Ideální transformátor má 200 závitů na primární a 50 na sekundární cívce. Primární napětí je 240 V. K sekundární cívce připojíme rezistor 30 Ω. Jaký proud jím protéká v ampérech? Použijte Vsekundární/Vprimární = Nsekundární/Nprimární a V = IR."
+        }
       }
     ],
     "17–18": [
       {
         "type": "multiple-choice",
-        "prompt": "Which quantity is measured in joules?",
+        "prompt": "An object travels in a circle at constant speed. Which statement about its velocity and resultant force is correct?",
         "choices": [
-          "Speed",
-          "Energy",
-          "Force",
-          "Power"
+          "Velocity is constant, so the force is zero",
+          "Velocity changes direction, and the force points toward the centre",
+          "Velocity changes direction, and the force points along the motion",
+          "Speed is constant, so acceleration points outward"
         ],
         "correctIndex": 1,
+        "id": "physics-17-05",
+        "reward": 10,
         "cs": {
-          "prompt": "Která veličina se měří v joulech?",
+          "prompt": "Těleso se pohybuje po kružnici stálou velikostí rychlosti. Které tvrzení o jeho vektorové rychlosti a výsledné síle je správné?",
           "choices": [
-            "Rychlost",
-            "Energie",
-            "Síla",
-            "Výkon"
+            "Vektorová rychlost je stálá, proto je síla nulová",
+            "Vektorová rychlost mění směr a síla míří do středu",
+            "Vektorová rychlost mění směr a síla míří ve směru pohybu",
+            "Velikost rychlosti je stálá, proto zrychlení míří ven"
           ]
-        },
-        "id": "physics-17-01",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "Velocity rises from 2 m/s to 8 m/s in 3 s. Acceleration = change in velocity / time. Find it in m/s².",
-        "numericAnswer": 2,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Rychlost vzroste z 2 m/s na 8 m/s za 3 s. Zrychlení = změna rychlosti / čas. Určete jej v m/s²."
-        },
-        "id": "physics-17-02",
-        "reward": 10
+        }
       },
       {
         "type": "text",
-        "prompt": "What quantity equals mass × velocity?",
+        "prompt": "Two trolleys collide and stick together, with negligible external horizontal force. Their total kinetic energy decreases. Which vector quantity must still have the same total before and after?",
         "acceptedAnswers": [
           "momentum",
           "linear momentum"
         ],
+        "id": "physics-17-03",
+        "reward": 10,
         "cs": {
-          "prompt": "Jak se nazývá veličina rovná součinu hmotnosti a rychlosti?",
+          "prompt": "Dva vozíky se srazí a spojí; vnější vodorovná síla je zanedbatelná. Jejich celková kinetická energie klesne. Která vektorová veličina musí mít přesto stejný celkový součet před srážkou i po ní?",
           "acceptedAnswers": [
             "hybnost"
           ]
-        },
-        "id": "physics-17-03",
-        "reward": 10
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A 2 kg body has a resultant force of 8 N. Use F = ma. Find its acceleration in m/s².",
-        "numericAnswer": 4,
+        "prompt": "A current of 4 mA flows for 3 s, then 2 mA flows in the same direction for 2 s. Use Q = It for each interval. What total charge passes in coulombs?",
+        "numericAnswer": 0.016,
         "tolerance": 0,
+        "id": "physics-17-07",
+        "reward": 10,
         "cs": {
-          "prompt": "Na těleso o hmotnosti 2 kg působí výsledná síla 8 N. Použijte F = ma. Určete zrychlení v m/s²."
-        },
-        "id": "physics-17-04",
-        "reward": 10
+          "prompt": "Proud 4 mA protéká 3 s a pak stejným směrem 2 mA po dobu 2 s. Pro každý interval použijte Q = It. Jaký celkový náboj projde v coulombech?"
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "A ball moves in a circle at constant speed. Does its velocity change?",
+        "prompt": "Light below a metal’s threshold frequency ejects no electrons. Its intensity is doubled, but its frequency is unchanged. Which outcome follows from a photon needing enough energy to eject an electron?",
+        "id": "physics-17-11",
+        "reward": 10,
+        "cs": {
+          "prompt": "Světlo pod mezní frekvencí kovu nevyráží elektrony. Intenzitu zdvojnásobíme, frekvence však zůstane stejná. Co plyne z toho, že foton musí mít k vyražení elektronu dost energie?",
+          "choices": [
+            "Žádné elektrony se nevyrazí",
+            "Vyrazí se dvojnásobek elektronů",
+            "Každý elektron má dvojnásobnou kinetickou energii",
+            "Mezní frekvence klesne na polovinu"
+          ]
+        },
         "choices": [
-          "Only when it stops",
-          "Yes, its direction changes",
-          "No, constant speed means constant velocity",
-          "Only if its mass changes"
+          "No electrons are ejected",
+          "Twice as many electrons are ejected",
+          "Each electron has twice the kinetic energy",
+          "The threshold frequency halves"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "On a velocity–time graph, velocity is negative but the line slopes upward toward zero. Which statement describes the motion?",
+        "choices": [
+          "Negative acceleration, increasing speed",
+          "Positive acceleration, decreasing speed",
+          "Positive acceleration, increasing speed",
+          "Zero acceleration, constant speed"
         ],
         "correctIndex": 1,
+        "id": "physics-17-01",
+        "reward": 10,
         "cs": {
-          "prompt": "Míč se pohybuje po kružnici stálou velikostí rychlosti. Mění se jeho vektor rychlosti?",
+          "prompt": "V grafu rychlosti v závislosti na čase je rychlost záporná, ale přímka stoupá k nule. Které tvrzení popisuje pohyb?",
           "choices": [
-            "Pouze při zastavení",
-            "Ano, mění se jeho směr",
-            "Ne, stálá velikost znamená stálý vektor rychlosti",
-            "Pouze při změně hmotnosti"
+            "Záporné zrychlení, rostoucí velikost rychlosti",
+            "Kladné zrychlení, klesající velikost rychlosti",
+            "Kladné zrychlení, rostoucí velikost rychlosti",
+            "Nulové zrychlení, stálá rychlost"
           ]
-        },
-        "id": "physics-17-05",
-        "reward": 10
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A spring has k = 100 N/m and extension x = 0.2 m. Use F = kx. Find the spring force magnitude in newtons.",
-        "numericAnswer": 20,
+        "prompt": "A runner’s velocity changes from −3 m/s to +9 m/s in 4 s. Find the average acceleration in m/s², including its sign. Use a = (v₂ − v₁)/Δt.",
+        "numericAnswer": 3,
         "tolerance": 0,
+        "id": "physics-17-02",
+        "reward": 10,
         "cs": {
-          "prompt": "Pružina má tuhost k = 100 N/m a prodloužení x = 0,2 m. Použijte F = kx. Určete velikost síly v newtonech."
-        },
-        "id": "physics-17-06",
-        "reward": 10
+          "prompt": "Rychlost běžce se změní z −3 m/s na +9 m/s za 4 s. Určete průměrné zrychlení v m/s² včetně znaménka. Použijte a = (v₂ − v₁)/Δt."
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A charge of 6 C passes a point in 3 s. Current = charge / time. Find the current in amperes.",
-        "numericAnswer": 2,
+        "prompt": "A 4 kg body is pulled east by 10 N while friction acts west with 4 N. What is its acceleration toward the east, in m/s²? Use a = resultant force / mass.",
+        "numericAnswer": 1.5,
         "tolerance": 0,
+        "id": "physics-17-04",
+        "reward": 10,
         "cs": {
-          "prompt": "Místem v obvodu projde náboj 6 C za 3 s. Proud = náboj / čas. Určete proud v ampérech."
-        },
-        "id": "physics-17-07",
-        "reward": 10
+          "prompt": "Na těleso 4 kg působí tah 10 N na východ a tření 4 N na západ. Jaké je jeho zrychlení na východ v m/s²? Použijte a = výsledná síla / hmotnost."
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "Two equal wave crests meet. At that instant their displacements add. Which effect is this?",
+        "prompt": "Two coherent waves of equal amplitude arrive with a path difference of half a wavelength. They began in phase. What occurs at that point?",
         "choices": [
-          "Absorption only",
-          "Refraction only",
-          "Constructive interference",
-          "Destructive interference"
+          "Maximum constructive interference",
+          "Complete destructive interference",
+          "A doubling of frequency",
+          "A halving of wave speed"
         ],
-        "correctIndex": 2,
-        "cs": {
-          "prompt": "Setkají se dva stejně vysoké vrcholy vln. Jejich výchylky se v tomto okamžiku sčítají. O jaký jev jde?",
-          "choices": [
-            "Pouze absorpce",
-            "Pouze lom",
-            "Konstruktivní interference",
-            "Destruktivní interference"
-          ]
-        },
+        "correctIndex": 1,
         "id": "physics-17-08",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A 12 V supply provides 0.5 A. Use P = VI. Find the power in watts.",
-        "numericAnswer": 6,
-        "tolerance": 0,
+        "reward": 10,
         "cs": {
-          "prompt": "Zdroj s napětím 12 V dodává proud 0,5 A. Použijte P = VI. Určete výkon ve wattech."
-        },
-        "id": "physics-17-09",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A 2 kg object moves at 3 m/s. Use E = ½mv². Find its kinetic energy in joules.",
-        "numericAnswer": 9,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Těleso o hmotnosti 2 kg se pohybuje rychlostí 3 m/s. Použijte E = ½mv². Určete kinetickou energii v joulech."
-        },
-        "id": "physics-17-10",
-        "reward": 10
-      },
-      {
-        "type": "text",
-        "prompt": "What is the SI unit of power? Give its name.",
-        "acceptedAnswers": [
-          "watt",
-          "watts"
-        ],
-        "cs": {
-          "prompt": "Jak se nazývá jednotka výkonu v soustavě SI?",
-          "acceptedAnswers": [
-            "watt"
+          "prompt": "Dvě koherentní vlny stejné amplitudy dorazí s dráhovým rozdílem poloviny vlnové délky. Na začátku byly ve fázi. Co v tomto bodě nastane?",
+          "choices": [
+            "Maximální konstruktivní interference",
+            "Úplná destruktivní interference",
+            "Zdvojnásobení frekvence",
+            "Poloviční rychlost vlnění"
           ]
-        },
-        "id": "physics-17-11",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A gas is compressed at constant temperature from 6 L to 2 L. Initially its absolute pressure is 100 kPa. Use p₁V₁ = p₂V₂. Find the final pressure in kPa.",
-        "numericAnswer": 300,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Plyn stlačíme při stálé teplotě z 6 L na 2 L. Počáteční absolutní tlak je 100 kPa. Použijte p₁V₁ = p₂V₂. Určete konečný tlak v kPa."
-        },
-        "id": "physics-17-12",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A wave has period 4 milliseconds. Use frequency = 1 / period in seconds. Find its frequency in hertz.",
-        "numericAnswer": 250,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Vlna má periodu 4 milisekundy. Frekvence = 1 / perioda v sekundách. Určete frekvenci v hertzech."
-        },
-        "id": "physics-17-13",
-        "reward": 10
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "A satellite moves in a circular orbit with engines off. What keeps changing its direction?",
+        "prompt": "A satellite is in a circular orbit with engines off. Why does it not move in a straight line?",
         "choices": [
-          "Gravity toward the planet",
-          "A forward force from its engines",
-          "No force is needed",
-          "Gravity away from the planet"
+          "Space pushes it forward",
+          "Its mass changes continuously",
+          "There is no gravity",
+          "Gravity provides centripetal acceleration"
         ],
-        "correctIndex": 0,
-        "cs": {
-          "prompt": "Družice se pohybuje po kruhové oběžné dráze s vypnutými motory. Co neustále mění směr jejího pohybu?",
-          "choices": [
-            "Gravitace směrem k planetě",
-            "Dopředná síla motorů",
-            "Žádná síla není potřeba",
-            "Gravitace směrem od planety"
-          ]
-        },
+        "correctIndex": 3,
         "id": "physics-17-14",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Družice obíhá po kružnici s vypnutými motory. Proč se nepohybuje přímočaře?",
+          "choices": [
+            "Prostor ji tlačí dopředu",
+            "Její hmotnost se neustále mění",
+            "Nepůsobí gravitace",
+            "Gravitace způsobuje dostředivé zrychlení"
+          ]
+        }
       },
       {
         "type": "numerical",
-        "prompt": "Two 6 Ω resistors are in parallel. Use 1/R = 1/R₁ + 1/R₂. The pair is connected across 12 V. Find the total current, in amperes.",
+        "prompt": "A 12 V source supplies 2 A for 5 s. A motor converts 75% of that electrical energy into useful work. How much useful work is done, in joules? Electrical energy = VIt.",
+        "numericAnswer": 90,
+        "tolerance": 0,
+        "id": "physics-17-09",
+        "reward": 10,
+        "cs": {
+          "prompt": "Zdroj 12 V dodává proud 2 A po dobu 5 s. Motor přemění 75 % této elektrické energie na užitečnou práci. Kolik joulů užitečné práce vykoná? Elektrická energie = VIt."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 500 g object moves at 4 m/s in a circle of diameter 4 m. Using F = mv²/r, find the resultant force in newtons.",
         "numericAnswer": 4,
         "tolerance": 0,
+        "id": "physics-17-10",
+        "reward": 10,
         "cs": {
-          "prompt": "Dva rezistory 6 Ω jsou zapojeny paralelně. Použijte 1/R = 1/R₁ + 1/R₂. Dvojice je připojena k napětí 12 V. Určete celkový proud v ampérech."
-        },
-        "id": "physics-17-15",
-        "reward": 10
+          "prompt": "Těleso o hmotnosti 500 g se pohybuje rychlostí 4 m/s po kružnici o průměru 4 m. Pomocí F = mv²/r určete výslednou sílu v newtonech."
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A 500 g object moves at 4 m/s in a circle of diameter 2 m. Use F = mv²/r. Find the resultant force magnitude in newtons.",
+        "prompt": "An ideal gas is compressed isothermally from 6 L to 2 L. Its initial absolute pressure is 100 kPa. Find the increase in pressure, in kPa. At constant temperature, p₁V₁ = p₂V₂.",
+        "numericAnswer": 200,
+        "tolerance": 0,
+        "id": "physics-17-12",
+        "reward": 10,
+        "cs": {
+          "prompt": "Ideální plyn izotermicky stlačíme z 6 L na 2 L. Počáteční absolutní tlak je 100 kPa. Určete přírůstek tlaku v kPa. Při stálé teplotě platí p₁V₁ = p₂V₂."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A spring has k = 200 N/m. Its extension increases from 10 cm to 20 cm, within its elastic limit. Using E = ½kx², find the increase in stored energy, in joules. Calculate the energy at each extension, using x in metres.",
+        "numericAnswer": 3,
+        "tolerance": 0,
+        "id": "physics-17-06",
+        "reward": 10,
+        "cs": {
+          "prompt": "Pružina má k = 200 N/m. Její prodloužení vzroste z 10 cm na 20 cm v mezích pružnosti. Pomocí E = ½kx² určete přírůstek uložené energie v joulech. Vypočítejte energii v každém stavu s x v metrech."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A wave has a period of 4 milliseconds and travels at 20 m/s. Find its wavelength in centimetres.",
         "numericAnswer": 8,
         "tolerance": 0,
+        "id": "physics-17-13",
+        "reward": 10,
         "cs": {
-          "prompt": "Těleso o hmotnosti 500 g se pohybuje rychlostí 4 m/s po kružnici o průměru 2 m. Použijte F = mv²/r. Určete velikost výsledné síly v newtonech."
-        },
-        "id": "physics-17-16",
-        "reward": 10
+          "prompt": "Vlna má periodu 4 milisekundy a šíří se rychlostí 20 m/s. Určete vlnovou délku v centimetrech."
+        }
       },
       {
         "type": "numerical",
-        "prompt": "An engine receives 800 J and rejects 500 J as heat per cycle. Efficiency = useful work / energy received × 100%. Find its percentage efficiency.",
+        "prompt": "Light has wavelength 600 nm. Use c = 3.00 × 10^8 m/s, h = 6.63 × 10^-34 J s, and E = hc/λ. Express the photon energy as a coefficient × 10^-19 J; enter only the coefficient.",
+        "numericAnswer": 3.315,
+        "tolerance": 0.005,
+        "id": "physics-17-16",
+        "reward": 10,
+        "cs": {
+          "prompt": "Světlo má vlnovou délku 600 nm. Použijte c = 3,00 × 10^8 m/s, h = 6,63 × 10^-34 J s a E = hc/λ. Vyjádřete energii fotonu jako koeficient × 10^-19 J; zadejte jen koeficient."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A heat engine rejects 500 J per cycle and does 300 J of work per cycle. What is its efficiency as a percentage?",
         "numericAnswer": 37.5,
         "tolerance": 0,
-        "cs": {
-          "prompt": "Stroj přijme za cyklus 800 J a odevzdá 500 J jako teplo. Účinnost = užitečná práce / přijatá energie × 100 %. Určete účinnost v procentech."
-        },
         "id": "physics-17-17",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Tepelný motor odevzdá za cyklus 500 J tepla a vykoná práci 300 J. Jaká je jeho účinnost v procentech?"
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A detector reads 450 counts/min initially and 150 counts/min after 12 hours. Both include a constant background of 50 counts/min. The sample contribution halves each half-life. Find the half-life in hours.",
+        "prompt": "Resistors of 6 Ω and 3 Ω are in parallel. That combination is in series with a 4 Ω resistor across a 12 V battery. Find the total current from the battery, in amperes.",
+        "numericAnswer": 2,
+        "tolerance": 0,
+        "id": "physics-17-15",
+        "reward": 10,
+        "cs": {
+          "prompt": "Rezistory 6 Ω a 3 Ω jsou zapojeny paralelně. Tato kombinace je sériově spojena s rezistorem 4 Ω a připojena k baterii 12 V. Určete celkový proud z baterie v ampérech."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A detector initially reads 850 counts/min, including a constant background of 50 counts/min. After 18 hours it reads 150 counts/min. Treat count rate as proportional to undecayed nuclei. Find the half-life in hours.",
         "numericAnswer": 6,
         "tolerance": 0,
-        "cs": {
-          "prompt": "Detektor nejprve ukazuje 450 impulzů/min a po 12 hodinách 150 impulzů/min. Oba údaje obsahují stálé pozadí 50 impulzů/min. Příspěvek vzorku se za každý poločas rozpadu sníží na polovinu. Určete poločas v hodinách."
-        },
         "id": "physics-17-18",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Detektor na začátku zaznamená 850 impulzů/min včetně stálého pozadí 50 impulzů/min. Po 18 hodinách zaznamená 150 impulzů/min. Předpokládejte, že četnost impulzů je úměrná počtu nepřeměněných jader. Určete poločas přeměny v hodinách."
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A 2 kg trolley at +3 m/s sticks to a 1 kg trolley at −3 m/s. With no external horizontal force, momentum is conserved: m₁v₁ + m₂v₂ = (m₁ + m₂)v. Find final velocity in m/s, including its sign.",
-        "numericAnswer": 1,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Vozík 2 kg s rychlostí +3 m/s se spojí s vozíkem 1 kg s rychlostí −3 m/s. Bez vnější vodorovné síly platí m₁v₁ + m₂v₂ = (m₁ + m₂)v. Určete výslednou rychlost v m/s včetně znaménka."
-        },
+        "prompt": "A 2 kg trolley at +5 m/s sticks to a 3 kg trolley at −1 m/s. Neglect external horizontal forces. How much kinetic energy is lost in the collision, in joules? Use conservation of momentum and kinetic energy E = ½mv².",
+        "numericAnswer": 21.6,
+        "tolerance": 0.01,
         "id": "physics-17-19",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Vozík 2 kg s rychlostí +5 m/s se srazí s vozíkem 3 kg s rychlostí −1 m/s a spojí se. Zanedbejte vnější vodorovné síly. Kolik kinetické energie se při srážce ztratí v joulech? Použijte zákon zachování hybnosti a kinetickou energii E = ½mv²."
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A motor uses 100 W for 5 s to lift a 5 kg load vertically. Its efficiency is 60%. Use g = 10 m/s² and useful energy = mgh. How high does it lift the load, in metres?",
-        "numericAnswer": 6,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Motor o příkonu 100 W pracuje 5 s a svisle zvedá břemeno 5 kg. Účinnost je 60 %. Použijte g = 10 m/s² a užitečná energie = mgh. Do jaké výšky břemeno zvedne? Odpovězte v metrech."
-        },
+        "prompt": "Light passes from air (n = 1.00) into glass (n = 1.50). Its incident ray makes an angle of 60° with the surface. Use n₁ sin θ₁ = n₂ sin θ₂, with angles measured from the normal. Find the refracted angle to the normal in degrees, to one decimal place.",
+        "numericAnswer": 19.5,
+        "tolerance": 0.1,
         "id": "physics-17-20",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Světlo přechází ze vzduchu (n = 1,00) do skla (n = 1,50). Dopadající paprsek svírá s povrchem úhel 60°. Použijte n₁ sin θ₁ = n₂ sin θ₂, kde úhly měříme od kolmice. Určete úhel lomu vůči kolmici ve stupních na jedno desetinné místo."
+        }
       }
     ]
   }

@@ -4,922 +4,959 @@
     "11–13": [
       {
         "type": "multiple-choice",
-        "prompt": "Which is a chemical element?",
+        "prompt": "Water is poured from a narrow vessel into a wider one without spilling. Which pair of changes is expected?",
         "choices": [
-          "Water",
-          "Air",
-          "Salt water",
-          "Oxygen"
+          "Volume increases; mass stays the same",
+          "Shape changes; volume stays the same",
+          "Shape stays the same; volume falls",
+          "Mass falls; volume stays the same"
         ],
-        "correctIndex": 3,
-        "cs": {
-          "prompt": "Co je chemický prvek?",
-          "choices": [
-            "Voda",
-            "Vzduch",
-            "Slaná voda",
-            "Kyslík"
-          ]
-        },
+        "correctIndex": 1,
         "id": "chemistry-11-01",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Vodu přelijeme z úzké nádoby do širší, aniž se rozlije. Kterou dvojici změn očekáváme?",
+          "choices": [
+            "Objem roste; hmotnost zůstává stejná",
+            "Tvar se mění; objem zůstává stejný",
+            "Tvar zůstává stejný; objem klesá",
+            "Hmotnost klesá; objem zůstává stejný"
+          ]
+        }
       },
       {
         "type": "text",
-        "prompt": "Write the chemical symbol for oxygen.",
+        "prompt": "In CO₂, the subscript 2 applies to one element, not to the whole molecule. Write the chemical symbol of the element present twice.",
         "acceptedAnswers": [
           "O"
         ],
+        "id": "chemistry-11-02",
+        "reward": 10,
         "cs": {
-          "prompt": "Napište chemickou značku kyslíku.",
+          "prompt": "V CO₂ se dolní index 2 vztahuje k jednomu prvku, nikoli k celé molekule. Napište značku prvku, který je zastoupen dvakrát.",
           "acceptedAnswers": [
             "O"
           ]
-        },
-        "id": "chemistry-11-02",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "How many hydrogen atoms are in one H₂O molecule?",
-        "numericAnswer": 2,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Kolik atomů vodíku je v jedné molekule H₂O?"
-        },
-        "id": "chemistry-11-03",
-        "reward": 10
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "Ice melts in a closed jar. What changes?",
+        "prompt": "A sample contains only O₂ molecules. Each molecule has two oxygen atoms. How should the sample be classified?",
         "choices": [
-          "Its state, but not its chemical identity",
-          "Its elements",
-          "Its mass increases",
-          "It becomes a new compound"
-        ],
-        "correctIndex": 0,
-        "cs": {
-          "prompt": "V uzavřené nádobě taje led. Co se mění?",
-          "choices": [
-            "Skupenství, ale ne chemické složení",
-            "Jeho prvky",
-            "Jeho hmotnost roste",
-            "Vzniká nová sloučenina"
-          ]
-        },
-        "id": "chemistry-11-04",
-        "reward": 10
-      },
-      {
-        "type": "text",
-        "prompt": "What is the name of the centre of an atom?",
-        "acceptedAnswers": [
-          "nucleus",
-          "atomic nucleus"
-        ],
-        "cs": {
-          "prompt": "Jak se nazývá střed atomu?",
-          "acceptedAnswers": [
-            "jádro",
-            "jadro",
-            "atomové jádro",
-            "atomove jadro"
-          ]
-        },
-        "id": "chemistry-11-05",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Which pH describes an acidic solution?",
-        "choices": [
-          "9",
-          "12",
-          "3",
-          "7"
-        ],
-        "correctIndex": 2,
-        "cs": {
-          "prompt": "Které pH označuje kyselý roztok?",
-          "choices": [
-            "9",
-            "12",
-            "3",
-            "7"
-          ]
-        },
-        "id": "chemistry-11-06",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "Dissolve 5 g of sugar in 45 g of water. No material escapes. What is the mass of the solution in g?",
-        "numericAnswer": 50,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Rozpustíme 5 g cukru ve 45 g vody. Nic neunikne. Jaká je hmotnost roztoku v g?"
-        },
-        "id": "chemistry-11-07",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Which method separates sand from water while collecting the liquid?",
-        "choices": [
-          "Filtration",
-          "Melting",
-          "Freezing the whole mixture",
-          "Adding more water"
-        ],
-        "correctIndex": 0,
-        "cs": {
-          "prompt": "Kterou metodou oddělíme písek od vody a zachytíme kapalinu?",
-          "choices": [
-            "Filtrací",
-            "Tavením",
-            "Zmrazením celé směsi",
-            "Přidáním další vody"
-          ]
-        },
-        "id": "chemistry-11-08",
-        "reward": 10
-      },
-      {
-        "type": "text",
-        "prompt": "Write the chemical symbol for carbon.",
-        "acceptedAnswers": [
-          "C"
-        ],
-        "cs": {
-          "prompt": "Napište chemickou značku uhlíku.",
-          "acceptedAnswers": [
-            "C"
-          ]
-        },
-        "id": "chemistry-11-09",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "One CO₂ molecule contains 3 atoms in total. How many atoms are in 4 CO₂ molecules?",
-        "numericAnswer": 12,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Jedna molekula CO₂ obsahuje celkem 3 atomy. Kolik atomů je ve 4 molekulách CO₂?"
-        },
-        "id": "chemistry-11-10",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Salt dissolves in water. Where is the salt?",
-        "choices": [
-          "All at the bottom",
-          "Dispersed throughout the water",
-          "Destroyed",
-          "Changed into water"
+          "A compound because each molecule has two atoms",
+          "An element because all atoms are oxygen",
+          "A mixture because it contains many molecules",
+          "A compound because oxygen is a gas"
         ],
         "correctIndex": 1,
+        "id": "chemistry-11-05",
+        "reward": 10,
         "cs": {
-          "prompt": "Sůl se rozpustí ve vodě. Kde je sůl?",
+          "prompt": "Vzorek obsahuje pouze molekuly O₂. Každá má dva atomy kyslíku. Jak vzorek zařadíme?",
           "choices": [
-            "Všechna na dně",
-            "Rozptýlená ve vodě",
-            "Zničená",
-            "Přeměněná na vodu"
+            "Sloučenina, protože každá molekula má dva atomy",
+            "Prvek, protože všechny atomy jsou kyslík",
+            "Směs, protože obsahuje mnoho molekul",
+            "Sloučenina, protože kyslík je plyn"
           ]
-        },
-        "id": "chemistry-11-11",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A neutral atom has 6 protons. How many electrons does it have?",
-        "numericAnswer": 6,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Neutrální atom má 6 protonů. Kolik má elektronů?"
-        },
-        "id": "chemistry-11-12",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Which observation is strongest evidence that a new substance formed?",
-        "choices": [
-          "A solid is cut in half",
-          "Ice melts",
-          "Sugar is crushed",
-          "A gas forms when two solutions are mixed at room temperature"
-        ],
-        "correctIndex": 3,
-        "cs": {
-          "prompt": "Které pozorování je nejsilnějším důkazem vzniku nové látky?",
-          "choices": [
-            "Pevná látka se rozpůlí",
-            "Led taje",
-            "Cukr se rozdrtí",
-            "Při smíchání dvou roztoků za pokojové teploty vzniká plyn"
-          ]
-        },
-        "id": "chemistry-11-13",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A mixture contains 10 g salt and 90 g water. What percentage of its total mass is salt?",
-        "numericAnswer": 10,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Směs obsahuje 10 g soli a 90 g vody. Kolik procent celkové hmotnosti tvoří sůl?"
-        },
-        "id": "chemistry-11-14",
-        "reward": 10
+        }
       },
       {
         "type": "text",
-        "prompt": "What is the change directly from solid to gas called?",
+        "prompt": "Pure liquid water at 0 °C loses heat and begins forming ice while its temperature stays at 0 °C. Name the change of state, rather than the general loss of heat.",
         "acceptedAnswers": [
-          "sublimation"
+          "freezing",
+          "solidification"
         ],
+        "id": "chemistry-11-06",
+        "reward": 10,
         "cs": {
-          "prompt": "Jak se nazývá přeměna přímo z pevného skupenství na plynné?",
+          "prompt": "Čistá kapalná voda při 0 °C ztrácí teplo a začíná tvořit led, zatímco teplota zůstává 0 °C. Pojmenujte změnu skupenství, nikoli obecně ztrátu tepla.",
           "acceptedAnswers": [
-            "sublimace"
+            "tuhnutí",
+            "tuhnuti",
+            "mrznutí",
+            "mrznuti"
           ]
-        },
-        "id": "chemistry-11-15",
-        "reward": 10
+        }
       },
       {
         "type": "numerical",
-        "prompt": "An atom has 11 protons and 12 neutrons. Its mass number is their sum. What is its mass number?",
-        "numericAnswer": 23,
+        "prompt": "How many hydrogen atoms are present in three molecules of H₂O?",
+        "numericAnswer": 6,
         "tolerance": 0,
+        "id": "chemistry-11-04",
+        "reward": 10,
         "cs": {
-          "prompt": "Atom má 11 protonů a 12 neutronů. Nukleonové číslo je jejich součet. Jaké je jeho nukleonové číslo?"
-        },
-        "id": "chemistry-11-16",
-        "reward": 10
+          "prompt": "Kolik atomů vodíku je ve třech molekulách H₂O?"
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "Two identical sugar cubes are put into equal volumes of water. Only temperature differs. What comparison tests the effect of temperature on dissolving time?",
+        "prompt": "An iron nail is cut in half and then left in damp air until rust forms. Which stage first produces a new substance?",
         "choices": [
-          "Colour of the cups",
-          "Initial mass of the water only",
-          "Final water level only",
-          "Time until each cube fully dissolves"
+          "Cutting it",
+          "Moving the pieces",
+          "Rust forming",
+          "Both cutting and moving it"
         ],
-        "correctIndex": 3,
+        "correctIndex": 2,
+        "id": "chemistry-11-03",
+        "reward": 10,
         "cs": {
-          "prompt": "Dvě stejné kostky cukru vložíme do stejných objemů vody. Liší se jen teplota. Co porovnáme při testování vlivu teploty na dobu rozpouštění?",
+          "prompt": "Železný hřebík rozřízneme napůl a pak necháme ve vlhkém vzduchu, až zreziví. Při které fázi poprvé vzniká nová látka?",
           "choices": [
-            "Barvu hrnků",
-            "Jen počáteční hmotnost vody",
-            "Jen konečnou hladinu vody",
-            "Čas do úplného rozpuštění každé kostky"
+            "Při řezání",
+            "Při přemístění kusů",
+            "Při vzniku rzi",
+            "Při řezání i přemístění"
           ]
-        },
-        "id": "chemistry-11-17",
-        "reward": 10
+        }
       },
       {
-        "type": "numerical",
-        "prompt": "A sealed flask and its contents have a mass of 120 g. Inside, a reaction makes 5 g of gas which stays in the flask. What is the final total mass in g?",
-        "numericAnswer": 120,
-        "tolerance": 0,
+        "type": "multiple-choice",
+        "prompt": "A mixture contains sand and salt, both mixed into water. The salt dissolves but the sand does not. After filtration, what is in the liquid that passes through?",
+        "choices": [
+          "Pure water only",
+          "Water and dissolved salt",
+          "Water and all the sand",
+          "Dry salt only"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-11-08",
+        "reward": 10,
         "cs": {
-          "prompt": "Uzavřená baňka s obsahem váží 120 g. Reakcí uvnitř vznikne 5 g plynu, který v baňce zůstane. Jaká je konečná celková hmotnost v g?"
-        },
-        "id": "chemistry-11-18",
-        "reward": 10
+          "prompt": "Směs obsahuje písek a sůl ve vodě. Sůl se rozpustí, písek ne. Co obsahuje kapalina, která projde filtrem?",
+          "choices": [
+            "Jen čistou vodu",
+            "Vodu a rozpuštěnou sůl",
+            "Vodu a všechen písek",
+            "Jen suchou sůl"
+          ]
+        }
+      },
+      {
+        "type": "text",
+        "prompt": "A solution has pH 2. Water is added and its pH becomes 4 at the same temperature. Is the final solution acidic, neutral or alkaline?",
+        "acceptedAnswers": [
+          "acidic",
+          "acid"
+        ],
+        "id": "chemistry-11-09",
+        "reward": 10,
+        "cs": {
+          "prompt": "Roztok má pH 2. Přidáme vodu a při stejné teplotě se jeho pH změní na 4. Je konečný roztok kyselý, neutrální, nebo zásaditý?",
+          "acceptedAnswers": [
+            "kyselý",
+            "kysely",
+            "kyselá",
+            "kysela"
+          ]
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Salt dissolves in water in a sealed jar. The solid crystals are no longer visible. What has happened to the total mass?",
+        "choices": [
+          "It falls by the salt mass",
+          "It rises by the salt mass",
+          "It stays the same",
+          "It falls to zero"
+        ],
+        "correctIndex": 2,
+        "id": "chemistry-11-10",
+        "reward": 10,
+        "cs": {
+          "prompt": "Sůl se rozpustí ve vodě v uzavřené nádobě. Pevné krystaly už nejsou vidět. Co se stalo s celkovou hmotností?",
+          "choices": [
+            "Klesla o hmotnost soli",
+            "Vzrostla o hmotnost soli",
+            "Zůstala stejná",
+            "Klesla na nulu"
+          ]
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Iron filings, sand and salt are mixed in water. The salt dissolves. Which material can a magnet remove directly, leaving the other two substances behind?",
+        "choices": [
+          "All three",
+          "Only sand",
+          "Only iron filings",
+          "Only dissolved salt"
+        ],
+        "correctIndex": 2,
+        "id": "chemistry-11-12",
+        "reward": 10,
+        "cs": {
+          "prompt": "Železné piliny, písek a sůl smícháme ve vodě. Sůl se rozpustí. Kterou látku lze přímo odstranit magnetem, zatímco zbývající dvě zůstanou?",
+          "choices": [
+            "Všechny tři",
+            "Jen písek",
+            "Jen železné piliny",
+            "Jen rozpuštěnou sůl"
+          ]
+        }
       },
       {
         "type": "numerical",
-        "prompt": "A solution contains 12 g of salt in 200 mL. You take 50 mL of the well-mixed solution. How many grams of salt are in this sample?",
+        "prompt": "A sample contains two CO₂ molecules and one O₂ molecule. How many oxygen atoms are present in total?",
+        "numericAnswer": 6,
+        "tolerance": 0,
+        "id": "chemistry-11-11",
+        "reward": 10,
+        "cs": {
+          "prompt": "Vzorek obsahuje dvě molekuly CO₂ a jednu molekulu O₂. Kolik atomů kyslíku je celkem přítomno?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A neutral atom contains 6 protons and 8 neutrons. It then gains two electrons without changing its nucleus. How many electrons does the resulting ion contain?",
+        "numericAnswer": 8,
+        "tolerance": 0,
+        "id": "chemistry-11-13",
+        "reward": 10,
+        "cs": {
+          "prompt": "Neutrální atom obsahuje 6 protonů a 8 neutronů. Pak přijme dva elektrony, aniž se změní jádro. Kolik elektronů obsahuje výsledný iont?"
+        }
+      },
+      {
+        "type": "text",
+        "prompt": "Magnesium reacts with dilute hydrochloric acid and produces a gas that makes a squeaky pop with a lit splint. Name the gas.",
+        "acceptedAnswers": [
+          "hydrogen",
+          "hydrogen gas",
+          "H2",
+          "H₂"
+        ],
+        "id": "chemistry-11-14",
+        "reward": 10,
+        "cs": {
+          "prompt": "Hořčík reaguje se zředěnou kyselinou chlorovodíkovou a vzniká plyn, který při přiblížení hořící špejle typicky štěkne. Pojmenujte plyn.",
+          "acceptedAnswers": [
+            "vodík",
+            "vodik",
+            "H2",
+            "H₂"
+          ]
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A sealed rigid container of gas is heated. No gas enters or leaves. Which pair of changes is expected?",
+        "choices": [
+          "Fewer particles and lower pressure",
+          "Larger atoms and unchanged motion",
+          "Faster average particle motion and higher pressure",
+          "More particles and lower pressure"
+        ],
+        "correctIndex": 2,
+        "id": "chemistry-11-15",
+        "reward": 10,
+        "cs": {
+          "prompt": "Plyn zahřejeme v uzavřené pevné nádobě. Žádný plyn nepřibude ani neunikne. Kterou dvojici změn očekáváme?",
+          "choices": [
+            "Méně částic a nižší tlak",
+            "Větší atomy a nezměněný pohyb",
+            "Rychlejší průměrný pohyb částic a vyšší tlak",
+            "Více částic a nižší tlak"
+          ]
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A solution contains 5 g of salt and 95 g of water. Then 20 g of water evaporates without any salt being lost. What is the mass of the remaining solution, in grams? Solution mass is the sum of the masses of its components.",
+        "numericAnswer": 80,
+        "tolerance": 0,
+        "id": "chemistry-11-07",
+        "reward": 10,
+        "cs": {
+          "prompt": "Roztok obsahuje 5 g soli a 95 g vody. Potom se odpaří 20 g vody, ale žádná sůl se neztratí. Jaká je hmotnost zbývajícího roztoku v gramech? Hmotnost roztoku je součet hmotností jeho složek."
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Two solutions at room temperature produce bubbles when mixed, although neither was bubbling before mixing. The mixture is not heated. Which conclusion is best supported?",
+        "choices": [
+          "The liquid must be boiling",
+          "The gas must be oxygen",
+          "A reaction may be producing gas",
+          "The gas has no mass"
+        ],
+        "correctIndex": 2,
+        "id": "chemistry-11-17",
+        "reward": 10,
+        "cs": {
+          "prompt": "Dva roztoky při pokojové teplotě po smíchání tvoří bubliny, přestože předtím nebublal ani jeden. Směs nezahříváme. Který závěr je nejlépe podložen?",
+          "choices": [
+            "Kapalina musí vřít",
+            "Plyn musí být kyslík",
+            "Plyn může vznikat při reakci",
+            "Plyn nemá hmotnost"
+          ]
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "In a sealed container, 12 g of carbon reacts completely with 32 g of oxygen to form only carbon dioxide. The empty container has mass 100 g. What is the mass of carbon dioxide alone, in grams?",
+        "numericAnswer": 44,
+        "tolerance": 0,
+        "id": "chemistry-11-16",
+        "reward": 10,
+        "cs": {
+          "prompt": "V uzavřené nádobě 12 g uhlíku zcela zreaguje s 32 g kyslíku za vzniku pouze oxidu uhličitého. Prázdná nádoba má hmotnost 100 g. Jaká je hmotnost samotného oxidu uhličitého v gramech?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A recipe uses 4 g of salt per 100 mL of final solution. How many grams are needed for 0.25 L of final solution at the same concentration?",
+        "numericAnswer": 10,
+        "tolerance": 0,
+        "id": "chemistry-11-18",
+        "reward": 10,
+        "cs": {
+          "prompt": "Předpis používá 4 g soli na 100 mL konečného roztoku. Kolik gramů je potřeba pro 0,25 L konečného roztoku o stejné koncentraci?"
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Salt water is heated and some water vapour is collected and cooled in a separate vessel. Salt does not evaporate under these conditions. Which statement is correct?",
+        "choices": [
+          "The collected water contains all the salt",
+          "The original solution becomes less concentrated",
+          "The collected water has no salt, and the remaining solution is more concentrated",
+          "Salt is destroyed during heating"
+        ],
+        "correctIndex": 2,
+        "id": "chemistry-11-19",
+        "reward": 10,
+        "cs": {
+          "prompt": "Slanou vodu zahřejeme a část páry zachytíme a ochladíme v jiné nádobě. Sůl se za těchto podmínek neodpařuje. Které tvrzení je správné?",
+          "choices": [
+            "Zachycená voda obsahuje všechnu sůl",
+            "Původní roztok se zředí",
+            "Zachycená voda neobsahuje sůl a zbývající roztok je koncentrovanější",
+            "Sůl se při zahřívání zničí"
+          ]
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A reaction uses 2 hydrogen molecules for every oxygen molecule. You have 14 hydrogen molecules and 10 oxygen molecules. After all hydrogen reacts, how many oxygen molecules remain?",
         "numericAnswer": 3,
         "tolerance": 0,
-        "cs": {
-          "prompt": "Roztok obsahuje 12 g soli ve 200 mL. Odebereme 50 mL dobře promíchaného roztoku. Kolik gramů soli je v tomto vzorku?"
-        },
-        "id": "chemistry-11-19",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A 100 g solution contains 10 g salt. Only water evaporates until 50 g of solution remains. What percentage of the remaining mass is salt?",
-        "numericAnswer": 20,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Roztok o hmotnosti 100 g obsahuje 10 g soli. Odpařuje se pouze voda, až zbude 50 g roztoku. Kolik procent zbývající hmotnosti tvoří sůl?"
-        },
         "id": "chemistry-11-20",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Reakce spotřebuje 2 molekuly vodíku na každou molekulu kyslíku. Máte 14 molekul vodíku a 10 molekul kyslíku. Kolik molekul kyslíku zbude po spotřebování všeho vodíku?"
+        }
       }
     ],
     "14–16": [
       {
         "type": "multiple-choice",
-        "prompt": "Which subatomic particle has a negative charge?",
+        "prompt": "An ion contains 11 protons, 12 neutrons and 10 electrons. It gains one electron. What is its atomic number afterwards?",
         "choices": [
-          "Proton",
-          "Neutron",
-          "Nucleus",
-          "Electron"
-        ],
-        "correctIndex": 3,
-        "cs": {
-          "prompt": "Která částice atomu má záporný náboj?",
-          "choices": [
-            "Proton",
-            "Neutron",
-            "Jádro",
-            "Elektron"
-          ]
-        },
-        "id": "chemistry-14-01",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "How many oxygen atoms are in one CO₂ molecule?",
-        "numericAnswer": 2,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Kolik atomů kyslíku je v jedné molekule CO₂?"
-        },
-        "id": "chemistry-14-02",
-        "reward": 10
-      },
-      {
-        "type": "text",
-        "prompt": "Write the chemical symbol for sodium.",
-        "acceptedAnswers": [
-          "Na"
-        ],
-        "cs": {
-          "prompt": "Napište chemickou značku sodíku.",
-          "acceptedAnswers": [
-            "Na"
-          ]
-        },
-        "id": "chemistry-14-03",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Which solution is neutral at 25 °C?",
-        "choices": [
-          "pH 7",
-          "pH 2",
-          "pH 5",
-          "pH 12"
-        ],
-        "correctIndex": 0,
-        "cs": {
-          "prompt": "Který roztok je při 25 °C neutrální?",
-          "choices": [
-            "pH 7",
-            "pH 2",
-            "pH 5",
-            "pH 12"
-          ]
-        },
-        "id": "chemistry-14-04",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "An atom has 8 protons and 10 neutrons. What is its mass number?",
-        "numericAnswer": 18,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Atom má 8 protonů a 10 neutronů. Jaké je jeho nukleonové číslo?"
-        },
-        "id": "chemistry-14-05",
-        "reward": 10
-      },
-      {
-        "type": "text",
-        "prompt": "What type of bond involves atoms sharing electron pairs?",
-        "acceptedAnswers": [
-          "covalent",
-          "covalent bond"
-        ],
-        "cs": {
-          "prompt": "Jaký typ vazby vzniká sdílením elektronových párů mezi atomy?",
-          "acceptedAnswers": [
-            "kovalentní",
-            "kovalentni",
-            "kovalentní vazba",
-            "kovalentni vazba"
-          ]
-        },
-        "id": "chemistry-14-06",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Isotopes of the same element differ in their number of…",
-        "choices": [
-          "Electron shells necessarily",
-          "Neutrons",
-          "Protons",
-          "Protons and neutrons equally"
+          "10",
+          "11",
+          "12",
+          "23"
         ],
         "correctIndex": 1,
+        "id": "chemistry-14-01",
+        "reward": 10,
         "cs": {
-          "prompt": "Izotopy stejného prvku se liší počtem…",
+          "prompt": "Iont obsahuje 11 protonů, 12 neutronů a 10 elektronů. Přijme jeden elektron. Jaké je pak jeho protonové číslo?",
           "choices": [
-            "Elektronových slupek v každém případě",
-            "Neutronů",
-            "Protonů",
-            "Protonů i neutronů o stejný počet"
+            "10",
+            "11",
+            "12",
+            "23"
           ]
-        },
-        "id": "chemistry-14-07",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "Using H = 1 and O = 16, find the relative molecular mass of H₂O.",
-        "numericAnswer": 18,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Pro H = 1 a O = 16 určete relativní molekulovou hmotnost H₂O."
-        },
-        "id": "chemistry-14-08",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A catalyst speeds up a reaction by…",
-        "choices": [
-          "Increasing the mass of products",
-          "Being used up completely",
-          "Changing the elements present",
-          "Providing a pathway with lower activation energy"
-        ],
-        "correctIndex": 3,
-        "cs": {
-          "prompt": "Katalyzátor urychluje reakci tím, že…",
-          "choices": [
-            "Zvyšuje hmotnost produktů",
-            "Zcela se spotřebuje",
-            "Mění přítomné prvky",
-            "Poskytuje cestu s nižší aktivační energií"
-          ]
-        },
-        "id": "chemistry-14-09",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "n = mass / molar mass. How many moles are in 20 g of a substance with molar mass 40 g/mol?",
-        "numericAnswer": 0.5,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "n = hmotnost / molární hmotnost. Kolik molů obsahuje 20 g látky s molární hmotností 40 g/mol?"
-        },
-        "id": "chemistry-14-10",
-        "reward": 10
+        }
       },
       {
         "type": "text",
-        "prompt": "An atom loses an electron. Is the resulting ion positive or negative?",
+        "prompt": "Two neutral atoms each have 6 protons, but one has 6 neutrons and the other 8. What term describes their relationship as forms of the same element?",
         "acceptedAnswers": [
-          "positive",
-          "positively charged"
+          "isotopes",
+          "isotope"
         ],
+        "id": "chemistry-14-03",
+        "reward": 10,
         "cs": {
-          "prompt": "Atom ztratí elektron. Je výsledný iont kladný, nebo záporný?",
+          "prompt": "Dva neutrální atomy mají každý 6 protonů, ale jeden má 6 neutronů a druhý 8. Jak se označují tyto formy téhož prvku?",
           "acceptedAnswers": [
-            "kladný",
-            "kladny",
-            "kladně nabitý",
-            "kladne nabity"
+            "izotopy",
+            "izotop"
           ]
-        },
-        "id": "chemistry-14-11",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "Find the coefficient of O₂ in the balanced equation: 2H₂ + __O₂ → 2H₂O.",
-        "numericAnswer": 1,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Doplňte koeficient u O₂ ve vyčíslené rovnici: 2H₂ + __O₂ → 2H₂O."
-        },
-        "id": "chemistry-14-12",
-        "reward": 10
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "A reaction warms the surrounding water. The reaction is…",
+        "prompt": "Two hydrogen atoms form H₂ by sharing a pair of electrons. Which description of the bond is correct?",
         "choices": [
-          "Endothermic",
-          "Necessarily reversible",
-          "Not chemical",
-          "Exothermic"
-        ],
-        "correctIndex": 3,
-        "cs": {
-          "prompt": "Reakce ohřívá okolní vodu. Reakce je…",
-          "choices": [
-            "Endotermická",
-            "Nutně vratná",
-            "Nechemická",
-            "Exotermická"
-          ]
-        },
-        "id": "chemistry-14-13",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "Dissolve 0.2 mol of solute to make 500 mL of solution. Concentration = moles / volume in litres. Find the concentration in mol/L.",
-        "numericAnswer": 0.4,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Rozpuštěním 0,2 mol látky připravíme 500 mL roztoku. Koncentrace = látkové množství / objem v litrech. Určete koncentraci v mol/L."
-        },
-        "id": "chemistry-14-14",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "An ion has 12 protons and 10 electrons. Enter its charge as a signed number in units of the elementary charge.",
-        "numericAnswer": 2,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Iont má 12 protonů a 10 elektronů. Zadejte jeho náboj jako číslo se znaménkem v jednotkách elementárního náboje."
-        },
-        "id": "chemistry-14-15",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A powdered solid reacts faster with an acid than the same mass in one lump. Temperature and acid concentration are equal. Why?",
-        "choices": [
-          "More solid surface is exposed",
-          "Its atoms are larger",
-          "It has more total mass",
-          "The acid has changed identity"
+          "Covalent, because the pair is shared between the atoms",
+          "Ionic, because one atom has permanently taken both electrons",
+          "Metallic, because the molecule contains two atoms",
+          "There is no bond unless protons are exchanged"
         ],
         "correctIndex": 0,
+        "id": "chemistry-14-06",
+        "reward": 10,
         "cs": {
-          "prompt": "Prášková pevná látka reaguje s kyselinou rychleji než stejně těžký kus. Teplota a koncentrace kyseliny jsou stejné. Proč?",
+          "prompt": "Dva atomy vodíku vytvoří H₂ sdílením páru elektronů. Který popis vazby je správný?",
           "choices": [
-            "Je vystaven větší povrch pevné látky",
-            "Má větší atomy",
-            "Má větší celkovou hmotnost",
-            "Kyselina se změnila na jinou látku"
+            "Kovalentní, protože atomy sdílejí elektronový pár",
+            "Iontová, protože jeden atom natrvalo převzal oba elektrony",
+            "Kovová, protože molekula má dva atomy",
+            "Bez výměny protonů žádná vazba nevzniká"
           ]
-        },
-        "id": "chemistry-14-16",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "For 2H₂ + O₂ → 2H₂O, 3 mol H₂ reacts with excess O₂. How many moles of O₂ are consumed?",
-        "numericAnswer": 1.5,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Při reakci 2H₂ + O₂ → 2H₂O reagují 3 mol H₂ s nadbytkem O₂. Kolik molů O₂ se spotřebuje?"
-        },
-        "id": "chemistry-14-17",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A solution contains 8 g solute in 200 mL. It is diluted to a total of 800 mL. What is its new concentration in g/L?",
-        "numericAnswer": 10,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Roztok obsahuje 8 g rozpuštěné látky ve 200 mL. Zředíme jej na celkový objem 800 mL. Jaká je nová koncentrace v g/L?"
-        },
-        "id": "chemistry-14-18",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "For 2H₂ + O₂ → 2H₂O, start with 4 mol H₂ and 1 mol O₂. After complete reaction, how many moles of H₂ remain?",
-        "numericAnswer": 2,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Při reakci 2H₂ + O₂ → 2H₂O máme na začátku 4 mol H₂ a 1 mol O₂. Kolik molů H₂ zbude po úplném proběhnutí reakce?"
-        },
-        "id": "chemistry-14-19",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A 20 g impure sample is 80% calcium carbonate by mass. Each 100 g of pure calcium carbonate releases 44 g CO₂ on complete decomposition. How many grams of CO₂ can the sample release?",
-        "numericAnswer": 7.04,
-        "tolerance": 0.01,
-        "cs": {
-          "prompt": "Nečistý vzorek o hmotnosti 20 g obsahuje 80 % uhličitanu vápenatého. Každých 100 g čistého uhličitanu vápenatého při úplném rozkladu uvolní 44 g CO₂. Kolik gramů CO₂ může vzorek uvolnit?"
-        },
-        "id": "chemistry-14-20",
-        "reward": 10
-      }
-    ],
-    "17–18": [
-      {
-        "type": "multiple-choice",
-        "prompt": "Which number identifies an element?",
-        "choices": [
-          "Number of neutrons",
-          "Mass of a sample",
-          "Number of molecules",
-          "Number of protons"
-        ],
-        "correctIndex": 3,
-        "cs": {
-          "prompt": "Které číslo určuje, o jaký prvek jde?",
-          "choices": [
-            "Počet neutronů",
-            "Hmotnost vzorku",
-            "Počet molekul",
-            "Počet protonů"
-          ]
-        },
-        "id": "chemistry-17-01",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "n = mass / molar mass. Find the amount in mol in 12 g of carbon with molar mass 12 g/mol.",
-        "numericAnswer": 1,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "n = hmotnost / molární hmotnost. Určete látkové množství v mol ve 12 g uhlíku s molární hmotností 12 g/mol."
-        },
-        "id": "chemistry-17-02",
-        "reward": 10
+        }
       },
       {
         "type": "text",
-        "prompt": "Name the bond formed by sharing electron pairs between atoms.",
+        "prompt": "HCl solution is mixed with NaOH solution in exactly the reacting proportions, producing dissolved NaCl and water. Name the type of reaction, not the method of separating the salt afterwards.",
         "acceptedAnswers": [
-          "covalent",
-          "covalent bond"
+          "neutralisation",
+          "neutralization"
         ],
+        "id": "chemistry-14-08",
+        "reward": 10,
         "cs": {
-          "prompt": "Pojmenujte vazbu vznikající sdílením elektronových párů mezi atomy.",
+          "prompt": "Roztok HCl smícháme s roztokem NaOH v přesném reakčním poměru a vznikne rozpuštěný NaCl a voda. Pojmenujte typ reakce, nikoli způsob pozdějšího oddělení soli.",
           "acceptedAnswers": [
-            "kovalentní",
-            "kovalentni",
-            "kovalentní vazba",
-            "kovalentni vazba"
+            "neutralizace"
           ]
-        },
-        "id": "chemistry-17-03",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A neutral atom has atomic number 17. How many electrons does it have?",
-        "numericAnswer": 17,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Neutrální atom má protonové číslo 17. Kolik má elektronů?"
-        },
-        "id": "chemistry-17-04",
-        "reward": 10
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "Which change is oxidation in terms of electrons?",
+        "prompt": "A neutral atom has 12 electrons. It forms a 2+ ion without changing its nucleus. How many electrons does the ion have?",
         "choices": [
-          "Gain of electrons",
-          "Sharing only",
-          "No electron change",
-          "Loss of electrons"
+          "10",
+          "12",
+          "14",
+          "2"
         ],
-        "correctIndex": 3,
+        "correctIndex": 0,
+        "id": "chemistry-14-04",
+        "reward": 10,
         "cs": {
-          "prompt": "Která změna je oxidace z hlediska elektronů?",
+          "prompt": "Neutrální atom má 12 elektronů. Vytvoří iont 2+ beze změny jádra. Kolik elektronů má iont?",
           "choices": [
-            "Přijetí elektronů",
-            "Pouze sdílení",
-            "Žádná změna elektronů",
-            "Ztráta elektronů"
+            "10",
+            "12",
+            "14",
+            "2"
           ]
-        },
-        "id": "chemistry-17-05",
-        "reward": 10
+        }
       },
       {
         "type": "numerical",
-        "prompt": "Using H = 1, C = 12 and O = 16, find the molar mass of CO₂ in g/mol.",
-        "numericAnswer": 44,
+        "prompt": "An ion has mass number 23, atomic number 11 and charge +1. How many neutrons does it have? Mass number = protons + neutrons.",
+        "numericAnswer": 12,
         "tolerance": 0,
+        "id": "chemistry-14-02",
+        "reward": 10,
         "cs": {
-          "prompt": "Pro H = 1, C = 12 a O = 16 určete molární hmotnost CO₂ v g/mol."
-        },
-        "id": "chemistry-17-06",
-        "reward": 10
+          "prompt": "Iont má nukleonové číslo 23, protonové číslo 11 a náboj +1. Kolik má neutronů? Nukleonové číslo = počet protonů + počet neutronů."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "Using relative atomic masses H = 1 and O = 16, find the relative molecular mass of H₂O₂, rather than H₂O.",
+        "numericAnswer": 34,
+        "tolerance": 0,
+        "id": "chemistry-14-07",
+        "reward": 10,
+        "cs": {
+          "prompt": "Pomocí relativních atomových hmotností H = 1 a O = 16 určete relativní molekulovou hmotnost H₂O₂, nikoli H₂O."
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A pH 2 solution is diluted until it reaches pH 5 at the same temperature. Which statement about the final solution is correct?",
+        "choices": [
+          "More acidic and still acidic",
+          "Less acidic but still acidic",
+          "Neutral",
+          "Alkaline"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-14-12",
+        "reward": 10,
+        "cs": {
+          "prompt": "Roztok s pH 2 zředíme, až má při stejné teplotě pH 5. Které tvrzení o konečném roztoku je správné?",
+          "choices": [
+            "Kyselejší a stále kyselý",
+            "Méně kyselý, ale stále kyselý",
+            "Neutrální",
+            "Zásaditý"
+          ]
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Why does increasing temperature usually increase reaction rate?",
+        "choices": [
+          "More collisions have enough energy to react",
+          "Particles stop moving",
+          "Activation energy always becomes zero",
+          "Mass is created"
+        ],
+        "correctIndex": 0,
+        "id": "chemistry-14-10",
+        "reward": 10,
+        "cs": {
+          "prompt": "Proč zvýšení teploty obvykle zvyšuje rychlost reakce?",
+          "choices": [
+            "Více srážek má dostatečnou energii k reakci",
+            "Částice se přestanou pohybovat",
+            "Aktivační energie vždy klesne na nulu",
+            "Vzniká hmota"
+          ]
+        }
       },
       {
         "type": "text",
-        "prompt": "What term describes a substance that increases reaction rate without being consumed overall?",
+        "prompt": "A substance increases reaction rate and is recovered unchanged overall at the end. It does not change the theoretical amount of product. Name its role.",
         "acceptedAnswers": [
-          "catalyst"
+          "catalyst",
+          "a catalyst"
         ],
+        "id": "chemistry-14-13",
+        "reward": 10,
         "cs": {
-          "prompt": "Jak se nazývá látka, která zvyšuje rychlost reakce a celkově se nespotřebovává?",
+          "prompt": "Látka zvyšuje rychlost reakce a na konci se celkově získá zpět nezměněná. Nemění teoretické množství produktu. Pojmenujte její roli.",
           "acceptedAnswers": [
             "katalyzátor",
             "katalyzator"
           ]
-        },
-        "id": "chemistry-17-07",
-        "reward": 10
+        }
       },
       {
         "type": "numerical",
-        "prompt": "Find the concentration in mol/L of 0.1 mol dissolved to a total volume of 250 mL.",
+        "prompt": "Balance __H₂ + __O₂ → __H₂O using the smallest whole-number coefficients. What is the sum of all three coefficients? Include any coefficient of 1.",
+        "numericAnswer": 5,
+        "tolerance": 0,
+        "id": "chemistry-14-05",
+        "reward": 10,
+        "cs": {
+          "prompt": "Vyčíslete __H₂ + __O₂ → __H₂O nejmenšími celočíselnými koeficienty. Jaký je součet všech tří koeficientů? Počítejte i koeficient 1."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A gas has molar mass 44 g/mol. A full container has mass 122 g; the empty container has mass 100 g. How many moles of gas are inside? Amount in moles = gas mass / molar mass.",
+        "numericAnswer": 0.5,
+        "tolerance": 0,
+        "id": "chemistry-14-09",
+        "reward": 10,
+        "cs": {
+          "prompt": "Plyn má molární hmotnost 44 g/mol. Plná nádoba má hmotnost 122 g a prázdná 100 g. Kolik molů plynu je uvnitř? Látkové množství = hmotnost plynu / molární hmotnost."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A solution contains 0.2 mol of solute in 500 cm³ of final solution. What is its concentration in mol/dm³? Concentration = amount / volume; 1 dm³ = 1000 cm³.",
         "numericAnswer": 0.4,
         "tolerance": 0,
+        "id": "chemistry-14-11",
+        "reward": 10,
         "cs": {
-          "prompt": "Určete koncentraci v mol/L pro 0,1 mol látky rozpuštěné na celkový objem 250 mL."
-        },
+          "prompt": "Roztok obsahuje 0,2 mol rozpuštěné látky v konečném objemu 500 cm³. Jaká je jeho koncentrace v mol/dm³? Koncentrace = látkové množství / objem; 1 dm³ = 1000 cm³."
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A reaction warms its surroundings without an external heater. Relative to the reacting system, which description is correct?",
+        "choices": [
+          "Energy is transferred out; exothermic",
+          "Energy is transferred in; exothermic",
+          "Energy is transferred out; endothermic",
+          "No energy transfer occurs"
+        ],
+        "correctIndex": 0,
+        "id": "chemistry-14-15",
+        "reward": 10,
+        "cs": {
+          "prompt": "Reakce ohřívá své okolí bez vnějšího ohřevu. Který popis je správný z pohledu reagující soustavy?",
+          "choices": [
+            "Energie odchází ze soustavy; exotermická",
+            "Energie vstupuje do soustavy; exotermická",
+            "Energie odchází ze soustavy; endotermická",
+            "Energie se nepřenáší"
+          ]
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A solution is prepared by mixing 10 g of solute with 190 g of water. What is the solute’s mass percentage in the final solution?",
+        "numericAnswer": 5,
+        "tolerance": 0,
+        "id": "chemistry-14-16",
+        "reward": 10,
+        "cs": {
+          "prompt": "Roztok připravíme smícháním 10 g rozpuštěné látky a 190 g vody. Jaké je hmotnostní procento rozpuštěné látky v konečném roztoku?"
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Solid sodium chloride does not conduct electricity but molten sodium chloride does. Which change explains this?",
+        "choices": [
+          "Ions become able to move",
+          "Sodium atoms become neutral",
+          "All covalent bonds disappear",
+          "Protons leave their nuclei"
+        ],
+        "correctIndex": 0,
+        "id": "chemistry-14-17",
+        "reward": 10,
+        "cs": {
+          "prompt": "Pevný chlorid sodný nevede elektrický proud, ale roztavený ano. Která změna to vysvětluje?",
+          "choices": [
+            "Ionty se mohou pohybovat",
+            "Atomy sodíku se stanou neutrálními",
+            "Všechny kovalentní vazby zmizí",
+            "Protony opustí jádra"
+          ]
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "For Mg + 2HCl → MgCl₂ + H₂, 0.3 mol Mg is mixed with 0.4 mol HCl. Assuming reaction goes as far as possible, how many moles of H₂ form?",
+        "numericAnswer": 0.2,
+        "tolerance": 0,
+        "id": "chemistry-14-14",
+        "reward": 10,
+        "cs": {
+          "prompt": "Pro Mg + 2HCl → MgCl₂ + H₂ smícháme 0,3 mol Mg a 0,4 mol HCl. Pokud reakce proběhne v maximálním možném rozsahu, kolik molů H₂ vznikne?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 25 mL sample of 0.1 mol/dm³ HCl is neutralised with 0.05 mol/dm³ NaOH in a 1:1 mole ratio. What volume of NaOH is needed, in mL?",
+        "numericAnswer": 50,
+        "tolerance": 0,
+        "id": "chemistry-14-18",
+        "reward": 10,
+        "cs": {
+          "prompt": "Vzorek 25 mL HCl o koncentraci 0,1 mol/dm³ neutralizujeme NaOH o koncentraci 0,05 mol/dm³ v molárním poměru 1:1. Jaký objem NaOH potřebujeme v mL?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A reaction’s theoretical yield is 8 g. A dish plus dry product has mass 26 g; the empty dish has mass 20 g. What is the percentage yield?",
+        "numericAnswer": 75,
+        "tolerance": 0,
+        "id": "chemistry-14-19",
+        "reward": 10,
+        "cs": {
+          "prompt": "Teoretický výtěžek reakce je 8 g. Miska se suchým produktem váží 26 g, prázdná miska 20 g. Jaký je procentní výtěžek?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A compound contains 24 g carbon and 4 g hydrogen. Use C = 12 g/mol and H = 1 g/mol. Its empirical formula is CH₂ and its molar mass is 28 g/mol. How many hydrogen atoms are in one molecule?",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "chemistry-14-20",
+        "reward": 10,
+        "cs": {
+          "prompt": "Sloučenina obsahuje 24 g uhlíku a 4 g vodíku. Použijte C = 12 g/mol a H = 1 g/mol. Její empirický vzorec je CH₂ a molární hmotnost 28 g/mol. Kolik atomů vodíku je v jedné molekule?"
+        }
+      }
+    ],
+    "17–18": [
+      {
+        "type": "text",
+        "prompt": "In 2Fe²⁺ + Cl₂ → 2Fe³⁺ + 2Cl⁻, name the process undergone by iron, rather than chlorine.",
+        "acceptedAnswers": [
+          "oxidation"
+        ],
         "id": "chemistry-17-08",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "At dynamic equilibrium in a closed system…",
-        "choices": [
-          "Both reactions stop",
-          "Reactant and product concentrations must be equal",
-          "All reactants disappear",
-          "Forward and reverse reaction rates are equal"
-        ],
-        "correctIndex": 3,
+        "reward": 10,
         "cs": {
-          "prompt": "Při dynamické rovnováze v uzavřené soustavě…",
-          "choices": [
-            "Obě reakce se zastaví",
-            "Koncentrace reaktantů a produktů musí být stejné",
-            "Všechny reaktanty zmizí",
-            "Rychlosti přímé a zpětné reakce jsou stejné"
+          "prompt": "V reakci 2Fe²⁺ + Cl₂ → 2Fe³⁺ + 2Cl⁻ pojmenujte proces, kterým prochází železo, nikoli chlor.",
+          "acceptedAnswers": [
+            "oxidace"
           ]
-        },
-        "id": "chemistry-17-09",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "pH = −log₁₀[H⁺]. What is the pH when [H⁺] = 0.001 mol/L?",
-        "numericAnswer": 3,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "pH = −log₁₀[H⁺]. Jaké je pH při [H⁺] = 0,001 mol/L?"
-        },
-        "id": "chemistry-17-10",
-        "reward": 10
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A reaction has ΔH = −40 kJ/mol. It…",
-        "choices": [
-          "Has zero activation energy",
-          "Releases heat",
-          "Absorbs heat",
-          "Cannot occur"
-        ],
-        "correctIndex": 1,
-        "cs": {
-          "prompt": "Reakce má ΔH = −40 kJ/mol. Tato reakce…",
-          "choices": [
-            "Má nulovou aktivační energii",
-            "Uvolňuje teplo",
-            "Pohlcuje teplo",
-            "Nemůže probíhat"
-          ]
-        },
-        "id": "chemistry-17-11",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A sample has isotopes of mass 10 and 11 in equal numbers. Find its mean relative atomic mass.",
-        "numericAnswer": 10.5,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Vzorek obsahuje stejný počet izotopů o hmotnostech 10 a 11. Určete jeho průměrnou relativní atomovou hmotnost."
-        },
-        "id": "chemistry-17-12",
-        "reward": 10
+        }
       },
       {
         "type": "text",
-        "prompt": "Does a cathode involve oxidation or reduction?",
+        "prompt": "Two solutions start at pH 7. The same small amount of acid is added to each. One changes to pH 3, while the other remains close to pH 7. What term describes the second solution’s acid–base behaviour?",
         "acceptedAnswers": [
-          "reduction"
+          "buffer",
+          "buffer solution",
+          "a buffer"
         ],
+        "id": "chemistry-17-16",
+        "reward": 10,
         "cs": {
-          "prompt": "Probíhá na katodě oxidace, nebo redukce?",
+          "prompt": "Dva roztoky začínají na pH 7. Do každého přidáme stejné malé množství kyseliny. První změní pH na 3, druhý zůstane blízko 7. Jak se nazývá druhý roztok podle jeho acidobazického chování?",
           "acceptedAnswers": [
-            "redukce"
+            "pufr",
+            "pufrový roztok",
+            "pufrovy roztok",
+            "tlumivý roztok",
+            "tlumivy roztok"
           ]
-        },
-        "id": "chemistry-17-13",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "A 0.2 mol/L solution supplies 25 mL. How many millimoles of solute does this volume contain? 1 mol = 1000 mmol.",
-        "numericAnswer": 5,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Odebereme 25 mL roztoku o koncentraci 0,2 mol/L. Kolik milimolů rozpuštěné látky tento objem obsahuje? 1 mol = 1000 mmol."
-        },
-        "id": "chemistry-17-14",
-        "reward": 10
+        }
       },
       {
         "type": "multiple-choice",
-        "prompt": "For N₂ + 3H₂ ⇌ 2NH₃, increasing pressure at constant temperature favours the side with fewer gas molecules. Which way does equilibrium shift?",
+        "prompt": "Across a period, neutral atoms gain protons and electrons, yet atomic radius generally decreases. Which explanation resolves this apparent contradiction?",
         "choices": [
-          "All gases become liquids",
-          "Towards NH₃",
-          "Towards N₂ and H₂",
-          "Neither way because coefficients do not matter"
+          "The added electrons occupy a new main shell each time",
+          "Nuclear attraction increases while added electrons enter the same main shell",
+          "Electrons become heavier and shrink",
+          "The number of protons decreases across the period"
         ],
         "correctIndex": 1,
+        "id": "chemistry-17-04",
+        "reward": 10,
         "cs": {
-          "prompt": "Pro N₂ + 3H₂ ⇌ 2NH₃ zvýšení tlaku za stálé teploty zvýhodňuje stranu s menším počtem molekul plynu. Kam se rovnováha posune?",
+          "prompt": "Neutrálním atomům v periodě přibývají protony i elektrony, přesto jejich poloměr obecně klesá. Co vysvětluje tento zdánlivý rozpor?",
           "choices": [
-            "Všechny plyny zkapalní",
-            "Směrem k NH₃",
-            "Směrem k N₂ a H₂",
-            "Nikam, protože koeficienty nehrají roli"
+            "Přidané elektrony vždy obsadí novou hlavní slupku",
+            "Přitažlivost jádra roste a přidané elektrony vstupují do stejné hlavní slupky",
+            "Elektrony ztěžknou a smrští se",
+            "Počet protonů v periodě klesá"
           ]
-        },
-        "id": "chemistry-17-15",
-        "reward": 10
+        }
       },
       {
         "type": "numerical",
-        "prompt": "20 mL of 0.1 mol/L H₂SO₄ is neutralized by NaOH. H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O. How many mL of 0.2 mol/L NaOH are needed?",
-        "numericAnswer": 20,
-        "tolerance": 0,
+        "prompt": "The first and second ionisation energies of X are 500 and 1200 kJ/mol. How much energy, in kJ, removes one electron from every ion in 0.5 mol of gaseous X⁺?",
+        "id": "chemistry-17-03",
+        "reward": 10,
         "cs": {
-          "prompt": "20 mL H₂SO₄ o koncentraci 0,1 mol/L neutralizujeme NaOH. H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O. Kolik mL NaOH o koncentraci 0,2 mol/L potřebujeme?"
+          "prompt": "První a druhá ionizační energie X jsou 500 a 1200 kJ/mol. Kolik energie v kJ je potřeba k odtržení jednoho elektronu z každého iontu v 0,5 mol plynného X⁺?"
         },
-        "id": "chemistry-17-16",
-        "reward": 10
+        "numericAnswer": 600,
+        "tolerance": 0
       },
       {
         "type": "numerical",
-        "prompt": "For A ⇌ 2B, Kc = [B]²/[A]. At equilibrium [A] = 0.5 and [B] = 0.2 mol/L. Find Kc numerically.",
-        "numericAnswer": 0.08,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "Pro A ⇌ 2B platí Kc = [B]²/[A]. V rovnováze [A] = 0,5 a [B] = 0,2 mol/L. Určete číselnou hodnotu Kc."
-        },
-        "id": "chemistry-17-17",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "q = mcΔT. A reaction warms 100 g water by 5 °C; c = 4 J/(g·°C). Exactly 0.1 mol reacts. Ignoring heat losses, find the reaction enthalpy in kJ/mol, including its sign.",
-        "numericAnswer": -20,
-        "tolerance": 0,
-        "cs": {
-          "prompt": "q = mcΔT. Reakce ohřeje 100 g vody o 5 °C; c = 4 J/(g·°C). Zreaguje přesně 0,1 mol. Zanedbejte tepelné ztráty a určete reakční entalpii v kJ/mol včetně znaménka."
-        },
-        "id": "chemistry-17-18",
-        "reward": 10
-      },
-      {
-        "type": "numerical",
-        "prompt": "For 2A + B → product, initially there are 0.6 mol A and 0.2 mol B. The reaction goes to completion. How many moles of A remain?",
+        "prompt": "A 5.85 g NaCl sample dissolves completely. Use molar mass 58.5 g/mol and assume complete dissociation. How many moles of ions in total are produced? Each formula unit of NaCl gives one Na⁺ and one Cl⁻; n = m/M.",
         "numericAnswer": 0.2,
-        "tolerance": 1e-06,
+        "tolerance": 0,
+        "id": "chemistry-17-02",
+        "reward": 10,
         "cs": {
-          "prompt": "Pro reakci 2A + B → produkt máme na začátku 0,6 mol A a 0,2 mol B. Reakce proběhne úplně. Kolik molů A zbude?"
-        },
-        "id": "chemistry-17-19",
-        "reward": 10
+          "prompt": "Vzorek 5,85 g NaCl se zcela rozpustí. Použijte molární hmotnost 58,5 g/mol a předpokládejte úplnou disociaci. Kolik molů iontů celkem vznikne? Každá vzorcová jednotka NaCl dává jeden Na⁺ a jeden Cl⁻; n = m/M."
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "One mole of O₂ contains approximately how many oxygen atoms? One mole contains 6.02 × 10^23 molecules.",
+        "choices": [
+          "6.02 × 10^23",
+          "1.204 × 10^24",
+          "3.01 × 10^23",
+          "32"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-17-01",
+        "reward": 10,
+        "cs": {
+          "prompt": "Kolik přibližně atomů kyslíku obsahuje jeden mol O₂? Jeden mol obsahuje 6,02 × 10^23 molekul.",
+          "choices": [
+            "6,02 × 10^23",
+            "1,204 × 10^24",
+            "3,01 × 10^23",
+            "32"
+          ]
+        }
       },
       {
         "type": "numerical",
-        "prompt": "10 mL of 0.1 mol/L HCl is mixed with 20 mL of 0.1 mol/L NaOH, then diluted to a total of 100 mL. They react 1:1. Find the final pH at 25 °C; pOH = −log₁₀[OH⁻] and pH + pOH = 14.",
-        "numericAnswer": 12,
+        "prompt": "A 25 cm³ sample of 0.20 mol/dm³ solution is diluted to a final volume of 100 cm³. Find its new concentration in mol/dm³. Dilution preserves amount of solute: c₁V₁ = c₂V₂.",
+        "numericAnswer": 0.05,
         "tolerance": 0,
+        "id": "chemistry-17-05",
+        "reward": 10,
         "cs": {
-          "prompt": "Smícháme 10 mL HCl o koncentraci 0,1 mol/L s 20 mL NaOH o koncentraci 0,1 mol/L a zředíme na celkových 100 mL. Reagují v poměru 1:1. Určete konečné pH při 25 °C; pOH = −log₁₀[OH⁻] a pH + pOH = 14."
-        },
+          "prompt": "Vzorek 25 cm³ roztoku o koncentraci 0,20 mol/dm³ zředíme na konečný objem 100 cm³. Určete novou koncentraci v mol/dm³. Při ředění zůstává látkové množství stejné: c₁V₁ = c₂V₂."
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "Ammonia, NH₃, has three bonding pairs and one lone pair around nitrogen. What is the shape formed by its atoms? The electron pairs are arranged approximately tetrahedrally; a lone pair is not an atom.",
+        "choices": [
+          "Tetrahedral",
+          "Trigonal pyramidal",
+          "Trigonal planar",
+          "Linear"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-17-06",
+        "reward": 10,
+        "cs": {
+          "prompt": "Amoniak NH₃ má kolem dusíku tři vazebné a jeden volný elektronový pár. Jaký tvar tvoří jeho atomy? Elektronové páry jsou uspořádány přibližně tetraedricky; volný pár není atom.",
+          "choices": [
+            "Tetraedrický",
+            "Trigonálně pyramidální",
+            "Trigonálně planární",
+            "Lineární"
+          ]
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "What is the oxidation number of sulfur in SO₃²⁻? Each oxygen has oxidation number −2. The oxidation numbers sum to the ion’s overall charge.",
+        "numericAnswer": 4,
+        "tolerance": 0,
+        "id": "chemistry-17-09",
+        "reward": 10,
+        "cs": {
+          "prompt": "Jaké je oxidační číslo síry v SO₃²⁻? Každý kyslík má oxidační číslo −2. Součet oxidačních čísel odpovídá celkovému náboji iontu."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A strong monoprotic acid initially has [H⁺] = 1.0 × 10^-2 mol/dm³. A sample is diluted to ten times its initial volume. Neglect water’s ionisation. What is the final pH? Use pH = −log₁₀[H⁺].",
+        "numericAnswer": 3,
+        "tolerance": 0,
+        "id": "chemistry-17-10",
+        "reward": 10,
+        "cs": {
+          "prompt": "Silná jednosytná kyselina má na začátku [H⁺] = 1,0 × 10^-2 mol/dm³. Vzorek zředíme na desetinásobek původního objemu. Zanedbejte ionizaci vody. Jaké je konečné pH? Použijte pH = −log₁₀[H⁺]."
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "A catalyst is added to a closed reaction mixture already at equilibrium at fixed temperature. What changes?",
+        "choices": [
+          "The equilibrium constant increases",
+          "Only the forward rate increases",
+          "Forward and reverse rates increase, but equilibrium composition stays the same",
+          "The overall enthalpy change becomes zero"
+        ],
+        "correctIndex": 2,
+        "id": "chemistry-17-11",
+        "reward": 10,
+        "cs": {
+          "prompt": "Do uzavřené reakční směsi, která je už v rovnováze při stálé teplotě, přidáme katalyzátor. Co se změní?",
+          "choices": [
+            "Rovnovážná konstanta vzroste",
+            "Vzroste jen rychlost přímé reakce",
+            "Vzrostou rychlosti přímé i zpětné reakce, ale rovnovážné složení zůstane stejné",
+            "Celková změna entalpie klesne na nulu"
+          ]
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A reaction warms 100 g of solution from 20 °C to 25 °C. Use c = 4.2 J/(g °C) and neglect heat loss. Find the energy change of the reacting system in kJ, including its sign. Energy gained by the solution is mcΔT.",
+        "numericAnswer": -2.1,
+        "tolerance": 0,
+        "id": "chemistry-17-12",
+        "reward": 10,
+        "cs": {
+          "prompt": "Reakce ohřeje 100 g roztoku z 20 °C na 25 °C. Použijte c = 4,2 J/(g °C) a zanedbejte tepelné ztráty. Určete změnu energie reagující soustavy v kJ včetně znaménka. Energie přijatá roztokem je mcΔT."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "For N₂ + 3H₂ → 2NH₃, 2 mol N₂ and 3 mol H₂ react as far as possible. How many moles of N₂ remain? The coefficients give the mole ratio in which reactants are consumed.",
+        "numericAnswer": 1,
+        "tolerance": 0,
+        "id": "chemistry-17-07",
+        "reward": 10,
+        "cs": {
+          "prompt": "Pro N₂ + 3H₂ → 2NH₃ reagují 2 mol N₂ a 3 mol H₂ v maximálním možném rozsahu. Kolik molů N₂ zbude? Koeficienty udávají molární poměr spotřeby reaktantů."
+        }
+      },
+      {
+        "type": "multiple-choice",
+        "prompt": "For an exothermic forward reaction, temperature is raised while other conditions are fixed. Which pair of changes is expected?",
+        "choices": [
+          "Equilibrium shifts to products; K increases",
+          "Equilibrium shifts to reactants; K decreases",
+          "Equilibrium shifts to reactants; K increases",
+          "Equilibrium stays unchanged; both rates stop"
+        ],
+        "correctIndex": 1,
+        "id": "chemistry-17-14",
+        "reward": 10,
+        "cs": {
+          "prompt": "U exotermické přímé reakce zvýšíme teplotu při zachování ostatních podmínek. Kterou dvojici změn očekáváme?",
+          "choices": [
+            "Rovnováha se posune k produktům; K vzroste",
+            "Rovnováha se posune k reaktantům; K klesne",
+            "Rovnováha se posune k reaktantům; K vzroste",
+            "Rovnováha zůstane stejná; obě reakce se zastaví"
+          ]
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "For A ⇌ 2B, Kc = [B]²/[A]. At equilibrium [B] = 0.6 and [A] = 0.2 mol/dm³. Find the numerical value of Kc.",
+        "numericAnswer": 1.8,
+        "tolerance": 0,
+        "id": "chemistry-17-15",
+        "reward": 10,
+        "cs": {
+          "prompt": "Pro A ⇌ 2B platí Kc = [B]²/[A]. V rovnováze [B] = 0,6 a [A] = 0,2 mol/dm³. Určete číselnou hodnotu Kc."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "For a first-order reaction, rate = k[A], with k = 0.2 s⁻¹. A 0.5 mol/dm³ solution is diluted to twice its volume. What is the immediate reaction rate after dilution, in mol/(dm³ s)?",
+        "numericAnswer": 0.05,
+        "tolerance": 0,
+        "id": "chemistry-17-17",
+        "reward": 10,
+        "cs": {
+          "prompt": "Pro reakci prvního řádu platí rychlost = k[A], kde k = 0,2 s⁻¹. Roztok o koncentraci 0,5 mol/dm³ zředíme na dvojnásobný objem. Jaká je okamžitá reakční rychlost po zředění v mol/(dm³ s)?"
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "Bond energies are H–H = 436, Cl–Cl = 243 and H–Cl = 431 kJ/mol. For H₂ + Cl₂ → 2HCl, estimate ΔH per mole of HCl produced, in kJ/mol. Estimate reaction ΔH as bonds broken minus bonds formed.",
+        "numericAnswer": -91.5,
+        "tolerance": 0,
+        "id": "chemistry-17-13",
+        "reward": 10,
+        "cs": {
+          "prompt": "Vazebné energie jsou H–H = 436, Cl–Cl = 243 a H–Cl = 431 kJ/mol. Pro H₂ + Cl₂ → 2HCl odhadněte ΔH na jeden mol vzniklého HCl v kJ/mol. Odhadněte reakční ΔH jako energie rozštěpených vazeb minus energie vzniklých vazeb."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A galvanic cell has standard reduction potentials +0.34 V at its cathode and −0.76 V at its anode. Find E°cell in millivolts. E°cell = E°cathode − E°anode.",
+        "numericAnswer": 1100,
+        "tolerance": 0,
+        "id": "chemistry-17-18",
+        "reward": 10,
+        "cs": {
+          "prompt": "Galvanický článek má standardní redukční potenciál na katodě +0,34 V a na anodě −0,76 V. Určete E° článku v milivoltech. E°článku = E°katody − E°anody."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "Use ΔG = ΔH − TΔS. If ΔH = −40 kJ/mol, ΔS = −100 J/(mol K), and T = 300 K, find ΔG in kJ/mol.",
+        "numericAnswer": -10,
+        "tolerance": 0,
+        "id": "chemistry-17-19",
+        "reward": 10,
+        "cs": {
+          "prompt": "Použijte ΔG = ΔH − TΔS. Pro ΔH = −40 kJ/mol, ΔS = −100 J/(mol K) a T = 300 K určete ΔG v kJ/mol."
+        }
+      },
+      {
+        "type": "numerical",
+        "prompt": "A 20.0 mL sample of H₂SO₄ is exactly neutralised by 40.0 mL of 0.100 mol/dm³ NaOH. The mole ratio is 1 acid : 2 NaOH. Find the mass of H₂SO₄ in the original sample, in grams. Use molar mass 98 g/mol.",
+        "numericAnswer": 0.196,
+        "tolerance": 0,
         "id": "chemistry-17-20",
-        "reward": 10
+        "reward": 10,
+        "cs": {
+          "prompt": "Vzorek 20,0 mL H₂SO₄ přesně neutralizujeme 40,0 mL NaOH o koncentraci 0,100 mol/dm³. Molární poměr je 1 kyselina : 2 NaOH. Určete hmotnost H₂SO₄ v původním vzorku v gramech. Použijte molární hmotnost 98 g/mol."
+        }
       }
     ]
   }

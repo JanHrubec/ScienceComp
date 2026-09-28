@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { t, subjectLabel, language } from '../i18n'
 import { computed, ref, watch } from 'vue'
-import { subjects, type Subject, type TeamState } from '../../shared/domain'
+import { TEAM_SKIP_LIMIT, subjects, type Subject, type TeamState } from '../../shared/domain'
 import { teamState, acceptState, refreshState } from '../state'
 import { api, errorMessage } from '../api'
 import { competition } from '../competition'
@@ -47,7 +47,7 @@ async function submit(skip = false) {
         </form>
         <p class="feedback" :class="tone" role="status" aria-live="polite">{{ feedback }}</p>
         <details class="scoring-note"><summary>{{ t('Scoring') }}</summary><p v-if="question.type === 'multiple-choice'">{{ t('Correct on try 1: +10. Try 2: 0. Every submission from try 3: −5, including incorrect answers.') }}</p><p v-else>{{ t('Correct on try 1: {full}. Try 2: {half}. Later: 0.', { full: question.reward, half: question.reward / 2 }) }}</p></details>
-        <div class="skip-area"><button class="text-button" :disabled="busy || teamState!.team.skipsUsed >= 3" @click="confirmSkip = !confirmSkip">{{ t('Skip question') }}</button><span>{{ t('{count} team skips left', { count: 3 - teamState!.team.skipsUsed }) }}</span><div v-if="confirmSkip" class="skip-confirm">{{ t('Skip this question? You cannot return to it.') }}<div><button class="secondary" :disabled="busy" @click="submit(true)">{{ t('Yes, skip') }}</button><button class="text-button" @click="confirmSkip = false">{{ t('Keep trying') }}</button></div></div></div>
+        <div class="skip-area"><button class="text-button" :disabled="busy || teamState!.team.skipsUsed >= TEAM_SKIP_LIMIT" @click="confirmSkip = !confirmSkip">{{ t('Skip question') }}</button><span>{{ t('{count} team skips left', { count: TEAM_SKIP_LIMIT - teamState!.team.skipsUsed }) }}</span><div v-if="confirmSkip" class="skip-confirm">{{ t('Skip this question? You cannot return to it.') }}<div><button class="secondary" :disabled="busy" @click="submit(true)">{{ t('Yes, skip') }}</button><button class="text-button" @click="confirmSkip = false">{{ t('Keep trying') }}</button></div></div></div>
       </template><div v-else class="completed"><h1>{{ t('{subject} complete.', { subject: subjectLabel(subject) }) }}</h1><p class="feedback" :class="tone" role="status">{{ feedback }}</p></div>
     </section>
   </main>
