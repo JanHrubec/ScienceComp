@@ -193,3 +193,7 @@ thead small { font-weight: 400; }
   .main-tabs { gap: 20px; }
   .main-tabs a { font-size: 14px; }
 }
+
+.language-switch { width: auto; min-height: 34px; padding: 4px 24px 4px 8px; font-size: 13px; background-color: transparent; }
+.login-header, .admin-header { gap: 16px; align-items: center; }
+@media (max-width: 700px) { .team-heading .language-switch { margin-left: auto; } }

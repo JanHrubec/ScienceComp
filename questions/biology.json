@@ -4,94 +4,148 @@
     "11–13": [
       {
         "type": "multiple-choice",
-        "prompt": "What is the smallest unit that can carry out the basic processes of life?",
+        "prompt": "What is the basic living unit of an organism?",
         "choices": [
-          "Organ system",
-          "Organ",
+          "Skeleton",
           "Cell",
+          "Organ",
           "Tissue"
         ],
-        "correctIndex": 2,
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Jaká je základní živá jednotka organismu?",
+          "choices": [
+            "Kostra",
+            "Buňka",
+            "Orgán",
+            "Tkáň"
+          ]
+        },
         "id": "biology-11-01",
         "reward": 10
       },
       {
         "type": "text",
-        "prompt": "Which green pigment absorbs light for photosynthesis?",
+        "prompt": "Which green pigment helps plants absorb light for photosynthesis?",
         "acceptedAnswers": [
           "chlorophyll"
         ],
+        "cs": {
+          "prompt": "Které zelené barvivo pomáhá rostlinám přijímat světlo pro fotosyntézu?",
+          "acceptedAnswers": [
+            "chlorofyl"
+          ]
+        },
         "id": "biology-11-02",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "Which structure controls what enters and leaves an animal cell, even though that cell has no cell wall?",
+        "prompt": "Which structure controls what enters and leaves a cell?",
         "choices": [
-          "Cell wall",
-          "Chloroplast",
-          "Vacuole only",
+          "Leaf",
+          "Bone",
+          "Blood",
           "Cell membrane"
         ],
         "correctIndex": 3,
+        "cs": {
+          "prompt": "Která struktura řídí, co vstupuje do buňky a co ji opouští?",
+          "choices": [
+            "List",
+            "Kost",
+            "Krev",
+            "Buněčná membrána"
+          ]
+        },
         "id": "biology-11-03",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A microscope has a 10× eyepiece. Its 4× objective is replaced by a 10× objective. What is the new total magnification?",
-        "numericAnswer": 100,
+        "prompt": "A plant has 3 pairs of leaves. How many leaves is that?",
+        "numericAnswer": 6,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Rostlina má 3 páry listů. Kolik listů to je?"
+        },
         "id": "biology-11-04",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "Which gas do humans take from the air for aerobic respiration?",
+        "prompt": "Which gas do humans need for aerobic respiration?",
         "choices": [
-          "Carbon monoxide",
-          "Nitrogen",
+          "Neon",
           "Oxygen",
-          "Helium"
+          "Helium",
+          "Hydrogen"
         ],
-        "correctIndex": 2,
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Který plyn člověk potřebuje k aerobnímu buněčnému dýchání?",
+          "choices": [
+            "Neon",
+            "Kyslík",
+            "Helium",
+            "Vodík"
+          ]
+        },
         "id": "biology-11-05",
         "reward": 10
       },
       {
         "type": "text",
-        "prompt": "What organ pumps blood around the human body?",
+        "prompt": "Which organ pumps blood around the body?",
         "acceptedAnswers": [
           "heart",
           "the heart"
         ],
+        "cs": {
+          "prompt": "Který orgán pohání krev po těle?",
+          "acceptedAnswers": [
+            "srdce"
+          ]
+        },
         "id": "biology-11-06",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "A plant is kept in darkness. Which process directly loses its energy source?",
+        "prompt": "Which process in a green plant needs light directly?",
         "choices": [
           "Respiration",
-          "Diffusion",
-          "Water absorption",
+          "Water absorption by roots",
+          "Seed water uptake",
           "Photosynthesis"
         ],
         "correctIndex": 3,
+        "cs": {
+          "prompt": "Který proces v zelené rostlině přímo potřebuje světlo?",
+          "choices": [
+            "Buněčné dýchání",
+            "Příjem vody kořeny",
+            "Nasávání vody semenem",
+            "Fotosyntéza"
+          ]
+        },
         "id": "biology-11-07",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A plant grows from 12 cm to 190 mm tall. What is its increase in height, in centimetres?",
-        "numericAnswer": 7,
+        "prompt": "A plant grows from 8 cm to 13 cm. What is the increase in height, in centimetres?",
+        "numericAnswer": 5,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Rostlina vyroste z 8 cm na 13 cm. O kolik centimetrů se její výška zvětšila?"
+        },
         "id": "biology-11-08",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "In the food chain grass → rabbit → fox, which organism is the producer?",
+        "prompt": "In grass → rabbit → fox, which organism is the producer?",
         "choices": [
           "All three",
           "Grass",
@@ -99,122 +153,193 @@
           "Fox"
         ],
         "correctIndex": 1,
+        "cs": {
+          "prompt": "V řetězci tráva → králík → liška je producentem který organismus?",
+          "choices": [
+            "Všechny tři",
+            "Tráva",
+            "Králík",
+            "Liška"
+          ]
+        },
         "id": "biology-11-09",
         "reward": 10
       },
       {
         "type": "text",
-        "prompt": "What is the name of the process by which a seed begins to grow into a seedling?",
+        "prompt": "What is the name of the process in which a seed starts growing into a seedling?",
         "acceptedAnswers": [
           "germination"
         ],
+        "cs": {
+          "prompt": "Jak se nazývá proces, při kterém semeno začíná růst v mladou rostlinu?",
+          "acceptedAnswers": [
+            "klíčení",
+            "kliceni"
+          ]
+        },
         "id": "biology-11-10",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "Why do cells need respiration?",
+        "prompt": "Do living plant cells respire at night?",
         "choices": [
-          "To create matter from nothing",
-          "To stop all chemical reactions",
-          "To make sunlight",
-          "To release usable energy from nutrients"
+          "No, respiration always needs light",
+          "Only when the plant flowers",
+          "Only if the leaves turn red",
+          "Yes, respiration continues"
         ],
         "correctIndex": 3,
+        "cs": {
+          "prompt": "Dýchají živé rostlinné buňky i v noci?",
+          "choices": [
+            "Ne, dýchání vždy potřebuje světlo",
+            "Pouze při kvetení",
+            "Pouze když listy zčervenají",
+            "Ano, buněčné dýchání pokračuje"
+          ]
+        },
         "id": "biology-11-11",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A population starts with 20 bacteria. Every bacterium divides into two, then every resulting bacterium divides into two again. None die. How many bacteria are present?",
-        "numericAnswer": 80,
+        "prompt": "There are 10 bacteria. Each divides into two once, and none die. How many bacteria are then present?",
+        "numericAnswer": 20,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Je zde 10 bakterií. Každá se jednou rozdělí na dvě a žádná nezemře. Kolik bakterií poté bude?"
+        },
         "id": "biology-11-12",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "Which feature increases the surface area for absorption in the small intestine?",
+        "prompt": "What is a main function of roots?",
         "choices": [
-          "Hair shafts",
-          "Villi",
-          "Thick enamel",
-          "Hard bone"
+          "Release pollen",
+          "Absorb water from soil",
+          "Make seeds directly",
+          "Absorb most sunlight"
         ],
         "correctIndex": 1,
+        "cs": {
+          "prompt": "Jaká je jedna z hlavních funkcí kořenů?",
+          "choices": [
+            "Uvolňovat pyl",
+            "Přijímat vodu z půdy",
+            "Přímo vytvářet semena",
+            "Přijímat většinu slunečního světla"
+          ]
+        },
         "id": "biology-11-13",
         "reward": 10
       },
       {
         "type": "text",
-        "prompt": "What term means an organism that breaks down dead organic matter?",
+        "prompt": "What do we call an organism that breaks down dead organic matter?",
         "acceptedAnswers": [
           "decomposer",
           "a decomposer"
         ],
+        "cs": {
+          "prompt": "Jak nazýváme organismus, který rozkládá odumřelou organickou hmotu?",
+          "acceptedAnswers": [
+            "rozkladač",
+            "rozkladac",
+            "reducent",
+            "dekompozitor"
+          ]
+        },
         "id": "biology-11-14",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "Of 50 seeds, 10 do not germinate. What percentage germinates?",
-        "numericAnswer": 80,
+        "prompt": "Of 20 seeds, 5 fail to germinate. How many germinate?",
+        "numericAnswer": 15,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Z 20 semen jich 5 nevyklíčí. Kolik semen vyklíčí?"
+        },
         "id": "biology-11-15",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "Two identical plants get the same water and soil, but different light levels. Which variable is deliberately changed?",
+        "prompt": "Two similar plants get equal water but different amounts of light. Which variable is deliberately changed?",
         "choices": [
+          "Both water and light",
+          "Neither",
           "Light level",
-          "Plant species",
-          "Soil type",
           "Water amount"
         ],
-        "correctIndex": 0,
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Dvě podobné rostliny dostávají stejné množství vody, ale různé množství světla. Která veličina je záměrně měněna?",
+          "choices": [
+            "Voda i světlo",
+            "Žádná",
+            "Množství světla",
+            "Množství vody"
+          ]
+        },
         "id": "biology-11-16",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "A red blood cell is specialised mainly to transport which gas from lungs to tissues?",
+        "prompt": "Why can leaf-like colouring help an insect survive?",
         "choices": [
-          "Hydrogen",
-          "Oxygen",
-          "Nitrogen",
-          "Helium"
+          "It cannot reproduce",
+          "Predators may notice it less often",
+          "It stops needing food",
+          "It becomes a plant"
         ],
         "correctIndex": 1,
+        "cs": {
+          "prompt": "Proč může zbarvení podobné listu pomoci hmyzu přežít?",
+          "choices": [
+            "Nemůže se rozmnožovat",
+            "Predátoři si ho mohou méně často všimnout",
+            "Přestane potřebovat potravu",
+            "Stane se rostlinou"
+          ]
+        },
         "id": "biology-11-17",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A 500 mL pond sample contains 12 water fleas. Assuming uniform distribution, how many would you expect in 2 L?",
-        "numericAnswer": 48,
+        "prompt": "A 500 mL pond sample contains 6 water fleas. Assuming uniform distribution, how many would you expect in 2 L?",
+        "numericAnswer": 24,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Vzorek 500 mL vody z rybníka obsahuje 6 perlooček. Při rovnoměrném rozložení kolik očekáváte ve 2 L?"
+        },
         "id": "biology-11-18",
         "reward": 10
       },
       {
-        "type": "multiple-choice",
-        "prompt": "An insect resembles the leaves it rests on. How can this help it survive?",
-        "choices": [
-          "It no longer needs food",
-          "It becomes a plant",
-          "It stops reproducing",
-          "Predators may be less likely to notice it"
-        ],
-        "correctIndex": 3,
+        "type": "numerical",
+        "prompt": "A microscope has a 10× eyepiece and a 4× objective. Total magnification is their product. The objective is changed to 10×. What is the new total magnification?",
+        "numericAnswer": 100,
+        "tolerance": 0,
+        "cs": {
+          "prompt": "Mikroskop má okulár 10× a objektiv 4×. Celkové zvětšení je jejich součin. Objektiv vyměníme za 10×. Jaké je nové celkové zvětšení?"
+        },
         "id": "biology-11-19",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A population starts with 100 rabbits. There are 25 births and 10 deaths, and 5 rabbits leave. None arrive. What is the final population?",
-        "numericAnswer": 110,
+        "prompt": "A rabbit population starts at 80. There are 20 births, 5 deaths and 5 rabbits leave. None arrive. By what percentage has the population increased?",
+        "numericAnswer": 12.5,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Populace začíná s 80 králíky. Narodí se 20, zemře 5 a dalších 5 odejde. Žádní nepřijdou. O kolik procent se populace zvětšila?"
+        },
         "id": "biology-11-20",
         "reward": 10
       }
@@ -222,95 +347,153 @@
     "14–16": [
       {
         "type": "multiple-choice",
-        "prompt": "A root cell from a flowering plant has no chloroplasts. Which organelle can still produce most of its ATP during aerobic respiration?",
+        "prompt": "Which cell structure contains most of the genetic material in a typical animal cell?",
         "choices": [
           "Cell wall",
-          "Mitochondrion",
           "Nucleus",
-          "Central vacuole"
+          "Cell membrane",
+          "Cytoplasm only"
         ],
         "correctIndex": 1,
+        "cs": {
+          "prompt": "Která struktura obsahuje většinu genetického materiálu běžné živočišné buňky?",
+          "choices": [
+            "Buněčná stěna",
+            "Jádro",
+            "Buněčná membrána",
+            "Pouze cytoplazma"
+          ]
+        },
         "id": "biology-14-01",
         "reward": 10
       },
       {
         "type": "text",
-        "prompt": "What molecule stores hereditary information in cells? Give its three-letter abbreviation.",
+        "prompt": "Which molecule stores hereditary information? Give its three-letter abbreviation.",
         "acceptedAnswers": [
           "DNA"
         ],
+        "cs": {
+          "prompt": "Která molekula uchovává dědičnou informaci? Uveďte třípísmennou zkratku.",
+          "acceptedAnswers": [
+            "DNA"
+          ]
+        },
         "id": "biology-14-02",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A cell image is 2 cm long. The actual cell is 50 micrometres long. There are 1000 micrometres in 1 mm. What is the magnification?",
-        "numericAnswer": 400,
+        "prompt": "A microscope has a 10× eyepiece and a 20× objective. Find the total magnification by multiplying them.",
+        "numericAnswer": 200,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Mikroskop má okulár 10× a objektiv 20×. Určete celkové zvětšení jejich vynásobením."
+        },
         "id": "biology-14-03",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "A dissolved substance is evenly distributed across a membrane permeable to it. Its particles are still moving. Which statement describes diffusion at this point?",
+        "prompt": "During diffusion, particles have a net movement from…",
         "choices": [
-          "Particles have stopped crossing",
-          "Equal average movement occurs in both directions",
-          "All particles move to one side",
-          "Net movement continues toward the higher concentration"
+          "Cold to hot only",
+          "Top to bottom only",
+          "Higher to lower concentration",
+          "Lower to higher concentration without energy"
         ],
-        "correctIndex": 1,
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Při difuzi se částice v souhrnu pohybují…",
+          "choices": [
+            "Pouze z chladu do tepla",
+            "Pouze shora dolů",
+            "Z vyšší koncentrace do nižší",
+            "Z nižší koncentrace do vyšší bez energie"
+          ]
+        },
         "id": "biology-14-04",
         "reward": 10
       },
       {
         "type": "text",
-        "prompt": "What is the term for the net movement of water through a partially permeable membrane from higher to lower water potential?",
+        "prompt": "What is the term for water moving across a partially permeable membrane from a more dilute solution to a more concentrated one?",
         "acceptedAnswers": [
           "osmosis"
         ],
+        "cs": {
+          "prompt": "Jak se nazývá pohyb vody přes polopropustnou membránu z méně koncentrovaného roztoku do koncentrovanějšího?",
+          "acceptedAnswers": [
+            "osmóza",
+            "osmoza"
+          ]
+        },
         "id": "biology-14-05",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "Which products are formed in aerobic respiration of glucose?",
+        "prompt": "Which gas is a product of aerobic respiration?",
         "choices": [
-          "Nitrogen and starch",
-          "Only oxygen",
-          "Carbon dioxide and water",
-          "Oxygen and glucose"
+          "Carbon dioxide",
+          "Oxygen",
+          "Helium",
+          "Hydrogen"
         ],
-        "correctIndex": 2,
+        "correctIndex": 0,
+        "cs": {
+          "prompt": "Který plyn vzniká při aerobním buněčném dýchání?",
+          "choices": [
+            "Oxid uhličitý",
+            "Kyslík",
+            "Helium",
+            "Vodík"
+          ]
+        },
         "id": "biology-14-06",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "In a double-stranded DNA sample, 30% of bases are adenine. What percentage are guanine?",
+        "prompt": "DNA base A pairs with T. If 20% of the bases in double-stranded DNA are A, what percentage are T?",
         "numericAnswer": 20,
         "tolerance": 0,
+        "cs": {
+          "prompt": "V DNA se báze A páruje s T. Pokud 20 % bází dvouřetězcové DNA tvoří A, kolik procent tvoří T?"
+        },
         "id": "biology-14-07",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "An enzyme works slowly at 5 °C, then regains its original activity on warming to 30 °C. What is the best explanation?",
+        "prompt": "What usually happens when an enzyme is heated far above its optimum temperature?",
         "choices": [
-          "It was permanently denatured at 5 °C",
-          "Lower temperature reduced collision frequency",
-          "Its amino-acid sequence changed back",
-          "The enzyme was consumed and then recreated"
+          "It becomes DNA",
+          "It uses no substrate",
+          "Its shape changes and activity falls",
+          "It works faster forever"
         ],
-        "correctIndex": 1,
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Co se obvykle stane, když enzym zahřejeme výrazně nad jeho optimální teplotu?",
+          "choices": [
+            "Změní se v DNA",
+            "Nepotřebuje substrát",
+            "Změní se jeho tvar a klesne aktivita",
+            "Navždy pracuje rychleji"
+          ]
+        },
         "id": "biology-14-08",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "In Aa × aa, allele A is completely dominant. Out of 80 offspring, how many are expected to show the recessive phenotype?",
-        "numericAnswer": 40,
+        "prompt": "In Aa × aa, the first parent passes on A or a equally often; the second always passes on a. What percentage of offspring is expected to be Aa?",
+        "numericAnswer": 50,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Při křížení Aa × aa předává první rodič stejně často A nebo a, druhý vždy a. Kolik procent potomků očekáváme s genotypem Aa?"
+        },
         "id": "biology-14-09",
         "reward": 10
       },
@@ -320,107 +503,172 @@
         "acceptedAnswers": [
           "mitosis"
         ],
+        "cs": {
+          "prompt": "Který typ buněčného dělení vytváří dvě geneticky shodné dceřiné buňky, pokud zanedbáme mutace?",
+          "acceptedAnswers": [
+            "mitóza",
+            "mitoza"
+          ]
+        },
         "id": "biology-14-10",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "Which blood component is primarily involved in clotting?",
+        "prompt": "Which blood component helps form a clot?",
         "choices": [
-          "Red blood cells",
+          "Red blood cells only",
           "Glucose",
-          "Antibodies",
+          "Water only",
           "Platelets"
         ],
         "correctIndex": 3,
+        "cs": {
+          "prompt": "Která složka krve pomáhá vytvářet krevní sraženinu?",
+          "choices": [
+            "Pouze červené krvinky",
+            "Glukóza",
+            "Pouze voda",
+            "Krevní destičky"
+          ]
+        },
         "id": "biology-14-11",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "Heart rate is 75 beats/min and stroke volume is 80 mL/beat. How many litres of blood does the heart pump in 2 minutes?",
-        "numericAnswer": 12,
+        "prompt": "A heart beats 60 times per minute and pumps 50 mL each beat. How much blood does it pump per minute, in litres?",
+        "numericAnswer": 3,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Srdce bije 60krát za minutu a při každém stahu vypudí 50 mL krve. Kolik litrů přečerpá za minutu?"
+        },
         "id": "biology-14-12",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "Why does a vaccine often provide protection against a later infection?",
+        "prompt": "After vaccination, why can a later immune response to the same pathogen be faster?",
         "choices": [
-          "It replaces red blood cells",
-          "It induces immune memory",
-          "It prevents all mutations",
-          "It kills every microbe forever"
+          "Vaccination removes all DNA",
+          "Memory cells remain",
+          "The body no longer needs white blood cells",
+          "All future pathogens are identical"
         ],
         "correctIndex": 1,
+        "cs": {
+          "prompt": "Proč může být po očkování pozdější imunitní odpověď na stejný patogen rychlejší?",
+          "choices": [
+            "Očkování odstraní veškerou DNA",
+            "Zůstávají paměťové buňky",
+            "Tělo už nepotřebuje bílé krvinky",
+            "Všechny budoucí patogeny jsou stejné"
+          ]
+        },
         "id": "biology-14-13",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A square quadrat has sides of 0.5 m and contains 6 daisies. Estimate their abundance in 10 m² of uniform habitat.",
-        "numericAnswer": 240,
+        "prompt": "A quadrat of area 0.5 m² contains 4 plants. Estimate abundance in 10 m² of uniform habitat.",
+        "numericAnswer": 80,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Čtvercová vzorkovací plocha o obsahu 0,5 m² obsahuje 4 rostliny. Odhadněte počet rostlin na 10 m² stejnorodého stanoviště."
+        },
         "id": "biology-14-14",
         "reward": 10
       },
       {
         "type": "text",
-        "prompt": "What term describes maintaining a stable internal environment within limits?",
+        "prompt": "What term describes keeping internal conditions within a stable range, such as controlling body temperature?",
         "acceptedAnswers": [
           "homeostasis"
         ],
+        "cs": {
+          "prompt": "Jak se nazývá udržování vnitřních podmínek v poměrně stálém rozmezí, například regulace tělesné teploty?",
+          "acceptedAnswers": [
+            "homeostáza",
+            "homeostaza"
+          ]
+        },
         "id": "biology-14-15",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "A plant is kept in darkness overnight. Which statement about its living cells is correct?",
+        "prompt": "A plant is kept in darkness overnight. Which statement is correct?",
         "choices": [
-          "Photosynthesis and respiration both stop",
-          "Respiration continues although photosynthesis stops",
           "Photosynthesis continues but respiration stops",
-          "Neither process needs a supply of energy-rich molecules"
+          "Neither uses energy-rich molecules",
+          "Respiration continues but photosynthesis stops",
+          "Both must stop"
         ],
-        "correctIndex": 1,
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Rostlina je přes noc ve tmě. Které tvrzení je správné?",
+          "choices": [
+            "Fotosyntéza pokračuje, ale dýchání se zastaví",
+            "Ani jeden proces nevyužívá energeticky bohaté molekuly",
+            "Buněčné dýchání pokračuje, ale fotosyntéza se zastaví",
+            "Oba procesy se musejí zastavit"
+          ]
+        },
         "id": "biology-14-16",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "Producers store 8000 kJ. Primary consumers receive 10% of that energy, and secondary consumers receive 10% of the primary consumers’ energy. How many kJ reach the secondary consumers?",
-        "numericAnswer": 80,
+        "prompt": "Producers contain 5000 kJ of energy. Herbivores receive 10%, and carnivores receive 10% of the herbivores’ energy. How many kJ reach the carnivores?",
+        "numericAnswer": 50,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Producenti obsahují 5000 kJ energie. Býložravci získají 10 % a masožravci získají 10 % energie býložravců. Kolik kJ získají masožravci?"
+        },
         "id": "biology-14-17",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "A resistant bacterial variant is present before an antibiotic is applied. After treatment it is common. Which explanation fits natural selection?",
+        "prompt": "Some bacteria are resistant before an antibiotic is used. Afterwards, resistant bacteria become more common. Why?",
         "choices": [
-          "Treatment caused every bacterium to make the same useful mutation",
-          "Susceptible bacteria converted into resistant bacteria on purpose",
-          "The existing resistant variant left more descendants",
-          "The resistant variant no longer needs to reproduce"
+          "Resistant bacteria survive and leave more descendants",
+          "Every bacterium chooses to become resistant",
+          "The antibiotic changes bacteria into viruses",
+          "Resistance prevents reproduction"
         ],
-        "correctIndex": 2,
+        "correctIndex": 0,
+        "cs": {
+          "prompt": "Některé bakterie jsou odolné již před použitím antibiotika. Poté se odolné bakterie stanou častějšími. Proč?",
+          "choices": [
+            "Odolné bakterie přežívají a zanechávají více potomků",
+            "Každá bakterie se rozhodne být odolná",
+            "Antibiotikum mění bakterie na viry",
+            "Odolnost brání rozmnožování"
+          ]
+        },
         "id": "biology-14-18",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A species has 24 chromosomes in each diploid body cell. Two normal gametes fuse. How many chromosomes are in the resulting zygote?",
+        "prompt": "Body cells have 24 chromosomes. Gametes have half that number. After two normal gametes fuse, how many chromosomes does the new cell have?",
         "numericAnswer": 24,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Tělní buňky mají 24 chromozomů. Pohlavní buňky jich mají polovinu. Kolik chromozomů má nová buňka po splynutí dvou normálních pohlavních buněk?"
+        },
         "id": "biology-14-19",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A population increases from 200 to 250 organisms, then returns to 200. What is the percentage decrease during the second change?",
+        "prompt": "A population rises from 200 to 250, then falls back to 200. What is the percentage decrease in the second change, measured from 250?",
         "numericAnswer": 20,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Populace vzroste z 200 na 250 a pak klesne zpět na 200. Jaký je procentní pokles při druhé změně, vztažený k 250?"
+        },
         "id": "biology-14-20",
         "reward": 10
       }
@@ -428,103 +676,163 @@
     "17–18": [
       {
         "type": "multiple-choice",
-        "prompt": "A cell can transcribe a gene normally but cannot translate its mRNA. Which structure is directly responsible for the blocked step?",
+        "prompt": "Which structure makes proteins using instructions from mRNA?",
         "choices": [
-          "Nucleus",
-          "Ribosome",
           "Cell membrane",
-          "Mitochondrial outer membrane"
+          "Ribosome",
+          "Cell wall",
+          "Vacuole"
         ],
         "correctIndex": 1,
+        "cs": {
+          "prompt": "Která struktura vytváří bílkoviny podle instrukcí v mRNA?",
+          "choices": [
+            "Buněčná membrána",
+            "Ribozom",
+            "Buněčná stěna",
+            "Vakuola"
+          ]
+        },
         "id": "biology-17-01",
         "reward": 10
       },
       {
         "type": "text",
-        "prompt": "What three-letter abbreviation names the main immediate energy-transfer molecule used by cells?",
+        "prompt": "Give the three-letter abbreviation of the molecule commonly used for immediate energy transfer in cells.",
         "acceptedAnswers": [
           "ATP"
         ],
+        "cs": {
+          "prompt": "Uveďte třípísmennou zkratku molekuly běžně používané k bezprostřednímu přenosu energie v buňkách.",
+          "acceptedAnswers": [
+            "ATP"
+          ]
+        },
         "id": "biology-17-02",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A double-stranded DNA molecule contains 1000 base pairs. Guanine makes up 20% of all bases. How many adenine bases are present?",
-        "numericAnswer": 600,
+        "prompt": "In double-stranded DNA, A pairs with T and G with C. If 20% of bases are G, what percentage are C?",
+        "numericAnswer": 20,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Ve dvouřetězcové DNA se A páruje s T a G s C. Pokud 20 % bází tvoří G, kolik procent tvoří C?"
+        },
         "id": "biology-17-03",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "A phospholipid bilayer forms because phospholipids have…",
+        "prompt": "Why does a cell membrane help the cell maintain different internal and external conditions?",
         "choices": [
-          "Hydrophilic heads and hydrophobic tails",
-          "Only hydrophilic parts",
-          "Only hydrophobic parts",
-          "No interaction with water"
+          "It blocks all water forever",
+          "It produces every nutrient",
+          "It selectively controls substance movement",
+          "It lets every substance move equally freely"
         ],
-        "correctIndex": 0,
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Proč buněčná membrána pomáhá buňce udržovat jiné podmínky uvnitř než v okolí?",
+          "choices": [
+            "Navždy zastavuje veškerou vodu",
+            "Vyrábí všechny živiny",
+            "Výběrově řídí pohyb látek",
+            "Propouští všechny látky stejně volně"
+          ]
+        },
         "id": "biology-17-04",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "An enzyme reaction contains 6 micromoles of product at 1 minute and 18 micromoles at 3 minutes. Find the average rate between these readings in micromoles per second.",
-        "numericAnswer": 0.1,
+        "prompt": "An enzyme forms 12 micromoles of product in 3 minutes at a constant rate. Find the rate in micromoles per minute.",
+        "numericAnswer": 4,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Enzym vytvoří stálou rychlostí 12 mikromolů produktu za 3 minuty. Určete rychlost v mikromolech za minutu."
+        },
         "id": "biology-17-05",
         "reward": 10
       },
       {
         "type": "text",
-        "prompt": "A cell produces an RNA copy of a DNA gene, before any protein is made. Name this copying process.",
+        "prompt": "What process makes an RNA copy of a DNA sequence?",
         "acceptedAnswers": [
           "transcription"
         ],
+        "cs": {
+          "prompt": "Který proces vytváří RNA kopii úseku DNA?",
+          "acceptedAnswers": [
+            "transkripce"
+          ]
+        },
         "id": "biology-17-06",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "For a reversible competitive inhibitor, what happens to maximum reaction rate when substrate concentration can become arbitrarily high?",
+        "prompt": "An enzyme’s active site binds a substrate. What usually happens if the active site changes shape too much?",
         "choices": [
-          "The same maximum can still be approached",
-          "The maximum must become zero",
-          "The maximum doubles",
-          "The enzyme’s amino-acid sequence changes"
+          "Every substrate binds better",
+          "The enzyme becomes a gene",
+          "The substrate gains a nucleus",
+          "The substrate binds less well"
         ],
-        "correctIndex": 0,
+        "correctIndex": 3,
+        "cs": {
+          "prompt": "Aktivní místo enzymu váže substrát. Co se obvykle stane, pokud se jeho tvar příliš změní?",
+          "choices": [
+            "Každý substrát se váže lépe",
+            "Enzym se stane genem",
+            "Substrát získá jádro",
+            "Substrát se váže hůře"
+          ]
+        },
         "id": "biology-17-07",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "In Aa × Aa, A is completely dominant. Among only the offspring with the dominant phenotype, what fraction is expected to be heterozygous? Give a decimal to two decimal places.",
-        "numericAnswer": 0.67,
-        "tolerance": 0.005,
+        "prompt": "Each Aa parent passes on a with probability 0.5. In Aa × Aa, multiply the two probabilities to find the probability of aa. Enter a decimal.",
+        "numericAnswer": 0.25,
+        "tolerance": 0,
+        "cs": {
+          "prompt": "Každý rodič Aa předává a s pravděpodobností 0,5. Při křížení Aa × Aa vynásobte obě pravděpodobnosti a určete pravděpodobnost aa. Zadejte desetinné číslo."
+        },
         "id": "biology-17-08",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "During meiosis I, which exchange can create new allele combinations on a chromosome?",
+        "prompt": "Which process produces gametes with half the usual chromosome number?",
         "choices": [
-          "Exchange between non-sister chromatids of homologous chromosomes",
-          "Exchange of entire ribosomes",
-          "Replication of a chromosome without exchange",
-          "Separation of identical sister chromatids alone"
+          "Translation",
+          "Meiosis",
+          "Mitosis",
+          "Transcription"
         ],
-        "correctIndex": 0,
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Který proces vytváří pohlavní buňky s polovičním počtem chromozomů?",
+          "choices": [
+            "Translace",
+            "Meióza",
+            "Mitóza",
+            "Transkripce"
+          ]
+        },
         "id": "biology-17-09",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A diploid cell has 12 chromosomes before DNA replication. After replication, how many chromosomes does it have before any chromatids separate? Count chromosomes by centromeres.",
-        "numericAnswer": 12,
+        "prompt": "A cell has 12 chromosomes. Each is copied into two sister chromatids before division. How many chromatids are then present?",
+        "numericAnswer": 24,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Buňka má 12 chromozomů. Každý se před dělením zdvojí na dvě sesterské chromatidy. Kolik chromatid potom buňka obsahuje?"
+        },
         "id": "biology-17-10",
         "reward": 10
       },
@@ -534,89 +842,141 @@
         "acceptedAnswers": [
           "apoptosis"
         ],
+        "cs": {
+          "prompt": "Jak se nazývá programovaná buněčná smrt?",
+          "acceptedAnswers": [
+            "apoptóza",
+            "apoptoza"
+          ]
+        },
         "id": "biology-17-11",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "At Hardy–Weinberg equilibrium, the frequency of recessive homozygotes is 0.04. Let q² = 0.04 and p + q = 1. What proportion of the population is heterozygous (2pq)?",
-        "numericAnswer": 0.32,
+        "prompt": "A microscope image is 20 mm long. The actual cell is 50 micrometres long. Use 1000 micrometres = 1 mm. Magnification = image length / actual length. Find the magnification.",
+        "numericAnswer": 400,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Obraz buňky je dlouhý 20 mm. Skutečná buňka měří 50 mikrometrů. Platí 1000 mikrometrů = 1 mm. Zvětšení = délka obrazu / skutečná délka. Určete zvětšení."
+        },
         "id": "biology-17-12",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "Which change would shift the oxygen–haemoglobin dissociation curve to the right, supporting oxygen release to active tissues?",
+        "prompt": "Active muscles release more CO₂. This can make haemoglobin release oxygen more readily. How does that help?",
         "choices": [
-          "Decreased carbon dioxide concentration",
-          "Increased carbon dioxide concentration",
-          "Decreased temperature",
-          "Increased pH"
+          "All blood flow stops",
+          "More oxygen reaches tissues needing it",
+          "Oxygen is no longer needed",
+          "CO₂ replaces DNA"
         ],
         "correctIndex": 1,
+        "cs": {
+          "prompt": "Pracující svaly uvolňují více CO₂. To může usnadnit uvolňování kyslíku z hemoglobinu. Jak to pomáhá?",
+          "choices": [
+            "Veškerý průtok krve se zastaví",
+            "Více kyslíku se dostane do tkání, které ho potřebují",
+            "Kyslík už není potřeba",
+            "CO₂ nahradí DNA"
+          ]
+        },
         "id": "biology-17-13",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A population contains 40 AA, 40 Aa and 20 aa individuals. What is the frequency of allele a, rather than genotype aa? Enter a decimal.",
-        "numericAnswer": 0.4,
+        "prompt": "A population has 20 AA, 20 Aa and 10 aa individuals. Each individual has two alleles. Find the frequency of A: number of A copies / total allele copies. Enter a decimal.",
+        "numericAnswer": 0.6,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Populace má 20 jedinců AA, 20 Aa a 10 aa. Každý jedinec má dvě alely. Frekvence A = počet kopií A / celkový počet kopií alel. Zadejte desetinné číslo."
+        },
         "id": "biology-17-14",
         "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "A respirometer absorbs CO₂ and shows a falling gas volume. A student warms it during the measurement. Why can volume change no longer be attributed only to oxygen uptake?",
+        "prompt": "A respirometer absorbs all CO₂ produced. At constant temperature and pressure, its gas volume falls while seeds respire. What does the fall measure?",
         "choices": [
-          "Gas volume also depends on temperature",
-          "Warming guarantees oxygen production",
-          "CO₂ absorption stops all respiration",
-          "Temperature changes the number of chromosomes"
+          "Glucose production",
+          "Nitrogen production",
+          "DNA replication",
+          "Oxygen consumption"
         ],
-        "correctIndex": 0,
+        "correctIndex": 3,
+        "cs": {
+          "prompt": "Respirometr pohlcuje všechen vzniklý CO₂. Při stálé teplotě a tlaku v něm během dýchání semen klesá objem plynu. Co tento pokles měří?",
+          "choices": [
+            "Tvorbu glukózy",
+            "Tvorbu dusíku",
+            "Replikaci DNA",
+            "Spotřebu kyslíku"
+          ]
+        },
         "id": "biology-17-15",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "An ecosystem has GPP = 1500 and producer respiration = 600 kJ/m²/year. What is its annual net primary production over 2 m², in kJ?",
+        "prompt": "Net primary production = gross production − producer respiration. Gross production is 1500 and respiration 600 kJ/m²/year. Find annual net production over 2 m², in kJ.",
         "numericAnswer": 1800,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Čistá primární produkce = hrubá produkce − dýchání producentů. Hrubá produkce je 1500 a dýchání 600 kJ/m²/rok. Určete roční čistou produkci na ploše 2 m² v kJ."
+        },
         "id": "biology-17-16",
         "reward": 10
       },
       {
         "type": "text",
-        "prompt": "A storm kills beetles regardless of their colour. By chance, a colour allele becomes more frequent among survivors. Name the evolutionary mechanism.",
+        "prompt": "A storm kills beetles regardless of colour. By chance, a colour allele becomes more frequent among survivors. Name the evolutionary mechanism.",
         "acceptedAnswers": [
           "genetic drift"
         ],
+        "cs": {
+          "prompt": "Bouře usmrtí brouky bez ohledu na barvu. Náhodou se alela určité barvy stane mezi přeživšími častější. Pojmenujte evoluční mechanismus.",
+          "acceptedAnswers": [
+            "genetický drift",
+            "geneticky drift",
+            "genetický posun",
+            "geneticky posun"
+          ]
+        },
         "id": "biology-17-17",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A study marks 40 animals and releases them. A later random sample contains 50 animals, of which 10 are marked. Assume perfect mixing and no births, deaths or migration. Estimate the number of unmarked animals in the entire population.",
+        "prompt": "40 animals are marked and released. A later sample of 50 includes 10 marked animals. Estimate N = 40 × 50 / 10. How many animals in the whole population are unmarked? Assume perfect mixing and no population change.",
         "numericAnswer": 160,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Označíme a vypustíme 40 zvířat. Pozdější vzorek 50 obsahuje 10 označených. Odhad populace je N = 40 × 50 / 10. Kolik zvířat v celé populaci není označeno? Předpokládejte dokonalé promísení a neměnnou populaci."
+        },
         "id": "biology-17-18",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "An mRNA has 960 nucleotides: 60 in untranslated regions and the rest in one coding region that includes a stop codon. Each codon uses 3 nucleotides. How many amino acids are encoded?",
-        "numericAnswer": 299,
+        "prompt": "An mRNA has 330 nucleotides. Of these, 30 are untranslated; the remaining region includes one stop codon. Each codon uses 3 nucleotides, and the stop codon adds no amino acid. How many amino acids are encoded?",
+        "numericAnswer": 99,
         "tolerance": 0,
+        "cs": {
+          "prompt": "mRNA má 330 nukleotidů. Z nich 30 není překládáno; zbývající oblast zahrnuje jeden stop kodon. Každý kodon má 3 nukleotidy a stop kodon nepřidává aminokyselinu. Kolik aminokyselin je kódováno?"
+        },
         "id": "biology-17-19",
         "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "Two genes assort independently and A and B are completely dominant. In AaBb × aabb, what fraction of offspring is expected to show exactly one dominant phenotype (A only or B only)? Enter a decimal.",
-        "numericAnswer": 0.5,
-        "tolerance": 0,
+        "prompt": "In Aa × Aa, expected genotypes are ¼ AA, ½ Aa and ¼ aa. A is completely dominant. Among offspring showing the dominant phenotype, what fraction is Aa? Enter a decimal to two decimal places.",
+        "numericAnswer": 0.67,
+        "tolerance": 0.005,
+        "cs": {
+          "prompt": "Při křížení Aa × Aa očekáváme ¼ AA, ½ Aa a ¼ aa. A je úplně dominantní. Jakou část potomků s dominantním fenotypem tvoří Aa? Zadejte desetinné číslo na dvě desetinná místa."
+        },
         "id": "biology-17-20",
         "reward": 10
       }

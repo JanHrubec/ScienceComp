@@ -7,7 +7,7 @@ import { DatabaseSync } from 'node:sqlite'
 import { answerReward } from '../shared/scoring.js'
 import { createApp } from '../server/app.js'
 import { openDatabase } from '../server/db.js'
-import { loadQuestions, isCorrect, parseNumber, type Question } from '../server/questions.js'
+import { loadQuestions, isCorrect, parseNumber, publicQuestion, type Question } from '../server/questions.js'
 import { subjects, ages, type TeamState, type AdminTeam, type CompetitionState } from '../shared/domain.js'
 const bank = loadQuestions('./questions')
 const answerFor = (q: Question) => q.type === 'multiple-choice' ? String(q.correctIndex) : q.type === 'text' ? q.acceptedAnswers[0] : String(q.numericAnswer)
@@ -16,22 +16,52 @@ test('bank has 300 unique, valid questions and all answer types in every track',
   for (const s of subjects) for (const age of ages) {
     const track = bank[s][age]; assert.equal(track.length, 20)
     assert.equal(new Set(track.map(q => q.type)).size, 3)
-    for (const q of track) { assert(!ids.has(q.id)); ids.add(q.id); assert(isCorrect(q, answerFor(q))) }
+    for (const q of track) { assert(!ids.has(q.id)); ids.add(q.id); assert(isCorrect(q, answerFor(q)))
+      assert(q.cs.prompt.length >= 10)
+      if (q.type === 'text') for (const variant of q.cs.acceptedAnswers) assert(isCorrect(q, variant))
+      if (q.type === 'multiple-choice') assert.equal(q.cs.choices.length, q.choices.length)
+      const safe = JSON.stringify(publicQuestion(q))
+      for (const key of ['acceptedAnswers', 'correctIndex', 'numericAnswer', 'tolerance']) assert(!safe.includes(key))
+    }
   }
   assert.equal(ids.size, 300)
 })
 test('exact grading normalises only permitted differences', () => {
-  const text: Question = { id: 't', prompt: 'Name it', type: 'text', reward: 10, acceptedAnswers: ['cell membrane'], ignorePunctuation: false }
+  const text: Question = { id: 't', prompt: 'Name it', type: 'text', reward: 10, acceptedAnswers: ['cell membrane'], ignorePunctuation: false, cs: { prompt: 'Pojmenujte ji', acceptedAnswers: ['buněčná membrána', 'bunecna membrana'] } }
   assert(isCorrect(text, '  CELL   Membrane  ')); assert(!isCorrect(text, 'plasma membrane')); assert(!isCorrect(text, 'cell membrane.'))
   assert(isCorrect({ ...text, ignorePunctuation: true }, 'Cell membrane.'))
-  const numeric: Question = { id: 'n', prompt: 'Number', type: 'numerical', reward: 10, numericAnswer: 9.81, tolerance: .02 }
+  const numeric: Question = { id: 'n', prompt: 'Number', type: 'numerical', reward: 10, numericAnswer: 9.81, tolerance: .02, cs: { prompt: 'Zadejte číslo' } }
   assert(isCorrect(numeric, '9.83')); assert(!isCorrect(numeric, '9.84'))
   assert(isCorrect({ ...numeric, numericAnswer: 5, tolerance: 0 }, '5.0'))
-  for (const bad of ['', ' ', '0x10', 'Infinity', '5kg', '1,000']) assert.equal(parseNumber(bad), null)
+  assert(isCorrect(numeric, '9,81'))
+  assert.equal(parseNumber(',5'), 0.5)
+  assert.equal(parseNumber('1,5e2'), 150)
+  assert(isCorrect(text, '  BUNĚČNÁ   MEMBRÁNA '))
+  assert(isCorrect(text, 'bunecna membrana'))
+  assert(isCorrect(text, 'buněčná membrána'.normalize('NFD')))
+  assert(!isCorrect(text, 'membrána'))
+  for (const bad of ['', ' ', '0x10', 'Infinity', '5kg', '1,2,3', '1.2,3']) assert.equal(parseNumber(bad), null)
 })
 test('startup rejects malformed files', () => {
   const dir = mkdtempSync(join(tmpdir(), 'fieldwork-bank-'))
   try { cpSync('./questions', dir, { recursive: true }); const path = join(dir, 'physics.json'); const data = JSON.parse(readFileSync(path, 'utf8')); data.tracks['11–13'][0].correctIndex = 99; writeFileSync(path, JSON.stringify(data)); assert.throws(() => loadQuestions(dir), /Invalid question file/) } finally { rmSync(dir, { recursive: true, force: true }) }
+})
+test('startup rejects missing Czech translations and mismatched choice counts', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'bilingual-bank-'))
+  try {
+    cpSync('./questions', dir, { recursive: true })
+    const path = join(dir, 'physics.json')
+    const original = readFileSync(path, 'utf8')
+    for (const mutate of [
+      (q: Record<string, unknown>) => { delete q.cs },
+      (q: Record<string, unknown>) => { q.cs = { prompt: 'Vyberte správnou možnost.', choices: ['Jedna', 'Dvě'] } },
+    ]) {
+      const data = JSON.parse(original)
+      mutate(data.tracks['11–13'][0])
+      writeFileSync(path, JSON.stringify(data))
+      assert.throws(() => loadQuestions(dir), /Invalid question file/)
+    }
+  } finally { rmSync(dir, { recursive: true, force: true }) }
 })
 test('competition API: multi-device atomic scoring, game, admin and restart persistence', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'fieldwork-db-')), path = join(dir, 'test.sqlite')
@@ -212,18 +242,26 @@ test('legacy database migration preserves teams, progress, sessions and position
 
 test('revised numerical questions use the requested units and quantities', () => {
   const checks: [typeof subjects[number], typeof ages[number], number, number][] = [
-    ['physics', '14–16', 12, 20 / (50 / 10000)],
-    ['physics', '17–18', 6, .5 * 200 * (.2 ** 2 - .1 ** 2)],
-    ['physics', '17–18', 19, .5 * 2 * 5 ** 2 + .5 * 3 * 1 ** 2 - .5 * 5 * 1.4 ** 2],
-    ['biology', '17–18', 3, 1000 * 2 * .3],
-    ['biology', '17–18', 5, (18 - 6) / (2 * 60)],
-    ['biology', '17–18', 8, 2 / 3],
-    ['biology', '17–18', 19, (960 - 60) / 3 - 1],
-    ['chemistry', '17–18', 13, (436 + 243 - 2 * 431) / 2],
-    ['chemistry', '17–18', 20, .04 * .1 / 2 * 98],
-    ['ess', '14–16', 19, (1000 - 150) * 1.12],
-    ['ess', '17–18', 19, (1000 - 600 - 350) / 1000 * 2 * 1000000],
-    ['ess', '17–18', 20, 700 + .5 * 700 * (1 - 700 / 1000) - 100],
+    ['physics', '11–13', 20, (200 - 50) / 200 * 100],
+    ['physics', '14–16', 15, 50 * 2 * 60 / 1000],
+    ['physics', '14–16', 20, (2 * 10 * 3) / 2 / .5],
+    ['physics', '17–18', 16, .5 * 4 ** 2 / (2 / 2)],
+    ['physics', '17–18', 18, 12 / 2],
+    ['physics', '17–18', 19, (2 * 3 + 1 * -3) / 3],
+    ['physics', '17–18', 20, 100 * 5 * .6 / (5 * 10)],
+    ['biology', '17–18', 14, (20 * 2 + 20) / (50 * 2)],
+    ['biology', '17–18', 18, 40 * 50 / 10 - 40],
+    ['biology', '17–18', 19, (330 - 30) / 3 - 1],
+    ['biology', '17–18', 20, .67],
+    ['chemistry', '14–16', 20, 20 * .8 * 44 / 100],
+    ['chemistry', '17–18', 16, (20 / 1000 * .1 * 2) / .2 * 1000],
+    ['chemistry', '17–18', 18, -(100 * 4 * 5) / 1000 / .1],
+    ['chemistry', '17–18', 20, 14 + Math.log10((.020 * .1 - .010 * .1) / .100)],
+    ['ess', '14–16', 18, (1000 - 800) * 1000 / 2000],
+    ['ess', '17–18', 17, 100 * 6 * .25 / 1000],
+    ['ess', '17–18', 19, 500 + .4 * 500 * (1 - 500 / 1000) - 120],
+    ['ess', '17–18', 20, 60 / (10 * .5 - 1)],
+    ['computer-science', '17–18', 20, 100 / (80 / 4 + 20)],
   ]
   for (const [subject, age, number, answer] of checks) assert(isCorrect(bank[subject][age][number - 1], String(answer)), `${subject} ${age} Q${number}`)
 })

@@ -110,7 +110,7 @@ export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: s
       }
       if (input.answer === undefined) throw new ApiError(400, 'Enter an answer first.')
       if (q.type === 'multiple-choice' && !q.choices.some((_, index) => input.answer === String(index))) throw new ApiError(400, 'Choose one answer.')
-      if (q.type === 'numerical' && parseNumber(input.answer) === null) throw new ApiError(400, 'Enter a number without units, using a decimal point if needed.')
+      if (q.type === 'numerical' && parseNumber(input.answer) === null) throw new ApiError(400, 'Enter a number without units, using a decimal point or comma if needed.')
       const correct = isCorrect(q, input.answer)
       const awarded = answerReward(q.type, q.reward, p.attempts, correct)
       if (correct) {
