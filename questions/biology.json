@@ -25,19 +25,15 @@
         }
       },
       {
-        "type": "text",
-        "prompt": "A leaf has green and white patches. After exposure to light, starch is found only in the green patches. Which light-absorbing pigment is missing from the white patches?",
-        "acceptedAnswers": [
-          "chlorophyll"
-        ],
         "id": "biology-11-02",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "Chlorophyll is the green pigment in a leaf. A leaf has 6 cm² of green area and 4 cm² of white area without chlorophyll. What percentage of its total area contains chlorophyll?",
+        "numericAnswer": 60,
+        "tolerance": 0,
         "cs": {
-          "prompt": "List má zelené a bílé části. Po osvětlení je škrob nalezen pouze v zelených částech. Které barvivo pohlcující světlo chybí v bílých částech?",
-          "acceptedAnswers": [
-            "chlorofyl"
-          ]
-        }
+          "prompt": "Chlorofyl je zelené barvivo v listu. List má 6 cm² zelené plochy a 4 cm² bílé plochy bez chlorofylu. Kolik procent celkové plochy obsahuje chlorofyl?"
+        },
+        "reward": 10
       },
       {
         "type": "multiple-choice",
@@ -62,242 +58,259 @@
         }
       },
       {
-        "type": "text",
-        "prompt": "During exercise, both breathing and pulse rate rise. Which organ’s repeated contractions directly cause the faster pulse and move blood to the muscles?",
-        "acceptedAnswers": [
-          "heart",
-          "the heart"
-        ],
         "id": "biology-11-06",
-        "reward": 10,
-        "cs": {
-          "prompt": "Při cvičení se zrychlí dýchání i tep. Opakované stahy kterého orgánu přímo způsobují rychlejší tep a pohánějí krev ke svalům?",
-          "acceptedAnswers": [
-            "srdce"
-          ]
-        }
-      },
-      {
-        "type": "numerical",
-        "prompt": "A plant grows from 12 cm to 190 mm tall. What is its increase in height, in centimetres?",
-        "numericAnswer": 7,
-        "tolerance": 0,
-        "id": "biology-11-08",
-        "reward": 10,
-        "cs": {
-          "prompt": "Rostlina vyroste z 12 cm na 190 mm. O kolik centimetrů se její výška zvětšila?"
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "An animal cell has no cell wall, yet some substances enter much more easily than others. Which structure explains this selective entry?",
-        "choices": [
-          "Cell wall",
-          "Chloroplast",
-          "Vacuole only",
-          "Cell membrane"
-        ],
-        "correctIndex": 3,
-        "id": "biology-11-03",
-        "reward": 10,
-        "cs": {
-          "prompt": "Živočišná buňka nemá buněčnou stěnu, ale některé látky do ní vstupují mnohem snadněji než jiné. Která struktura vysvětluje tento výběrový vstup?",
-          "choices": [
-            "Buněčná stěna",
-            "Chloroplast",
-            "Pouze vakuola",
-            "Buněčná membrána"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A plant is kept in darkness. Which process directly loses its energy source?",
-        "choices": [
-          "Respiration",
-          "Diffusion",
-          "Water absorption",
-          "Photosynthesis"
-        ],
-        "correctIndex": 3,
-        "id": "biology-11-07",
-        "reward": 10,
-        "cs": {
-          "prompt": "Rostlina je ve tmě. Který proces přímo ztrácí svůj zdroj energie?",
-          "choices": [
-            "Buněčné dýchání",
-            "Difuze",
-            "Příjem vody",
-            "Fotosyntéza"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "In grass → rabbit → fox, the arrows show energy passing to the eater. Rabbit numbers fall sharply. If all other conditions stay the same, what is the most likely initial effect on grass?",
-        "choices": [
-          "More grass is eaten",
-          "Less grass is eaten",
-          "Grass becomes a consumer",
-          "Grass no longer needs light"
-        ],
-        "correctIndex": 1,
-        "id": "biology-11-09",
-        "reward": 10,
-        "cs": {
-          "prompt": "V řetězci tráva → králík → liška ukazují šipky přenos energie k tomu, kdo potravu požírá. Počet králíků prudce klesne. Jaký je nejpravděpodobnější počáteční dopad na trávu při stejných ostatních podmínkách?",
-          "choices": [
-            "Sní se více trávy",
-            "Sní se méně trávy",
-            "Tráva se stane konzumentem",
-            "Tráva už nepotřebuje světlo"
-          ]
-        }
-      },
-      {
         "type": "text",
-        "prompt": "A seed absorbs water and its first root emerges before any green leaf appears. Name the process that has begun; it is not pollination.",
+        "prompt": "Blood entering an organ has little oxygen; blood leaving it has more. Meanwhile, air entering the organ has more oxygen than air leaving it. Which organ transfers oxygen from air into blood?",
         "acceptedAnswers": [
-          "germination"
+          "lungs",
+          "lung",
+          "the lungs"
         ],
-        "id": "biology-11-10",
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Krev vstupující do orgánu obsahuje málo kyslíku; odcházející krev ho obsahuje více. Vdechovaný vzduch má přitom více kyslíku než vydechovaný. Který orgán převádí kyslík ze vzduchu do krve?",
+          "acceptedAnswers": [
+            "plíce",
+            "plicní sklípky",
+            "plice",
+            "plicni sklipky"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-11-08",
+        "type": "multiple-choice",
+        "prompt": "Genetically identical plant cuttings receive equal water and soil but different amounts of light. Their growth differs. Which conclusion is supported by this experiment?",
+        "choices": [
+          "Any difference in growth proves different inherited DNA",
+          "Light changes every gene into a new gene",
+          "Water has no effect on any plant",
+          "The environment can affect a trait even when inherited DNA is the same"
+        ],
+        "correctIndex": 3,
+        "cs": {
+          "prompt": "Geneticky shodné rostlinné řízky dostávají stejné množství vody a stejnou půdu, ale různé množství světla. Jejich růst se liší. Který závěr tento pokus podporuje?",
+          "choices": [
+            "Každý rozdíl v růstu dokazuje odlišnou zděděnou DNA",
+            "Světlo mění každý gen na nový gen",
+            "Voda nemá vliv na žádnou rostlinu",
+            "Prostředí může ovlivnit znak i při stejné zděděné DNA"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-11-03",
+        "type": "multiple-choice",
+        "prompt": "A cell membrane lets water pass but blocks a large dissolved molecule. The blocked molecule is added outside. Which claim is justified by these facts alone?",
+        "choices": [
+          "Water can cross even though the large molecule cannot",
+          "Nothing can cross because one molecule is blocked",
+          "All dissolved molecules can cross because water can",
+          "The large molecule must enter before water can cross"
+        ],
+        "correctIndex": 0,
         "reward": 10,
         "cs": {
-          "prompt": "Semeno přijme vodu a první kořínek vyroste ještě před zeleným listem. Pojmenujte proces, který začal; nejde o opylení.",
-          "acceptedAnswers": [
-            "klíčení",
-            "kliceni"
+          "prompt": "Buněčná membrána propouští vodu, ale ne velkou rozpuštěnou molekulu. Tuto molekulu přidáme vně buňky. Které tvrzení plyne pouze z těchto údajů?",
+          "choices": [
+            "Voda může procházet, i když velká molekula nemůže",
+            "Nic nemůže procházet, protože jedna molekula je zadržena",
+            "Všechny rozpuštěné molekuly mohou procházet, protože voda může",
+            "Velká molekula musí vstoupit dříve, než může procházet voda"
           ]
         }
       },
       {
+        "id": "biology-11-07",
+        "type": "text",
+        "prompt": "A plant is first kept in darkness until a test confirms no stored starch remains. Part of a leaf is then covered with opaque foil and the plant is placed in light. Starch forms where photosynthesis occurs. Which part should test positive for newly formed starch: covered or uncovered?",
+        "acceptedAnswers": [
+          "uncovered",
+          "uncovered part",
+          "the uncovered part",
+          "exposed"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Rostlina je nejprve ve tmě, dokud test nepotvrdí, že již neobsahuje zásobní škrob. Část listu pak zakryjeme neprůhlednou fólií a rostlinu dáme na světlo. Škrob vzniká tam, kde probíhá fotosyntéza. Která část má obsahovat nově vzniklý škrob: zakrytá, nebo nezakrytá?",
+          "acceptedAnswers": [
+            "nezakrytá",
+            "nezakrytá část",
+            "odkrytá",
+            "odkrytá část",
+            "nezakryta",
+            "nezakryta cast",
+            "odkryta",
+            "odkryta cast"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-11-09",
         "type": "multiple-choice",
-        "prompt": "A germinating seed is kept in darkness and uses its stored food. Which process supplies usable energy before it has green leaves?",
+        "prompt": "An enzyme helps break down food because the food molecule fits a region of the enzyme. Strong heating changes this region’s shape permanently. Cooling does not restore its activity. Which explanation fits?",
         "choices": [
-          "Photosynthesis",
-          "Pollination",
-          "Respiration",
-          "Evaporation"
+          "Cooling has removed all food molecules",
+          "The enzyme’s atoms have disappeared",
+          "The food molecule no longer fits the changed region",
+          "The enzyme must work faster because it was once hot"
         ],
         "correctIndex": 2,
+        "cs": {
+          "prompt": "Enzym pomáhá rozkládat potravu, protože molekula potravy zapadá do určité části enzymu. Silné zahřátí tvar této části trvale změní. Po ochlazení se činnost neobnoví. Které vysvětlení odpovídá?",
+          "choices": [
+            "Ochlazení odstranilo všechny molekuly potravy",
+            "Atomy enzymu zmizely",
+            "Molekula potravy již do změněné části nezapadá",
+            "Enzym musí pracovat rychleji, protože byl dříve horký"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-11-10",
+        "type": "multiple-choice",
+        "prompt": "Ten dry seeds produce no seedlings; ten watered seeds of the same species produce eight. Light and temperature are the same. What does this comparison support?",
+        "choices": [
+          "Light was the cause of the difference",
+          "Water helped germination under these conditions",
+          "Every watered seed always germinates",
+          "Water prevents germination"
+        ],
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Z deseti suchých semen nevzejde žádná rostlinka; z deseti zalévaných semen stejného druhu jich vzejde osm. Světlo i teplota jsou stejné. Co toto srovnání podporuje?",
+          "choices": [
+            "Rozdíl způsobilo světlo",
+            "Voda za těchto podmínek pomohla klíčení",
+            "Každé zalévané semeno vždy vyklíčí",
+            "Voda brání klíčení"
+          ]
+        },
+        "reward": 10
+      },
+      {
         "id": "biology-11-11",
-        "reward": 10,
-        "cs": {
-          "prompt": "Klíčící semeno je ve tmě a spotřebovává zásobní látky. Který proces mu dodává využitelnou energii, než má zelené listy?",
-          "choices": [
-            "Fotosyntéza",
-            "Opylení",
-            "Buněčné dýchání",
-            "Vypařování"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Disease flattens the villi in the small intestine without shortening the intestine. What is the most likely effect?",
-        "choices": [
-          "Less surface area and slower nutrient absorption",
-          "More surface area and faster absorption",
-          "No effect because length is unchanged",
-          "Food no longer contains nutrients"
-        ],
-        "correctIndex": 0,
-        "id": "biology-11-13",
-        "reward": 10,
-        "cs": {
-          "prompt": "Nemoc zploští klky v tenkém střevě, ale nezkrátí střevo. Jaký je nejpravděpodobnější dopad?",
-          "choices": [
-            "Menší povrch a pomalejší vstřebávání živin",
-            "Větší povrch a rychlejší vstřebávání",
-            "Žádný vliv, protože délka se nezměnila",
-            "Potrava už neobsahuje živiny"
-          ]
-        }
-      },
-      {
         "type": "text",
-        "prompt": "A fungus grows on a dead log and releases nutrients into the soil as the wood breaks down. Name its feeding role, rather than its organism group.",
+        "prompt": "A population contains green and brown insects. On brown ground, birds more often catch the visible green insects. Colour is inherited; insects do not change colour during life. Over many generations, which colour should become more common if other conditions stay the same?",
         "acceptedAnswers": [
-          "decomposer",
-          "a decomposer"
+          "brown"
         ],
-        "id": "biology-11-14",
-        "reward": 10,
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Houba roste na mrtvém kmeni a při rozkladu dřeva uvolňuje živiny do půdy. Pojmenujte její potravní roli, nikoli skupinu organismů.",
+          "prompt": "V populaci žije zelený a hnědý hmyz. Na hnědé půdě ptáci častěji chytají nápadný zelený hmyz. Barva je dědičná a jedinci ji během života nemění. Která barva má být po mnoha generacích častější, pokud se jiné podmínky nezmění?",
           "acceptedAnswers": [
-            "rozkladač",
-            "rozkladac",
-            "reducent",
-            "dekompozitor"
+            "hnědá",
+            "hnědý",
+            "hnědé",
+            "hnědou",
+            "hneda",
+            "hnedy",
+            "hnede",
+            "hnedou"
           ]
-        }
+        },
+        "reward": 10
       },
       {
+        "id": "biology-11-13",
         "type": "multiple-choice",
-        "prompt": "To test only the effect of light on growth, two identical plants receive different light levels. Which pair of conditions should be kept the same?",
+        "prompt": "Intestinal folds provide surface for absorbing nutrients. A disease flattens the folds without changing intestine length. If absorption per cm² stays the same, what happens to total absorption per minute?",
         "choices": [
-          "Water and soil",
-          "Light and water",
-          "Light and final height",
-          "Final height and final mass"
+          "It stays the same because length is unchanged",
+          "It increases because the surface is smoother",
+          "It must stop completely",
+          "It decreases because surface area decreases"
         ],
-        "correctIndex": 0,
+        "correctIndex": 3,
+        "cs": {
+          "prompt": "Záhyby střeva poskytují plochu pro vstřebávání živin. Nemoc je zploští, ale délka střeva se nezmění. Pokud je vstřebávání na cm² stejné, co se stane s celkovým vstřebáváním za minutu?",
+          "choices": [
+            "Zůstane stejné, protože délka je stejná",
+            "Vzroste, protože povrch je hladší",
+            "Musí se úplně zastavit",
+            "Klesne, protože se zmenší plocha"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-11-14",
+        "type": "text",
+        "prompt": "A growing plant gains a lot of dry mass while its soil loses very little mass. Plants build sugars using carbon from carbon dioxide. Did most of the carbon in the new plant material come from the soil or the air?",
+        "acceptedAnswers": [
+          "air",
+          "the air",
+          "from the air"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Rostoucí rostlina získá velkou suchou hmotnost, ale půda jí ztratí jen velmi málo. Rostliny vytvářejí cukry z uhlíku v oxidu uhličitém. Pochází většina uhlíku v nové rostlinné hmotě z půdy, nebo ze vzduchu?",
+          "acceptedAnswers": [
+            "vzduch",
+            "vzduchu",
+            "ze vzduchu"
+          ]
+        },
+        "reward": 10
+      },
+      {
         "id": "biology-11-16",
+        "type": "multiple-choice",
+        "prompt": "Plants in bright light receive 100 mL water daily; plants in shade receive 50 mL. The first group grows more. Which change would allow a fairer test of light’s effect?",
+        "choices": [
+          "Use more plants but keep the different watering amounts",
+          "Give both groups the same water and keep other conditions equal",
+          "Give the shaded group less water still",
+          "Change the soil only in the bright-light group"
+        ],
+        "correctIndex": 1,
         "reward": 10,
         "cs": {
-          "prompt": "Při testování pouze vlivu světla na růst dostávají dvě stejné rostliny různé množství světla. Kterou dvojici podmínek je třeba zachovat stejnou?",
+          "prompt": "Rostliny na silném světle dostávají denně 100 mL vody; rostliny ve stínu 50 mL. První skupina vyroste více. Která změna umožní lépe ověřit vliv světla?",
           "choices": [
-            "Vodu a půdu",
-            "Světlo a vodu",
-            "Světlo a konečnou výšku",
-            "Konečnou výšku a konečnou hmotnost"
+            "Použít více rostlin, ale zachovat rozdílné zalévání",
+            "Dávat oběma skupinám stejnou vodu a zachovat stejné ostatní podmínky",
+            "Dávat rostlinám ve stínu ještě méně vody",
+            "Změnit půdu jen u skupiny na silném světle"
           ]
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "A person has fewer red blood cells than usual, but each cell works normally. Which delivery is most directly reduced?",
-        "choices": [
-          "Oxygen from lungs to tissues",
-          "Light to the skin",
-          "Food through the intestine",
-          "Water into the stomach"
-        ],
-        "correctIndex": 0,
         "id": "biology-11-17",
-        "reward": 10,
-        "cs": {
-          "prompt": "Člověk má méně červených krvinek než obvykle, ale každá funguje normálně. Dodávka čeho se tím nejpříměji sníží?",
-          "choices": [
-            "Kyslíku z plic do tkání",
-            "Světla do kůže",
-            "Potravy střevem",
-            "Vody do žaludku"
-          ]
-        }
-      },
-      {
         "type": "multiple-choice",
-        "prompt": "Green insects are hard to see on green leaves but easy to see on brown leaves. Birds hunt by sight. After the leaves turn brown, what is most likely initially?",
+        "prompt": "Two similar watered plants stand on balances. Their soil is covered to stop evaporation from soil. Coating the leaves of one plant reduces its loss of mass. Neither plant loses any solid material. What does this most directly support?",
         "choices": [
-          "Birds notice more green insects",
-          "Every insect immediately changes colour",
-          "All insects stop needing food",
-          "Predation must stop"
+          "Water can leave a plant through its leaves",
+          "All water loss comes from the covered soil",
+          "Leaves turn water into solid minerals",
+          "The coating proves roots never absorb water"
         ],
         "correctIndex": 0,
-        "id": "biology-11-19",
-        "reward": 10,
         "cs": {
-          "prompt": "Zelený hmyz je na zelených listech špatně vidět, ale na hnědých dobře. Ptáci loví zrakem. Co nejspíše nastane krátce po zhnědnutí listů?",
+          "prompt": "Dvě podobné zalité rostliny stojí na vahách. Půda je zakrytá, aby se z ní neodpařovala voda. Potření listů jedné rostliny sníží úbytek její hmotnosti. Ani jedna neztrácí pevný materiál. Co to nejpříměji podporuje?",
           "choices": [
-            "Ptáci si všimnou více zeleného hmyzu",
-            "Každý jedinec hmyzu ihned změní barvu",
-            "Všechen hmyz přestane potřebovat potravu",
-            "Predace se musí zastavit"
+            "Voda může opouštět rostlinu přes listy",
+            "Veškerá voda uniká ze zakryté půdy",
+            "Listy mění vodu na pevné minerály",
+            "Potření dokazuje, že kořeny nikdy nepřijímají vodu"
           ]
-        }
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-11-19",
+        "type": "numerical",
+        "prompt": "A survey finds 24 insects on 6 leaves of plant A and 18 insects on 3 leaves of plant B. How many more insects per leaf does B have on average than A?",
+        "numericAnswer": 2,
+        "tolerance": 0,
+        "cs": {
+          "prompt": "Průzkum našel 24 kusů hmyzu na 6 listech rostliny A a 18 na 3 listech rostliny B. O kolik kusů hmyzu na list je průměr u B vyšší než u A?"
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -311,15 +324,30 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A 500 mL pond sample contains 12 water fleas. Assuming uniform distribution, how many would you expect in 2 L?",
-        "numericAnswer": 48,
-        "tolerance": 0,
         "id": "biology-11-18",
-        "reward": 10,
+        "type": "text",
+        "prompt": "In a pond, water fleas eat algae and fish eat water fleas. No other feeding links change. Fish numbers fall, allowing more water fleas to survive. Should the amount of algae initially increase or decrease because of this indirect effect?",
+        "acceptedAnswers": [
+          "decrease",
+          "fall",
+          "decline"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Vzorek 500 mL vody z rybníka obsahuje 12 perlooček. Při rovnoměrném rozložení kolik očekáváte ve 2 L?"
-        }
+          "prompt": "V rybníku perloočky požírají řasy a ryby požírají perloočky. Žádné jiné potravní vztahy se nemění. Počet ryb klesne, a proto přežije více perlooček. Má množství řas kvůli tomuto nepřímému vlivu zpočátku růst, nebo klesat?",
+          "acceptedAnswers": [
+            "klesat",
+            "klesne",
+            "pokles",
+            "snížit se",
+            "snižovat se",
+            "ubývat",
+            "snizit se",
+            "snizovat se",
+            "ubyvat"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -333,15 +361,15 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "Of 50 seeds, 10 do not germinate. What percentage germinates?",
-        "numericAnswer": 80,
-        "tolerance": 0,
         "id": "biology-11-15",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "Of 50 seeds, 10 fail to germinate. Of the seedlings that do grow, 5 later die. What percentage of the original seeds produce surviving seedlings?",
+        "numericAnswer": 70,
+        "tolerance": 0,
         "cs": {
-          "prompt": "Z 50 semen jich 10 nevyklíčí. Kolik procent semen vyklíčí?"
-        }
+          "prompt": "Z 50 semen jich 10 nevyklíčí. Z vyrostlých rostlinek jich později 5 zahyne. Z kolika procent původních semen vzniknou přeživší rostlinky?"
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -357,67 +385,81 @@
     ],
     "14–16": [
       {
-        "type": "text",
-        "prompt": "A cell copies its hereditary instructions before dividing. The copied molecule contains the bases A, T, G and C. Give its three-letter abbreviation; it is not the immediate energy carrier.",
-        "acceptedAnswers": [
-          "DNA"
-        ],
         "id": "biology-14-02",
-        "reward": 10,
-        "cs": {
-          "prompt": "Buňka před dělením kopíruje dědičné instrukce. Kopírovaná molekula obsahuje báze A, T, G a C. Uveďte její třípísmennou zkratku; nejde o bezprostřední přenašeč energie.",
-          "acceptedAnswers": [
-            "DNA"
-          ]
-        }
-      },
-      {
-        "type": "text",
-        "prompt": "A skin cell with 46 chromosomes divides during wound repair. Each resulting daughter nucleus has 46 chromosomes with the same genetic information, ignoring mutation. Name the nuclear division process.",
-        "acceptedAnswers": [
-          "mitosis"
-        ],
-        "id": "biology-14-10",
-        "reward": 10,
-        "cs": {
-          "prompt": "Kožní buňka se 46 chromozomy se dělí při hojení rány. Každé vzniklé dceřiné jádro má 46 chromozomů se stejnou genetickou informací, zanedbáme-li mutace. Pojmenujte proces dělení jádra.",
-          "acceptedAnswers": [
-            "mitóza",
-            "mitoza"
-          ]
-        }
-      },
-      {
         "type": "multiple-choice",
-        "prompt": "A person has normal red blood cell numbers but cuts take unusually long to stop bleeding. Which reduced blood component most directly explains this?",
+        "prompt": "A plant gene can be read by a bacterium to build the same sequence of amino acids. What does this shared genetic code support?",
         "choices": [
-          "Platelets",
-          "Red blood cells",
-          "Glucose",
-          "Dissolved carbon dioxide"
+          "All organisms contain exactly the same genes",
+          "Plants are made of bacterial cells",
+          "Living groups share an evolutionary ancestry",
+          "Every gene produces the same protein"
+        ],
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Bakterie dokáže podle rostlinného genu sestavit stejnou sekvenci aminokyselin. Co tento společný genetický kód podporuje?",
+          "choices": [
+            "Všechny organismy mají naprosto stejné geny",
+            "Rostliny jsou tvořeny bakteriálními buňkami",
+            "Skupiny organismů mají společný evoluční původ",
+            "Každý gen vytváří stejnou bílkovinu"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-14-10",
+        "type": "text",
+        "prompt": "Plant roots kept in darkness take in oxygen and use sugar to release energy. Which process is occurring: photosynthesis or respiration? Answer with the process, not the gas.",
+        "acceptedAnswers": [
+          "respiration",
+          "cellular respiration",
+          "aerobic respiration"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Kořeny rostliny ve tmě přijímají kyslík a využívají cukr k uvolnění energie. Který proces probíhá: fotosyntéza, nebo buněčné dýchání? Zadejte proces, nikoli plyn.",
+          "acceptedAnswers": [
+            "dýchání",
+            "buněčné dýchání",
+            "aerobní dýchání",
+            "dychani",
+            "bunecne dychani",
+            "aerobni dychani"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-14-11",
+        "type": "multiple-choice",
+        "prompt": "Platelets help wounds clot; red blood cells carry oxygen. A patient has normal red blood cell numbers but very few platelets. Which problem is most directly expected?",
+        "choices": [
+          "A small cut bleeds for longer",
+          "There must be fewer oxygen-carrying cells",
+          "Blood cannot flow through any vessels",
+          "Every blood cell stops dividing"
         ],
         "correctIndex": 0,
-        "id": "biology-14-11",
-        "reward": 10,
         "cs": {
-          "prompt": "Člověk má normální počet červených krvinek, ale krvácení z řezných ran se zastavuje neobvykle dlouho. Úbytek které krevní složky to nejpříměji vysvětluje?",
+          "prompt": "Krevní destičky pomáhají srážení krve; červené krvinky přenášejí kyslík. Pacient má normální počet červených krvinek, ale velmi málo destiček. Který problém lze přímo očekávat?",
           "choices": [
-            "Krevních destiček",
-            "Červených krvinek",
-            "Glukózy",
-            "Rozpuštěného oxidu uhličitého"
+            "Drobná rána krvácí déle",
+            "Musí být méně buněk přenášejících kyslík",
+            "Krev nemůže proudit žádnou cévou",
+            "Všechny krvinky se přestanou dělit"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A species has 24 chromosomes per diploid body cell. A normal gamete fuses with an abnormal gamete containing one extra chromosome. How many chromosomes does the zygote have?",
+        "prompt": "A species has 24 chromosomes per body cell. A normal sex cell has half that number. One normal sex cell joins one with an extra chromosome. How many chromosomes does the resulting cell contain?",
         "numericAnswer": 25,
         "tolerance": 0,
         "id": "biology-14-19",
         "reward": 10,
         "cs": {
-          "prompt": "Druh má v diploidní tělní buňce 24 chromozomů. Normální pohlavní buňka splyne s abnormální pohlavní buňkou obsahující jeden chromozom navíc. Kolik chromozomů má zygota?"
+          "prompt": "Druh má 24 chromozomů v tělní buňce. Normální pohlavní buňka má polovinu tohoto počtu. Jedna normální pohlavní buňka se spojí s buňkou s jedním chromozomem navíc. Kolik chromozomů obsahuje vzniklá buňka?"
         }
       },
       {
@@ -443,64 +485,59 @@
         }
       },
       {
+        "id": "biology-14-01",
+        "type": "text",
+        "prompt": "A water plant both produces oxygen by photosynthesis and consumes it by respiration. Measured NET oxygen change per minute is: darkness −2, dim light 0, bright light +3. Under which listed condition are oxygen production and consumption balanced?",
+        "acceptedAnswers": [
+          "dim light",
+          "dim"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Vodní rostlina vytváří kyslík fotosyntézou a zároveň ho spotřebovává dýcháním. Naměřená ČISTÁ změna kyslíku za minutu je: tma −2, slabé světlo 0, silné světlo +3. Při které uvedené podmínce jsou tvorba a spotřeba kyslíku v rovnováze?",
+          "acceptedAnswers": [
+            "slabé světlo",
+            "slabém světle",
+            "při slabém světle",
+            "slabe svetlo",
+            "slabem svetle",
+            "pri slabem svetle"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-14-05",
+        "type": "numerical",
+        "prompt": "Osmosis can change a plant tissue sample’s mass by moving water. A sample goes from 4.0 g to 4.6 g. What is the percentage mass increase relative to its starting mass?",
+        "numericAnswer": 15,
+        "tolerance": 0,
+        "cs": {
+          "prompt": "Osmóza může změnit hmotnost rostlinného vzorku přesunem vody. Hmotnost vzroste ze 4,0 g na 4,6 g. O kolik procent počáteční hmotnosti vzrostla?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-14-06",
         "type": "multiple-choice",
-        "prompt": "A root cell from a flowering plant has no chloroplasts. Which organelle can still produce most of its ATP during aerobic respiration? ATP carries energy usable by the cell.",
+        "prompt": "Two bird species use the same nesting holes. One eats seeds and the other insects. Suitable holes become scarce while both foods remain abundant. Which competition should increase most directly?",
         "choices": [
-          "Cell wall",
-          "Mitochondrion",
-          "Nucleus",
-          "Central vacuole"
+          "Competition between the species for seeds",
+          "Competition between the species for nesting holes",
+          "Competition between the species for insects",
+          "No competition, because their foods differ"
         ],
         "correctIndex": 1,
-        "id": "biology-14-01",
-        "reward": 10,
         "cs": {
-          "prompt": "Kořenová buňka kvetoucí rostliny nemá chloroplasty. Která organela přesto může tvořit většinu jejího ATP při aerobním buněčném dýchání? ATP přenáší energii využitelnou buňkou.",
+          "prompt": "Dva druhy ptáků využívají stejné hnízdní dutiny. Jeden se živí semeny, druhý hmyzem. Vhodných dutin ubude, ale obou druhů potravy je stále dost. Která konkurence se má nejpříměji zvýšit?",
           "choices": [
-            "Buněčná stěna",
-            "Mitochondrie",
-            "Jádro",
-            "Centrální vakuola"
+            "Konkurence mezi druhy o semena",
+            "Konkurence mezi druhy o hnízdní dutiny",
+            "Konkurence mezi druhy o hmyz",
+            "Žádná konkurence, protože mají odlišnou potravu"
           ]
-        }
-      },
-      {
-        "type": "text",
-        "prompt": "What is the term for the net movement of water through a partially permeable membrane from higher to lower water potential? Here this means from a more dilute solution to a more concentrated solution.",
-        "acceptedAnswers": [
-          "osmosis"
-        ],
-        "id": "biology-14-05",
-        "reward": 10,
-        "cs": {
-          "prompt": "Jak se nazývá čistý pohyb vody přes polopropustnou membránu z vyššího vodního potenciálu do nižšího? V tomto případě to znamená z méně koncentrovaného roztoku do koncentrovanějšího.",
-          "acceptedAnswers": [
-            "osmóza",
-            "osmoza"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Which products are formed in aerobic respiration of glucose?",
-        "choices": [
-          "Nitrogen and starch",
-          "Only oxygen",
-          "Carbon dioxide and water",
-          "Oxygen and glucose"
-        ],
-        "correctIndex": 2,
-        "id": "biology-14-06",
-        "reward": 10,
-        "cs": {
-          "prompt": "Které produkty vznikají při aerobním buněčném dýchání glukózy?",
-          "choices": [
-            "Dusík a škrob",
-            "Pouze kyslík",
-            "Oxid uhličitý a voda",
-            "Kyslík a glukóza"
-          ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -514,24 +551,24 @@
         }
       },
       {
+        "id": "biology-14-08",
         "type": "multiple-choice",
-        "prompt": "An enzyme works slowly at 5 °C, then regains its original activity on warming to 30 °C. What is the best explanation?",
+        "prompt": "The same enzyme sample produces 10 units/min at 30 °C, 2 units/min after cooling to 5 °C, and 10 units/min on returning to 30 °C. No enzyme is added. Which conclusion is best supported?",
         "choices": [
-          "It was permanently denatured at 5 °C",
-          "Lower temperature reduced collision frequency",
-          "Its amino-acid sequence changed back",
-          "The enzyme was consumed and then recreated"
+          "Cooling permanently destroyed all the enzyme",
+          "The reduced activity on cooling was reversible",
+          "The enzyme works equally fast at every temperature",
+          "Warming always increases activity without limit"
         ],
         "correctIndex": 1,
-        "id": "biology-14-08",
         "reward": 10,
         "cs": {
-          "prompt": "Enzym při 5 °C pracuje pomalu a po ohřátí na 30 °C obnoví původní aktivitu. Jaké je nejlepší vysvětlení?",
+          "prompt": "Stejný vzorek enzymu tvoří 10 jednotek/min při 30 °C, po ochlazení na 5 °C 2 jednotky/min a po návratu na 30 °C opět 10 jednotek/min. Žádný enzym nepřidáme. Který závěr je nejlépe podložen?",
           "choices": [
-            "Při 5 °C byl trvale denaturován",
-            "Nižší teplota snížila četnost srážek",
-            "Jeho sekvence aminokyselin se změnila zpět",
-            "Enzym se spotřeboval a znovu vytvořil"
+            "Ochlazení trvale zničilo všechen enzym",
+            "Pokles aktivity po ochlazení byl vratný",
+            "Enzym pracuje stejně rychle při každé teplotě",
+            "Ohřívání vždy neomezeně zvyšuje aktivitu"
           ]
         }
       },
@@ -547,84 +584,87 @@
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "Why does a vaccine often provide protection against a later infection?",
-        "choices": [
-          "It replaces red blood cells",
-          "It induces immune memory",
-          "It prevents all mutations",
-          "It kills every microbe forever"
-        ],
-        "correctIndex": 1,
         "id": "biology-14-13",
+        "type": "multiple-choice",
+        "prompt": "A vaccine is expected to shorten response time to a particular pathogen. Which comparison best tests this, while controlling other differences?",
+        "choices": [
+          "Vaccinated adults and unvaccinated children, same pathogen",
+          "Vaccinated people given one pathogen and unvaccinated people another",
+          "Two vaccinated groups given different doses",
+          "Similar vaccinated and unvaccinated groups, same pathogen and dose"
+        ],
+        "correctIndex": 3,
         "reward": 10,
         "cs": {
-          "prompt": "Proč očkování často poskytuje ochranu před pozdější infekcí?",
+          "prompt": "Očekáváme, že vakcína zkrátí dobu reakce na určitý patogen. Které srovnání to nejlépe ověří při omezení jiných rozdílů?",
           "choices": [
-            "Nahrazuje červené krvinky",
-            "Vyvolává imunitní paměť",
-            "Zabraňuje všem mutacím",
-            "Navždy zahubí všechny mikroby"
+            "Očkovaní dospělí a neočkované děti, stejný patogen",
+            "Očkovaní vystavení jednomu patogenu a neočkovaní jinému",
+            "Dvě očkované skupiny vystavené různým dávkám",
+            "Podobné očkované a neočkované skupiny, stejný patogen i dávka"
           ]
         }
       },
       {
-        "type": "text",
-        "prompt": "After exercise, sweating increases as body temperature rises, helping return temperature toward its usual range. Name the regulation of internal conditions illustrated here.",
-        "acceptedAnswers": [
-          "homeostasis"
-        ],
         "id": "biology-14-15",
-        "reward": 10,
+        "type": "text",
+        "prompt": "Insulin normally promotes removal of glucose from blood into cells and storage. In a model, cells stop responding to insulin but glucose entry after a meal stays unchanged. Compared with the normal model, should blood glucose remain higher or lower after that meal?",
+        "acceptedAnswers": [
+          "higher"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Po cvičení se při růstu tělesné teploty zvýší pocení a pomůže teplotu vrátit k obvyklému rozmezí. Pojmenujte znázorněnou regulaci vnitřních podmínek.",
+          "prompt": "Inzulin obvykle podporuje odstraňování glukózy z krve do buněk a její ukládání. V modelu přestanou buňky reagovat na inzulin, ale přísun glukózy po jídle se nezmění. Má být glukóza v krvi po tomto jídle oproti normálnímu modelu vyšší, nebo nižší?",
           "acceptedAnswers": [
-            "homeostáza",
-            "homeostaza"
+            "vyšší",
+            "zvýšená",
+            "vyssi",
+            "zvysena"
           ]
-        }
+        },
+        "reward": 10
       },
       {
-        "type": "multiple-choice",
-        "prompt": "A plant is kept in darkness overnight. Which statement about its living cells is correct?",
-        "choices": [
-          "Photosynthesis and respiration both stop",
-          "Respiration continues although photosynthesis stops",
-          "Photosynthesis continues but respiration stops",
-          "Neither process needs a supply of energy-rich molecules"
-        ],
-        "correctIndex": 1,
         "id": "biology-14-16",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "Yeast cells supplied with sugar release carbon dioxide and enough energy to keep functioning in an oxygen-free container. Which claim is contradicted by this observation?",
+        "choices": [
+          "Living cells can transform chemical energy",
+          "Some organisms can function without oxygen",
+          "Carbon atoms can move from sugar into carbon dioxide",
+          "All cellular release of energy from sugar requires oxygen"
+        ],
+        "correctIndex": 3,
         "cs": {
-          "prompt": "Rostlina je přes noc ve tmě. Které tvrzení o jejích živých buňkách je správné?",
+          "prompt": "Kvasinky s přísunem cukru uvolňují v nádobě bez kyslíku oxid uhličitý a dost energie k udržení své činnosti. Kterému tvrzení toto pozorování odporuje?",
           "choices": [
-            "Fotosyntéza i buněčné dýchání se zastaví",
-            "Buněčné dýchání pokračuje, ale fotosyntéza se zastaví",
-            "Fotosyntéza pokračuje, ale buněčné dýchání se zastaví",
-            "Ani jeden proces nepotřebuje přísun energeticky bohatých molekul"
+            "Živé buňky mohou přeměňovat chemickou energii",
+            "Některé organismy mohou fungovat bez kyslíku",
+            "Atomy uhlíku mohou přejít z cukru do oxidu uhličitého",
+            "Každé buněčné uvolňování energie z cukru vyžaduje kyslík"
           ]
-        }
+        },
+        "reward": 10
       },
       {
-        "type": "multiple-choice",
-        "prompt": "A resistant bacterial variant is present before an antibiotic is applied. After treatment it is common. Which explanation fits natural selection?",
-        "choices": [
-          "Treatment caused every bacterium to make the same useful mutation",
-          "Susceptible bacteria converted into resistant bacteria on purpose",
-          "The existing resistant variant left more descendants",
-          "The resistant variant no longer needs to reproduce"
-        ],
-        "correctIndex": 2,
         "id": "biology-14-18",
+        "type": "multiple-choice",
+        "prompt": "There are 10 resistant and 90 sensitive bacteria. An antibiotic kills 80 sensitive bacteria and no resistant ones. Before any reproduction, what percentage of survivors are resistant?",
+        "choices": [
+          "50%",
+          "10%",
+          "80%",
+          "100%"
+        ],
+        "correctIndex": 0,
         "reward": 10,
         "cs": {
-          "prompt": "Odolná varianta bakterie je přítomna již před použitím antibiotika. Po léčbě je běžná. Které vysvětlení odpovídá přírodnímu výběru?",
+          "prompt": "Máme 10 odolných a 90 citlivých bakterií. Antibiotikum usmrtí 80 citlivých a žádnou odolnou. Kolik procent přeživších je odolných ještě před rozmnožováním?",
           "choices": [
-            "Léčba vyvolala u všech bakterií stejnou užitečnou mutaci",
-            "Citlivé bakterie se záměrně přeměnily na odolné",
-            "Již existující odolná varianta zanechala více potomků",
-            "Odolná varianta se už nepotřebuje rozmnožovat"
+            "50 %",
+            "10 %",
+            "80 %",
+            "100 %"
           ]
         }
       },
@@ -651,15 +691,20 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A square quadrat has sides of 0.5 m and contains 6 daisies. Estimate their abundance in 10 m² of uniform habitat.",
-        "numericAnswer": 240,
-        "tolerance": 0,
         "id": "biology-14-14",
-        "reward": 10,
+        "type": "text",
+        "prompt": "Compare the same DNA region: target ATCGTA, A TTGGAA, B ATCATA, C GTGGAA. Fewer differences normally suggest closer ancestry. Here the FIRST position mutates unusually often, so exclude it from the comparison. Which species has the fewest differences at the remaining five positions? Enter A, B or C.",
+        "acceptedAnswers": [
+          "B"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Čtvercová vzorkovací plocha má strany 0,5 m a obsahuje 6 sedmikrásek. Odhadněte jejich počet na 10 m² stejnorodého stanoviště."
-        }
+          "prompt": "Porovnejte stejný úsek DNA: zkoumaný druh ATCGTA, A TTGGAA, B ATCATA, C GTGGAA. Méně rozdílů obvykle ukazuje bližší původ. PRVNÍ pozice zde neobvykle často mutuje, proto ji z porovnání vyřaďte. Který druh má nejméně rozdílů na zbývajících pěti pozicích? Zadejte A, B nebo C.",
+          "acceptedAnswers": [
+            "B"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -673,124 +718,145 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A population rises from 200 to 250. It then falls by 20% of 250, after which 10 individuals leave. What is the overall percentage change from the original 200? Use a negative sign for a decrease.",
-        "numericAnswer": -5,
-        "tolerance": 0,
         "id": "biology-14-20",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "Two island populations look alike. In controlled crosses, every offspring of a cross BETWEEN islands is infertile; crosses WITHIN either island produce fertile offspring in the same conditions. Under a species criterion based on producing fertile offspring together, what is best supported?",
+        "choices": [
+          "They must be one species because they look alike",
+          "The populations are reproductively separated; the within-island controls argue against the conditions causing all infertility",
+          "The conditions must make every offspring infertile",
+          "The results prove that neither island population can reproduce at all"
+        ],
+        "correctIndex": 1,
         "cs": {
-          "prompt": "Populace vzroste z 200 na 250. Pak klesne o 20 % z 250 a následně odejde 10 jedinců. Jaká je celková procentní změna oproti původním 200? Pokles označte záporným znaménkem."
-        }
+          "prompt": "Dvě ostrovní populace vypadají stejně. V řízeném křížení jsou všichni potomci křížení MEZI ostrovy neplodní; křížení UVNITŘ obou ostrovů dává za stejných podmínek plodné potomky. Co je nejlépe podloženo podle kritéria druhu založeného na společné tvorbě plodných potomků?",
+          "choices": [
+            "Musejí být jedním druhem, protože vypadají stejně",
+            "Populace jsou reprodukčně oddělené; kontroly uvnitř ostrovů mluví proti tomu, že veškerou neplodnost způsobují podmínky",
+            "Podmínky nutně způsobují neplodnost všech potomků",
+            "Výsledky dokazují, že se ani jedna ostrovní populace nemůže vůbec rozmnožovat"
+          ]
+        },
+        "reward": 10
       }
     ],
     "17–18": [
       {
-        "type": "text",
-        "prompt": "An active transport pump stops when a cell’s immediately usable energy supply is depleted, even though glucose remains present. Name the molecule normally hydrolysed to power this pump, using its three-letter abbreviation.",
-        "acceptedAnswers": [
-          "ATP"
-        ],
         "id": "biology-17-02",
-        "reward": 10,
-        "cs": {
-          "prompt": "Pumpa pro aktivní transport se zastaví po vyčerpání bezprostředně využitelné energie buňky, přestože glukóza zůstává přítomna. Uveďte třípísmennou zkratku molekuly, jejíž hydrolýza pumpu běžně pohání.",
-          "acceptedAnswers": [
-            "ATP"
-          ]
-        }
-      },
-      {
         "type": "text",
-        "prompt": "A drug prevents production of new mRNA, but existing mRNA can still be used to make protein. Which process is directly blocked: name the process, not the drug.",
+        "prompt": "Ice floats because its open structure makes it less dense than liquid water. Compare an ice sample and a liquid-water sample of equal VOLUME. Which contains more water molecules: ice or liquid? Ignore dissolved substances.",
         "acceptedAnswers": [
-          "transcription"
+          "liquid",
+          "liquid water",
+          "water"
         ],
-        "id": "biology-17-06",
-        "reward": 10,
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Léčivo brání vzniku nové mRNA, ale existující mRNA lze stále použít k tvorbě bílkovin. Který proces je přímo blokován? Pojmenujte proces, nikoli léčivo.",
+          "prompt": "Led plave, protože jeho otevřená struktura má menší hustotu než kapalná voda. Porovnejte vzorek ledu a kapalné vody o stejném OBJEMU. Který obsahuje více molekul vody: led, nebo kapalina? Rozpuštěné látky zanedbejte.",
           "acceptedAnswers": [
-            "transkripce"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A phospholipid bilayer separates two watery solutions. Which arrangement is energetically favoured?",
-        "choices": [
-          "Heads face water on both sides; tails face one another inside",
-          "Tails face water on both sides; heads meet inside",
-          "All heads face only the outside solution",
-          "Heads and tails alternate randomly with no orientation"
-        ],
-        "correctIndex": 0,
-        "id": "biology-17-04",
-        "reward": 10,
-        "cs": {
-          "prompt": "Fosfolipidová dvojvrstva odděluje dva vodné roztoky. Které uspořádání je energeticky výhodné?",
-          "choices": [
-            "Hlavy směřují k vodě na obou stranách; ocasy k sobě uvnitř",
-            "Ocasy směřují k vodě na obou stranách; hlavy se setkávají uvnitř",
-            "Všechny hlavy směřují jen k vnějšímu roztoku",
-            "Hlavy a ocasy se střídají náhodně bez orientace"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A damaged cell activates an internal programme, breaks into membrane-bound fragments and is removed without spilling its contents. Which process best fits?",
-        "id": "biology-17-11",
-        "reward": 10,
-        "cs": {
-          "prompt": "Poškozená buňka aktivuje vnitřní program, rozdělí se na membránou ohraničené fragmenty a je odstraněna bez vylití obsahu. Který proces nejlépe odpovídá?",
-          "choices": [
-            "Mitóza",
-            "Osmóza",
-            "Apoptóza",
-            "Transkripce"
+            "kapalina",
+            "kapalná voda",
+            "voda",
+            "kapalna voda"
           ]
         },
-        "choices": [
-          "Mitosis",
-          "Osmosis",
-          "Apoptosis",
-          "Transcription"
+        "reward": 10
+      },
+      {
+        "id": "biology-17-06",
+        "type": "text",
+        "prompt": "During transcription, a DNA template is copied into RNA using T→A, A→U, C→G and G→C. The template is read in the order TACGAA. Enter the RNA sequence produced in that order, without spaces. Do not copy the DNA letters unchanged.",
+        "acceptedAnswers": [
+          "AUGCUU"
         ],
-        "correctIndex": 2
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Při transkripci se templát DNA přepisuje do RNA podle T→A, A→U, C→G a G→C. Templát se čte v pořadí TACGAA. Zadejte sekvenci RNA vznikající v tomto pořadí bez mezer. Nepřepisujte písmena DNA beze změny.",
+          "acceptedAnswers": [
+            "AUGCUU"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-17-04",
+        "type": "multiple-choice",
+        "prompt": "A membrane lets water pass but blocks a dissolved sugar. Net water movement is toward the higher sugar concentration. Inside is 10 g/L sugar; outside is 5 g/L. Which initial change is expected?",
+        "choices": [
+          "No water crosses because sugar cannot cross",
+          "Water enters and the cell swells",
+          "Water leaves and the cell shrinks",
+          "Sugar leaves until concentrations match"
+        ],
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Membrána propouští vodu, ale ne rozpuštěný cukr. Čistý tok vody směřuje k vyšší koncentraci cukru. Uvnitř je 10 g/L cukru, vně 5 g/L. Jaká počáteční změna se očekává?",
+          "choices": [
+            "Voda neprochází, protože cukr neprochází",
+            "Voda vstupuje a buňka zvětšuje objem",
+            "Voda vystupuje a buňka se smršťuje",
+            "Cukr vystupuje, dokud se koncentrace nevyrovnají"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-17-11",
+        "type": "multiple-choice",
+        "prompt": "A skin cell and a nerve cell in the same person usually contain the same inherited DNA but make different sets of proteins. Which explanation fits both observations?",
+        "choices": [
+          "Different genes are active in the two cell types",
+          "Every skin cell loses all genes needed by nerve cells",
+          "Proteins are made without using gene information",
+          "Different cell functions require completely unrelated genetic codes"
+        ],
+        "correctIndex": 0,
+        "cs": {
+          "prompt": "Kožní a nervová buňka téhož člověka obvykle obsahují stejnou zděděnou DNA, ale vytvářejí různé soubory bílkovin. Které vysvětlení odpovídá oběma pozorováním?",
+          "choices": [
+            "V obou typech buněk jsou aktivní jiné geny",
+            "Každá kožní buňka ztratí všechny geny potřebné pro nervové buňky",
+            "Bílkoviny vznikají bez využití informace v genech",
+            "Různé funkce buněk vyžadují zcela nesouvisející genetické kódy"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A diploid cell has 12 chromosomes before DNA replication. After replication, how many chromosomes does it have before any chromatids separate? Count chromosomes by centromeres.",
+        "prompt": "Before DNA replication, a cell has 12 chromosomes. Each is copied into two attached sister chromatids, which are still counted as one chromosome until they separate. How many chromosomes are counted after replication but before separation?",
         "numericAnswer": 12,
         "tolerance": 0,
         "id": "biology-17-10",
         "reward": 10,
         "cs": {
-          "prompt": "Diploidní buňka má před replikací DNA 12 chromozomů. Kolik chromozomů má po replikaci, ale před oddělením chromatid? Počítejte chromozomy podle centromer."
+          "prompt": "Před replikací DNA má buňka 12 chromozomů. Každý se zkopíruje do dvou spojených sesterských chromatid, které se až do oddělení stále počítají jako jeden chromozom. Kolik chromozomů napočítáme po replikaci, ale před oddělením?"
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "A cell can transcribe a gene normally but cannot translate its mRNA. Which structure is directly responsible for the blocked step? Translation makes a protein using mRNA.",
-        "choices": [
-          "Nucleus",
-          "Ribosome",
-          "Cell membrane",
-          "Mitochondrial outer membrane"
-        ],
-        "correctIndex": 1,
         "id": "biology-17-01",
-        "reward": 10,
+        "type": "text",
+        "prompt": "A codon table gives AAG = lysine, AAA = lysine and GAG = glutamate. A mutation changes the RNA codon AAG to AAA. Is the amino acid at this position the same or different? Answer about the protein, not the RNA sequence.",
+        "acceptedAnswers": [
+          "same",
+          "the same",
+          "unchanged"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Buňka může normálně přepisovat gen, ale nemůže překládat jeho mRNA. Která struktura přímo zajišťuje zablokovaný krok? Translací vzniká bílkovina podle mRNA.",
-          "choices": [
-            "Jádro",
-            "Ribozom",
-            "Buněčná membrána",
-            "Vnější membrána mitochondrie"
+          "prompt": "Tabulka kodonů uvádí AAG = lysin, AAA = lysin a GAG = glutamát. Mutace změní kodon RNA AAG na AAA. Je aminokyselina na tomto místě stejná, nebo jiná? Odpovídejte o bílkovině, nikoli o sekvenci RNA.",
+          "acceptedAnswers": [
+            "stejná",
+            "stejný",
+            "beze změny",
+            "nezměněná",
+            "stejna",
+            "stejny",
+            "beze zmeny",
+            "nezmenena"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -815,154 +881,154 @@
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "For a reversible competitive inhibitor, what happens to maximum reaction rate when substrate concentration can become arbitrarily high? The inhibitor and substrate compete for the same active site.",
-        "choices": [
-          "The same maximum can still be approached",
-          "The maximum must become zero",
-          "The maximum doubles",
-          "The enzyme’s amino-acid sequence changes"
-        ],
-        "correctIndex": 0,
         "id": "biology-17-07",
+        "type": "multiple-choice",
+        "prompt": "A reversible inhibitor and the reactant compete for the same enzyme site. Enzyme amount is fixed. Increasing reactant concentration can displace the inhibitor. At very high reactant concentration, how does the attainable rate compare with the maximum without inhibitor?",
+        "choices": [
+          "It can approach the same maximum",
+          "It must remain zero",
+          "It must become twice the maximum",
+          "It must remain at half the maximum"
+        ],
+        "correctIndex": 0,
         "reward": 10,
         "cs": {
-          "prompt": "Co se u vratného kompetitivního inhibitoru stane s maximální reakční rychlostí, pokud může koncentrace substrátu libovolně růst? Inhibitor a substrát soutěží o stejné aktivní místo.",
+          "prompt": "Vratný inhibitor a reagující látka soutěží o stejné místo enzymu. Množství enzymu je stálé. Vyšší koncentrace reagující látky může inhibitor vytlačit. Jak se při velmi vysoké koncentraci dosažitelná rychlost porovná s maximem bez inhibitoru?",
           "choices": [
-            "Stále se lze přiblížit stejnému maximu",
-            "Maximum musí klesnout na nulu",
-            "Maximum se zdvojnásobí",
-            "Změní se sekvence aminokyselin enzymu"
+            "Může se přiblížit stejnému maximu",
+            "Musí zůstat nulová",
+            "Musí dosáhnout dvojnásobného maxima",
+            "Musí zůstat na polovině maxima"
           ]
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "During meiosis I, which exchange can create new allele combinations on a chromosome?",
-        "choices": [
-          "Exchange between non-sister chromatids of homologous chromosomes",
-          "Exchange of entire ribosomes",
-          "Replication of a chromosome without exchange",
-          "Separation of identical sister chromatids alone"
-        ],
-        "correctIndex": 0,
         "id": "biology-17-09",
-        "reward": 10,
-        "cs": {
-          "prompt": "Která výměna během meiózy I může vytvořit nové kombinace alel na chromozomu?",
-          "choices": [
-            "Výměna mezi nesesterskými chromatidami homologních chromozomů",
-            "Výměna celých ribozomů",
-            "Replikace chromozomu bez výměny",
-            "Pouhé oddělení identických sesterských chromatid"
-          ]
-        }
-      },
-      {
         "type": "multiple-choice",
-        "prompt": "Which change would shift the oxygen–haemoglobin dissociation curve to the right, supporting oxygen release to active tissues? A right shift means haemoglobin releases oxygen more readily at the same oxygen partial pressure.",
+        "prompt": "In a model neuron, every impulse has the same height once a threshold is reached. A stronger continuous stimulus makes the neuron fire more often. Which trace should represent the stronger stimulus over the same time interval?",
         "choices": [
-          "Decreased carbon dioxide concentration",
-          "Increased carbon dioxide concentration",
-          "Decreased temperature",
-          "Increased pH"
+          "Taller peaks with the same gaps",
+          "Shorter peaks with longer gaps",
+          "Peaks of the same height with shorter gaps",
+          "One taller peak replacing all repeated peaks"
         ],
-        "correctIndex": 1,
-        "id": "biology-17-13",
-        "reward": 10,
+        "correctIndex": 2,
         "cs": {
-          "prompt": "Která změna posune disociační křivku kyslíku a hemoglobinu doprava a podpoří uvolňování kyslíku v aktivních tkáních? Posun doprava znamená, že hemoglobin při stejném parciálním tlaku kyslíku snáze uvolňuje kyslík.",
+          "prompt": "V modelovém neuronu má každý impulz po překročení prahu stejnou výšku. Silnější trvalý podnět způsobí častější vysílání impulzů. Který záznam má odpovídat silnějšímu podnětu za stejný čas?",
           "choices": [
-            "Pokles koncentrace oxidu uhličitého",
-            "Zvýšení koncentrace oxidu uhličitého",
-            "Pokles teploty",
-            "Zvýšení pH"
+            "Vyšší vrcholy se stejnými rozestupy",
+            "Nižší vrcholy s delšími rozestupy",
+            "Stejně vysoké vrcholy s kratšími rozestupy",
+            "Jeden vyšší vrchol nahrazující všechny opakované vrcholy"
           ]
-        }
+        },
+        "reward": 10
       },
       {
+        "id": "biology-17-13",
+        "type": "numerical",
+        "prompt": "Blood carries 20 mL of oxygen per 100 mL on entering an organ and 14 mL per 100 mL on leaving. If 500 mL of blood passes each minute, how many mL of oxygen does the organ remove from the blood per minute?",
+        "numericAnswer": 30,
+        "tolerance": 0,
+        "cs": {
+          "prompt": "Krev při vstupu do orgánu obsahuje 20 mL kyslíku na 100 mL krve a při výstupu 14 mL na 100 mL. Za minutu proteče 500 mL krve. Kolik mL kyslíku orgán za minutu odebere z krve?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "biology-17-15",
         "type": "multiple-choice",
-        "prompt": "A respirometer absorbs CO₂ and shows a falling gas volume. A student warms it during the measurement. Why can volume change no longer be attributed only to oxygen uptake?",
+        "prompt": "An experiment estimates respiration from falling gas volume in a sealed tube; CO₂ is absorbed. Cooling alone also decreases gas volume. The test tube cools during measurement. Without a matched control, how is oxygen use likely estimated?",
         "choices": [
-          "Gas volume also depends on temperature",
-          "Warming guarantees oxygen production",
-          "CO₂ absorption stops all respiration",
-          "Temperature changes the number of chromosomes"
+          "Too high, because cooling adds to the measured fall",
+          "Too low, because cooling cancels oxygen uptake",
+          "Exactly correct, because temperature cannot affect gas",
+          "Zero, because CO₂ is absorbed"
         ],
         "correctIndex": 0,
-        "id": "biology-17-15",
-        "reward": 10,
         "cs": {
-          "prompt": "Respirometr pohlcuje CO₂ a vykazuje klesající objem plynu. Student ho během měření zahřeje. Proč už nelze změnu objemu přisuzovat pouze spotřebě kyslíku?",
+          "prompt": "Pokus odhaduje buněčné dýchání z poklesu objemu plynu v uzavřené trubici; CO₂ se pohlcuje. Ochlazení samo také zmenšuje objem plynu. Trubice během měření chladne. Jak nejspíše vyjde spotřeba kyslíku bez odpovídající kontroly?",
           "choices": [
-            "Objem plynu závisí také na teplotě",
-            "Zahřátí zaručuje tvorbu kyslíku",
-            "Pohlcování CO₂ zastaví veškeré dýchání",
-            "Teplota mění počet chromozomů"
+            "Příliš vysoká, protože ochlazení zvětší naměřený pokles",
+            "Příliš nízká, protože ochlazení ruší spotřebu kyslíku",
+            "Přesná, protože teplota nemůže ovlivnit plyn",
+            "Nulová, protože se CO₂ pohlcuje"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "In Aa × Aa, A is completely dominant. Among only the offspring with the dominant phenotype, what fraction is expected to be heterozygous? Give a decimal to two decimal places. The expected genotype ratio is 1 AA : 2 Aa : 1 aa.",
+        "prompt": "Offspring are expected in the ratio 1 AA : 2 Aa : 1 aa. AA and Aa show the dominant trait; aa does not. Among only those showing the dominant trait, what fraction are Aa? Enter a decimal to two decimal places.",
         "numericAnswer": 0.67,
         "tolerance": 0.005,
         "id": "biology-17-08",
         "reward": 10,
         "cs": {
-          "prompt": "Při křížení Aa × Aa je A úplně dominantní. Jaká část pouze těch potomků, kteří mají dominantní fenotyp, bude heterozygotní? Zadejte desetinné číslo na dvě desetinná místa. Očekávaný poměr genotypů je 1 AA : 2 Aa : 1 aa."
+          "prompt": "Potomci se očekávají v poměru 1 AA : 2 Aa : 1 aa. AA a Aa projevují dominantní znak; aa ne. Jaký podíl pouze těch, kteří znak projevují, tvoří Aa? Zadejte desetinné číslo na dvě desetinná místa."
         }
       },
       {
-        "type": "numerical",
-        "prompt": "At Hardy–Weinberg equilibrium, the frequency of recessive homozygotes is 0.04. Let q² = 0.04 and p + q = 1. What proportion of the population is heterozygous (2pq)?",
-        "numericAnswer": 0.32,
-        "tolerance": 0,
         "id": "biology-17-12",
-        "reward": 10,
+        "type": "text",
+        "prompt": "A simplified evolutionary tree splits fish from the other groups first, then birds from mammals, and finally bats from whales. Flight appears in bats and birds, but not whales. Which of these three groups shares the MOST RECENT common ancestor with bats: fish, birds or whales?",
+        "acceptedAnswers": [
+          "whales",
+          "whale"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Při Hardyho–Weinbergově rovnováze je frekvence recesivních homozygotů 0,04. Platí q² = 0,04 a p + q = 1. Jakou část populace tvoří heterozygoti (2pq)?"
-        }
+          "prompt": "Zjednodušený evoluční strom nejprve odděluje ryby od ostatních skupin, pak ptáky od savců a nakonec netopýry od velryb. Let se objevuje u netopýrů a ptáků, ale ne u velryb. Která z těchto tří skupin má s netopýry NEJNEDÁVNĚJŠÍHO společného předka: ryby, ptáci, nebo velryby?",
+          "acceptedAnswers": [
+            "velryby",
+            "velryba"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A population contains 40 AA, 40 Aa and 20 aa individuals. What is the frequency of allele a, rather than genotype aa? Enter a decimal.",
+        "prompt": "A population contains 40 AA, 40 Aa and 20 aa individuals. Each individual carries two gene copies, shown by its two letters. What fraction of all gene copies are a? Count copies, not individuals; enter a decimal.",
         "numericAnswer": 0.4,
         "tolerance": 0,
         "id": "biology-17-14",
         "reward": 10,
         "cs": {
-          "prompt": "Populace obsahuje 40 jedinců AA, 40 Aa a 20 aa. Jaká je frekvence alely a, nikoli genotypu aa? Zadejte desetinné číslo."
+          "prompt": "Populace obsahuje 40 jedinců AA, 40 Aa a 20 aa. Každý nese dvě kopie genu, znázorněné dvěma písmeny. Jaký podíl všech kopií genu tvoří a? Počítejte kopie, nikoli jedince; zadejte desetinné číslo."
         }
       },
       {
-        "type": "text",
-        "prompt": "A storm kills beetles regardless of their colour. By chance, a colour allele becomes more frequent among survivors. Name the evolutionary mechanism.",
-        "acceptedAnswers": [
-          "genetic drift"
-        ],
         "id": "biology-17-17",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "Many small populations begin with equal numbers of two inherited variants. A random storm kills individuals regardless of their variant. Afterwards one variant rises in frequency in some populations and falls in others. Which explanation is sufficient without assuming any survival advantage?",
+        "choices": [
+          "Chance differences in which individuals survived",
+          "The same variant must be better adapted in every population",
+          "Every survivor deliberately changed its inherited variant",
+          "A change in frequency always requires a new mutation"
+        ],
+        "correctIndex": 0,
         "cs": {
-          "prompt": "Bouře usmrtí brouky bez ohledu na barvu. Náhodou se alela určité barvy stane mezi přeživšími častější. Pojmenujte evoluční mechanismus.",
-          "acceptedAnswers": [
-            "genetický drift",
-            "geneticky drift",
-            "genetický posun",
-            "geneticky posun"
+          "prompt": "Mnoho malých populací začíná se stejným počtem dvou dědičných variant. Náhodná bouře usmrtí jedince bez ohledu na jejich variantu. Poté četnost jedné varianty v některých populacích vzroste a v jiných klesne. Které vysvětlení stačí bez předpokladu výhody pro přežití?",
+          "choices": [
+            "Náhodné rozdíly v tom, kteří jedinci přežili",
+            "Tatáž varianta musí být lépe přizpůsobená v každé populaci",
+            "Každý přeživší záměrně změnil svou dědičnou variantu",
+            "Změna četnosti vždy vyžaduje novou mutaci"
           ]
-        }
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "An ecosystem has GPP = 1500 and producer respiration = 600 kJ/m²/year. What is its annual net primary production over 2 m², in kJ?",
-        "numericAnswer": 1800,
-        "tolerance": 0,
         "id": "biology-17-16",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "Plants store 1500 kJ/m²/day as chemical energy through photosynthesis and use 600 kJ/m²/day in respiration. Net production is the difference. Find the net production of a 5 m² plot over two days in MJ. Use 1000 kJ = 1 MJ.",
+        "numericAnswer": 9,
+        "tolerance": 0,
         "cs": {
-          "prompt": "Ekosystém má GPP = 1500 a dýchání producentů = 600 kJ/m²/rok. Jaká je jeho roční čistá primární produkce na ploše 2 m² v kJ?"
-        }
+          "prompt": "Rostliny fotosyntézou ukládají 1500 kJ/m² za den jako chemickou energii a buněčným dýcháním spotřebují 600 kJ/m² za den. Čistá produkce je rozdíl. Určete čistou produkci plochy 5 m² za dva dny v MJ. Platí 1000 kJ = 1 MJ."
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -977,25 +1043,25 @@
       },
       {
         "type": "numerical",
-        "prompt": "An mRNA has 960 nucleotides: 60 in untranslated regions and the rest in one coding region that includes a stop codon. Each codon uses 3 nucleotides. How many amino acids are encoded?",
+        "prompt": "An mRNA has 960 nucleotides: 60 are not translated; the rest form three-nucleotide codons. Each codon gives one amino acid except the final stop codon, which gives none. How many amino acids are encoded?",
         "numericAnswer": 299,
         "tolerance": 0,
         "id": "biology-17-19",
         "reward": 10,
         "cs": {
-          "prompt": "mRNA má 960 nukleotidů: 60 v nepřekládaných oblastech a zbytek v jedné kódující oblasti, která zahrnuje stop kodon. Každý kodon má 3 nukleotidy. Kolik aminokyselin je kódováno?"
+          "prompt": "mRNA má 960 nukleotidů: 60 se nepřekládá; zbytek tvoří trojice zvané kodony. Každý kodon určuje jednu aminokyselinu kromě posledního stop kodonu, který neurčuje žádnou. Kolik aminokyselin je kódováno?"
         }
       },
       {
-        "type": "numerical",
-        "prompt": "Two genes assort independently and A and B are completely dominant. In AaBb × aabb, what fraction of offspring is expected to show exactly one dominant phenotype (A only or B only)? Enter a decimal.",
-        "numericAnswer": 0.5,
-        "tolerance": 0,
         "id": "biology-17-20",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "Each of two traits independently has a 1/2 chance of appearing. Of 160 offspring, how many are expected to show exactly one trait and survive, if 75% of each trait group survive? Multiply independent probabilities; include both “first only” and “second only”.",
+        "numericAnswer": 60,
+        "tolerance": 0,
         "cs": {
-          "prompt": "Dva geny se dědí nezávisle a A i B jsou úplně dominantní. Při křížení AaBb × aabb jaká část potomků vykazuje právě jeden dominantní fenotyp (pouze A nebo pouze B)? Zadejte desetinné číslo."
-        }
+          "prompt": "Každý ze dvou znaků se nezávisle projeví s pravděpodobností 1/2. Kolik ze 160 potomků má podle očekávání projevit právě jeden znak a přežít, pokud v každé skupině znaků přežije 75 %? Nezávislé pravděpodobnosti násobte; započítejte „jen první“ i „jen druhý“."
+        },
+        "reward": 10
       }
     ]
   }

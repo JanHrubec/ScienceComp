@@ -11,12 +11,16 @@ import { loadQuestions, isCorrect, parseNumber, publicQuestion, type Question } 
 import { TEAM_SKIP_LIMIT, subjects, ages, type TeamState, type AdminTeam, type CompetitionState } from '../shared/domain.js'
 const bank = loadQuestions('./questions')
 const answerFor = (q: Question) => q.type === 'multiple-choice' ? String(q.correctIndex) : q.type === 'text' ? q.acceptedAnswers[0] : String(q.numericAnswer)
-test('bank has 300 unique, valid questions and all answer types in every track', () => {
+test('bank has 300 unique bilingual questions with all three answer types in every track', () => {
   const ids = new Set<string>()
+  const answerTypes = new Set<string>()
   for (const s of subjects) for (const age of ages) {
     const track = bank[s][age]; assert.equal(track.length, 20)
-    assert.equal(new Set(track.map(q => q.type)).size, 3)
+    assert(track.some(q => q.type === 'numerical'))
+    assert(track.some(q => q.type === 'multiple-choice'))
+    assert(track.some(q => q.type === 'text'))
     for (const q of track) { assert(!ids.has(q.id)); ids.add(q.id); assert(isCorrect(q, answerFor(q)))
+      answerTypes.add(q.type)
       assert(q.cs.prompt.length >= 10)
       if (q.type === 'text') for (const variant of q.cs.acceptedAnswers) assert(isCorrect(q, variant))
       if (q.type === 'multiple-choice') assert.equal(q.cs.choices.length, q.choices.length)
@@ -25,6 +29,7 @@ test('bank has 300 unique, valid questions and all answer types in every track',
     }
   }
   assert.equal(ids.size, 300)
+  assert.equal(answerTypes.size, 3)
 })
 test('exact grading normalises only permitted differences', () => {
   const text: Question = { id: 't', prompt: 'Name it', type: 'text', reward: 10, acceptedAnswers: ['cell membrane'], ignorePunctuation: false, cs: { prompt: 'Pojmenujte ji', acceptedAnswers: ['buněčná membrána', 'bunecna membrana'] } }
@@ -130,9 +135,11 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal((await request<TeamState>('/team/state', a.cookie)).body.progress.physics.attempts, 0)
     assert.equal((await answer('physics', numberQ, a.cookie, '999')).body.awarded, 0)
     assert.equal((await answer('physics', numberQ, b.cookie, '5.0')).body.awarded, 5)
-    await answer('physics', bank.physics['11–13'][3], a.cookie, 'friction')
-    await answer('physics', bank.physics['11–13'][3], b.cookie, 'magnetism')
-    assert.equal((await answer('physics', bank.physics['11–13'][3], a.cookie, '  GRAVITY  ')).body.awarded, 0)
+    await answer('physics', bank.physics['11–13'][3], a.cookie, '999')
+    await answer('physics', bank.physics['11–13'][3], b.cookie, '998')
+    const thirdTry = await answer('physics', bank.physics['11–13'][3], a.cookie, '  DOLŮ  ')
+    assert.equal(thirdTry.body.correct, true)
+    assert.equal(thirdTry.body.awarded, 0)
     for (let i = 0; i < TEAM_SKIP_LIMIT - 1; i++) assert.equal((await request('/team/skip', b.cookie, { subject: 'ess', questionId: bank.ess['11–13'][i].id })).status, 200)
     // The last shared skip is contested by two devices in different subjects.
     const lastSkip = await Promise.all([
@@ -249,11 +256,34 @@ test('legacy database migration preserves teams, progress, sessions and position
 })
 
 test('revised numerical questions use the requested units and quantities', () => {
+  // These numbers are stable ID suffixes, not array positions. Calculate the
+  // expected quantity independently to catch answer-key and unit mistakes.
   const checks: [typeof subjects[number], typeof ages[number], number, number][] = [
+    ['computer-science', '14–16', 4, 50 - 20],
+    ['ess', '11–13', 20, 80 * 2 - (60 * 2 + 10)],
+    ['ess', '14–16', 10, 1200 - 1200 * .1 - 80],
+    ['physics', '14–16', 3, 6 / (2000 / 1000)],
+    ['computer-science', '14–16', 3, (7 + 3) - 7],
+    ['computer-science', '17–18', 2, (24 + 8) * 8],
+    ['computer-science', '17–18', 6, 3 * (1 + 2)],
+    ['computer-science', '17–18', 15, (10 + 3 + 4) - 14],
+    ['biology', '11–13', 2, 6 / (6 + 4) * 100],
+    ['biology', '11–13', 15, (50 - 10 - 5) / 50 * 100],
+    ['biology', '14–16', 5, (4.6 - 4) / 4 * 100],
+    ['biology', '17–18', 13, (20 - 14) * 500 / 100],
+    ['biology', '17–18', 14, (40 + 20 * 2) / ((40 + 40 + 20) * 2)],
+    ['biology', '17–18', 16, (1500 - 600) * 5 * 2 / 1000],
+    ['biology', '17–18', 20, (.5 * .5 + .5 * .5) * 160 * .75],
+    ['chemistry', '11–13', 17, (54 - 52) / 4],
+    ['chemistry', '14–16', 10, (40 / 20) * 2],
+    ['chemistry', '14–16', 17, (200 * .05) / (200 - 50) * 100],
+    ['chemistry', '17–18', 10, 2 + 1 + 1],
+    ['ess', '11–13', 18, (1 - .2) * 100 - (1 - .8) * 100],
+    ['ess', '14–16', 18, 200 * .7 * .5],
+    ['ess', '17–18', 15, (10 + (4 - 1) * 5) / .5],
     ['physics', '11–13', 3, 60 / (10 + 2)],
     ['physics', '11–13', 13, (300 - 60) / 8],
     ['computer-science', '11–13', 3, 2 ** 2],
-    ['computer-science', '11–13', 14, (16 + 8) / 8],
     ['computer-science', '14–16', 19, 2],
     ['biology', '14–16', 19, 24 / 2 + (24 / 2 + 1)],
     ['chemistry', '11–13', 11, 2 * 2 + 2],
@@ -263,12 +293,9 @@ test('revised numerical questions use the requested units and quantities', () =>
     ['physics', '14–16', 6, 8 / (12 / 3)],
     ['physics', '17–18', 7, (.004 * 3) + (.002 * 2)],
     ['computer-science', '11–13', 20, 3 + 4 * 2],
-    ['computer-science', '14–16', 2, 13 * 2 - 2],
-    ['computer-science', '14–16', 17, 1 + 2 + 3],
     ['computer-science', '17–18', 19, .8 * (1 - .1 ** 2) * 100],
     ['biology', '11–13', 4, 10 * 10 - 10 * 4],
     ['biology', '11–13', 20, (25 - 10 - 5) / 80 * 100],
-    ['biology', '14–16', 20, (250 * .8 - 10 - 200) / 200 * 100],
     ['ess', '11–13', 17, (2 * (30 - 10) - 25 - 35) / 200 * 100],
     ['ess', '14–16', 13, (500 * .8 * 1.2 - 500) / 500 * 100],
     ['physics', '14–16', 12, 20 / (50 / 10000)],
@@ -283,12 +310,62 @@ test('revised numerical questions use the requested units and quantities', () =>
     ['ess', '14–16', 19, (1000 - 150) * 1.12],
     ['ess', '17–18', 19, (1000 - 600 - 350) / 1000 * 2 * 1000000],
     ['ess', '17–18', 20, 700 + .5 * 700 * (1 - 700 / 1000) - 100],
+    ['physics', '14–16', 15, (6 - 1) - (6 - 3)],
+    ['physics', '17–18', 13, (1.2 / 3 * 2) * 250],
+    ['physics', '17–18', 20, 5 / 2 - 2],
+    ['computer-science', '17–18', 11, 4 + 7 + 7 + 4],
+    ['chemistry', '17–18', 17, 2 ** 0 * .5 ** 2],
   ]
   for (const [subject, age, number, answer] of checks) {
     const id = `${subject}-${age.slice(0, 2)}-${String(number).padStart(2, '0')}`
     const question = bank[subject][age].find(q => q.id === id)
     assert(question, id)
     assert(isCorrect(question, String(answer)), id)
+  }
+})
+
+
+test('reviewed questions reject common traps and incorrectly rounded hundredths', () => {
+  const cases: [typeof subjects[number], typeof ages[number], number, string, string[]][] = [
+    ['biology', '17–18', 13, '0.67', ['0.66', '0.68', '0.5']],
+    ['chemistry', '14–16', 16, '6.67', ['6.66', '6.68', '5']],
+    ['computer-science', '14–16', 5, '30', ['10', '20']],
+    ['ess', '11–13', 19, '30', ['40', '10', '130']],
+    ['physics', '17–18', 20, '0.5', ['3', '1', '5']],
+    ['chemistry', '17–18', 16, '0.25', ['0.5', '1', '2']],
+    ['computer-science', '17–18', 15, '22', ['15', '16', '28']],
+  ]
+  for (const [subject, age, position, correct, wrong] of cases) {
+    const q = bank[subject][age][position - 1]
+    assert.equal(q.type, 'numerical', q.id)
+    assert(isCorrect(q, correct), q.id)
+    assert(isCorrect(q, correct.replace('.', ',')), `${q.id}: decimal comma`)
+    for (const answer of wrong) assert(!isCorrect(q, answer), `${q.id} must reject ${answer}`)
+  }
+})
+
+test('short science answers accept explicit bilingual variants without accepting a different concept', () => {
+  // Displayed positions, with real user input to exercise accents, formulas,
+  // ordinary words and supplied labels as well as code output.
+  const cases: [typeof subjects[number], typeof ages[number], number, string[], string[]][] = [
+    ['physics', '11–13', 4, ['  DOWN  ', 'dolů', 'dolu'], ['up', 'nahoru', '7']],
+    ['physics', '11–13', 10, ['melting', 'tání', 'tani'], ['boiling', 'var']],
+    ['physics', '11–13', 19, ['A', 'a'], ['B', 'C']],
+    ['biology', '11–13', 10, ['brown', 'hnědá', 'hneda'], ['green', 'zelená']],
+    ['biology', '14–16', 18, ['B'], ['A', 'C']],
+    ['biology', '17–18', 2, ['AUGCUU', 'augcuu'], ['TACGAA', 'AUGCTT']],
+    ['chemistry', '11–13', 13, ['CO2', 'CO₂', 'oxid uhličitý', 'oxid uhlicity'], ['oxygen', 'kyslík']],
+    ['chemistry', '17–18', 8, ['C2H4', 'C₂H₄', 'CH2=CH2'], ['C2H6']],
+    ['chemistry', '17–18', 11, ['NH3', 'NH₃'], ['NH4+', 'HA']],
+    ['ess', '14–16', 5, ['erosion', 'eroze', 'půdní eroze'], ['deposition', 'sedimentace']],
+    ['ess', '17–18', 11, ['possible', 'možné', 'mozne'], ['certain', 'impossible', 'jisté']],
+    ['computer-science', '17–18', 19, ['Karel', '  karel  '], ['Eva', 'Jan']],
+  ]
+  for (const [subject, age, position, accepted, rejected] of cases) {
+    const q = bank[subject][age][position - 1]
+    assert.equal(q.type, 'text', q.id)
+    for (const answer of accepted) assert(isCorrect(q, answer), `${q.id}: ${answer}`)
+    for (const answer of rejected) assert(!isCorrect(q, answer), `${q.id} must reject ${answer}`)
   }
 })
 

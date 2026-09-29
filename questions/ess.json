@@ -3,42 +3,49 @@
   "tracks": {
     "11–13": [
       {
+        "id": "ess-11-01",
         "type": "multiple-choice",
-        "prompt": "Sunlight decreases over a pond and algae grow more slowly. Which statement correctly separates the living component from the environmental factor?",
+        "prompt": "Sunlight decreases over a pond and algae grow more slowly. Which pair correctly identifies a change in a living component and a change in a non-living factor, in that order?",
         "choices": [
-          "Algae are living; sunlight is non-living",
-          "Sunlight is living because it changes growth",
-          "Both are living because they interact",
-          "Algae are non-living because they do not walk"
+          "Slower algal growth; less sunlight",
+          "Less sunlight; slower algal growth",
+          "Slower algal growth; slower algal growth",
+          "Less sunlight; less sunlight"
         ],
         "correctIndex": 0,
-        "id": "ess-11-01",
         "reward": 10,
         "cs": {
-          "prompt": "Na rybník dopadá méně slunečního světla a řasy rostou pomaleji. Které tvrzení správně odlišuje živou složku od faktoru prostředí?",
+          "prompt": "Na rybník dopadá méně světla a řasy rostou pomaleji. Která dvojice správně uvádí změnu živé složky a změnu neživého faktoru v tomto pořadí?",
           "choices": [
-            "Řasy jsou živé; sluneční světlo je neživé",
-            "Sluneční světlo je živé, protože mění růst",
-            "Obojí je živé, protože se vzájemně ovlivňuje",
-            "Řasy jsou neživé, protože nechodí"
+            "Pomalejší růst řas; méně světla",
+            "Méně světla; pomalejší růst řas",
+            "Pomalejší růst řas; pomalejší růst řas",
+            "Méně světla; méně světla"
           ]
         }
       },
       {
-        "type": "text",
-        "prompt": "A survey counts all frogs of one species in one pond, but excludes other species and frogs in another pond. What ecological term describes the group being counted?",
-        "acceptedAnswers": [
-          "population",
-          "a population"
-        ],
         "id": "ess-11-02",
-        "reward": 10,
+        "type": "text",
+        "prompt": "The boundary of a forest system includes its trees, animals and soil. Fallen leaves move from trees to soil within it; sunlight crosses into it from outside. Which is an INPUT across this boundary: fallen leaves or sunlight?",
+        "acceptedAnswers": [
+          "sunlight",
+          "light",
+          "solar energy"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Průzkum počítá všechny žáby jednoho druhu v jednom rybníku, ale nezahrnuje jiné druhy ani žáby v jiném rybníku. Jaký ekologický termín označuje počítanou skupinu?",
+          "prompt": "Hranice lesního systému zahrnuje jeho stromy, živočichy a půdu. Spadané listí se přesouvá ze stromů do půdy uvnitř systému; sluneční světlo přichází zvenčí. Co je VSTUPEM přes tuto hranici: spadané listí, nebo sluneční světlo?",
           "acceptedAnswers": [
-            "populace"
+            "sluneční světlo",
+            "světlo",
+            "sluneční energie",
+            "slunecni svetlo",
+            "svetlo",
+            "slunecni energie"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "multiple-choice",
@@ -63,33 +70,53 @@
         }
       },
       {
-        "type": "text",
-        "prompt": "An uncovered pond loses water during a dry week, even though it never reaches boiling temperature and has no outlet. Name the change of state that can explain the loss.",
-        "acceptedAnswers": [
-          "evaporation"
-        ],
         "id": "ess-11-06",
-        "reward": 10,
+        "type": "text",
+        "prompt": "Water leaves a plant’s leaves as vapour, later forms tiny liquid cloud droplets, and falls as rain. In which state does it FIRST enter the air from the leaves: solid, liquid or gas?",
+        "acceptedAnswers": [
+          "gas",
+          "gaseous",
+          "vapour",
+          "vapor"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Nezakrytý rybník během suchého týdne ztrácí vodu, přestože voda nevře a rybník nemá odtok. Pojmenujte změnu skupenství, která může ztrátu vysvětlit.",
+          "prompt": "Voda opouští listy rostliny jako pára, později tvoří drobné kapalné kapky v oblacích a padá jako déšť. V jakém skupenství NEJPRVE vstupuje z listů do vzduchu: pevném, kapalném, nebo plynném?",
           "acceptedAnswers": [
-            "vypařování",
-            "vyparovani",
-            "odpařování",
-            "odparovani"
+            "plyn",
+            "plynné",
+            "plynném",
+            "plynné skupenství",
+            "pára",
+            "plynne",
+            "plynnem",
+            "plynne skupenstvi",
+            "para"
           ]
-        }
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "A pond has 15 frogs. Five arrive, two leave and three die. There are no births. How many frogs remain?",
-        "numericAnswer": 15,
-        "tolerance": 0,
         "id": "ess-11-04",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "Equal artificial rain falls on two trays with the same soil and slope. One has grass rooted in the soil; one is bare. The bare tray loses more muddy water. What does the comparison support?",
+        "choices": [
+          "Grass creates extra rain",
+          "Bare soil always absorbs all rain",
+          "Muddy runoff means no soil has moved",
+          "Vegetation can reduce soil loss during rainfall"
+        ],
+        "correctIndex": 3,
         "cs": {
-          "prompt": "V rybníku je 15 žab. Pět přijde, dvě odejdou a tři zemřou. Žádné se nenarodí. Kolik žab zbude?"
-        }
+          "prompt": "Stejný umělý déšť dopadá na dvě misky se stejnou půdou a sklonem. V jedné roste zakořeněná tráva, druhá je holá. Z holé misky odtéká více kalné vody. Co porovnání podporuje?",
+          "choices": [
+            "Tráva vytváří další déšť",
+            "Holá půda vždy vsákne všechen déšť",
+            "Kalný odtok znamená, že se žádná půda nepohnula",
+            "Vegetace může snížit ztrátu půdy při dešti"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "multiple-choice",
@@ -114,26 +141,31 @@
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "In a woodland survey, soil pH changes while deer numbers stay the same. Which classification is correct?",
-        "choices": [
-          "Both are abiotic",
-          "Both are biotic",
-          "pH is abiotic; deer numbers are biotic",
-          "pH is biotic; deer numbers are abiotic"
-        ],
-        "correctIndex": 2,
         "id": "ess-11-07",
-        "reward": 10,
+        "type": "text",
+        "prompt": "A town replaces absorbent soil with waterproof pavement. The same amount of rain falls; storage and evaporation are unchanged. Should the amount of water running into drains increase or decrease?",
+        "acceptedAnswers": [
+          "increase",
+          "rise"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Při průzkumu lesa se mění pH půdy, zatímco počet jelenů zůstává stejný. Které zařazení je správné?",
-          "choices": [
-            "Obojí je abiotické",
-            "Obojí je biotické",
-            "pH je abiotické; počet jelenů je biotický",
-            "pH je biotické; počet jelenů je abiotický"
+          "prompt": "Město nahradí vsakovací půdu nepropustnou dlažbou. Napadne stejné množství deště; zadržování vody na povrchu a výpar se nezmění. Má množství vody odtékající do kanalizace vzrůst, nebo klesnout?",
+          "acceptedAnswers": [
+            "vzrůst",
+            "vzroste",
+            "růst",
+            "zvýšit se",
+            "zvýší se",
+            "zvýšení",
+            "vzrust",
+            "rust",
+            "zvysit se",
+            "zvysi se",
+            "zvyseni"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "multiple-choice",
@@ -158,96 +190,97 @@
         }
       },
       {
-        "type": "text",
-        "prompt": "A survey records variation in genes, species and habitats, not just the total number of animals. What umbrella term describes this variety of life?",
-        "acceptedAnswers": [
-          "biodiversity",
-          "biological diversity"
-        ],
         "id": "ess-11-10",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "Species richness counts species, not individuals. A survey finds 8 oaks, 3 pines and 5 birches, then 4 more oaks and one willow. Treat each tree name as one species. How many species have been recorded?",
+        "numericAnswer": 4,
+        "tolerance": 0,
         "cs": {
-          "prompt": "Průzkum zaznamenává rozmanitost genů, druhů a stanovišť, nikoli jen celkový počet zvířat. Jaký souhrnný termín označuje tuto rozmanitost života?",
-          "acceptedAnswers": [
-            "biodiverzita",
-            "biologická rozmanitost",
-            "biologicka rozmanitost"
-          ]
-        }
+          "prompt": "Druhová bohatost počítá druhy, nikoli jedince. Průzkum najde 8 dubů, 3 borovice a 5 bříz, pak další 4 duby a jednu vrbu. Každý název stromu zde představuje jeden druh. Kolik druhů bylo zaznamenáno?"
+        },
+        "reward": 10
       },
       {
+        "id": "ess-11-12",
         "type": "multiple-choice",
-        "prompt": "Earth absorbs sunlight and emits infrared radiation. A gas absorbs some of that outgoing radiation. Which gas is an important example?",
+        "prompt": "A region has an unusually cold winter, while its average temperature over successive 30-year periods has risen. Which statement correctly distinguishes the two observations?",
         "choices": [
-          "Carbon dioxide",
-          "Helium",
-          "Argon",
-          "Neon"
+          "A short cold period can occur within a long-term warming trend",
+          "One cold winter disproves every long-term temperature record",
+          "A warming trend means every day must be warmer than the day before",
+          "The two observations cannot both be measured correctly"
         ],
         "correctIndex": 0,
-        "id": "ess-11-12",
-        "reward": 10,
         "cs": {
-          "prompt": "Země pohlcuje sluneční světlo a vyzařuje infračervené záření. Plyn část tohoto odcházejícího záření pohltí. Který plyn je významným příkladem?",
+          "prompt": "Oblast má neobvykle chladnou zimu, ale její průměrná teplota za po sobě jdoucí třicetiletá období roste. Které tvrzení správně rozlišuje obě pozorování?",
           "choices": [
-            "Oxid uhličitý",
-            "Helium",
-            "Argon",
-            "Neon"
+            "Krátké chladné období může nastat během dlouhodobého oteplování",
+            "Jedna chladná zima vyvrací každý dlouhodobý teplotní záznam",
+            "Oteplování znamená, že každý den musí být teplejší než předchozí",
+            "Obě pozorování nemohou být současně správně změřena"
           ]
-        }
+        },
+        "reward": 10
       },
       {
-        "type": "multiple-choice",
-        "prompt": "Why can fertiliser runoff harm a lake?",
-        "choices": [
-          "It stops every microorganism growing",
-          "It can stimulate algal growth and later oxygen depletion",
-          "It always removes all nutrients",
-          "It turns water into oil"
-        ],
-        "correctIndex": 1,
         "id": "ess-11-13",
-        "reward": 10,
-        "cs": {
-          "prompt": "Proč může odtok hnojiv poškodit jezero?",
-          "choices": [
-            "Zastaví růst všech mikroorganismů",
-            "Může podpořit růst řas a pozdější úbytek kyslíku",
-            "Vždy odstraní všechny živiny",
-            "Změní vodu na ropu"
-          ]
-        }
-      },
-      {
-        "type": "text",
-        "prompt": "A pond is drained. Frogs lose their usual place to feed and breed, although the species still exists elsewhere. What ecological term names the place they have lost?",
-        "acceptedAnswers": [
-          "habitat",
-          "a habitat"
+        "type": "multiple-choice",
+        "prompt": "Fertiliser can cause rapid algal growth. After the algae die, decomposers use oxygen to break them down. Which immediate change is expected while decomposition increases?",
+        "choices": [
+          "Dissolved oxygen rises because decomposers release it",
+          "Dissolved oxygen stays fixed because the water volume is unchanged",
+          "Dissolved oxygen rises because less photosynthesis occurs",
+          "Dissolved oxygen falls as decomposers use it"
         ],
-        "id": "ess-11-15",
+        "correctIndex": 3,
         "reward": 10,
         "cs": {
-          "prompt": "Rybník vypustíme. Žáby ztratí obvyklé místo k hledání potravy a rozmnožování, přestože druh jinde zůstává. Jaký ekologický termín označuje místo, které ztratily?",
-          "acceptedAnswers": [
-            "habitat",
-            "stanoviště",
-            "stanoviste",
-            "biotop"
+          "prompt": "Hnojivo může vyvolat rychlý růst řas. Po jejich odumření spotřebovávají rozkladači při rozkladu kyslík. Jaká bezprostřední změna se očekává, když rozklad zesílí?",
+          "choices": [
+            "Rozpuštěného kyslíku přibývá, protože ho rozkladači uvolňují",
+            "Rozpuštěný kyslík se nemění, protože objem vody je stejný",
+            "Rozpuštěného kyslíku přibývá, protože probíhá méně fotosyntézy",
+            "Rozpuštěného kyslíku ubývá, protože ho rozkladači spotřebovávají"
           ]
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A school uses 1000 L of water per day and reduces this by 20%. How many litres does it still use per day? Calculate the percentage saving from the original 1000 L.",
-        "numericAnswer": 800,
-        "tolerance": 0,
-        "id": "ess-11-08",
-        "reward": 10,
+        "id": "ess-11-15",
+        "type": "multiple-choice",
+        "prompt": "Two groups agree that draining a wetland would create jobs and destroy habitat. One prioritises jobs, the other habitat. What can environmental measurements do for this disagreement?",
+        "choices": [
+          "Prove that only jobs have value",
+          "Prove that nobody is allowed to value jobs",
+          "Clarify the impacts, while the choice also depends on priorities",
+          "Automatically choose everyone’s priorities"
+        ],
+        "correctIndex": 2,
         "cs": {
-          "prompt": "Škola spotřebuje 1000 L vody denně a sníží spotřebu o 20 %. Kolik litrů denně stále spotřebovává? Procentní úsporu vztáhněte k původním 1000 L."
-        }
+          "prompt": "Dvě skupiny souhlasí, že odvodnění mokřadu vytvoří pracovní místa a zničí stanoviště. Jedna upřednostňuje práci, druhá stanoviště. Jakou roli mají při tomto sporu environmentální měření?",
+          "choices": [
+            "Dokázat, že hodnotu mají jen pracovní místa",
+            "Dokázat, že nikdo nesmí oceňovat pracovní místa",
+            "Upřesnit dopady, ale volba závisí také na prioritách",
+            "Automaticky určit priority všech lidí"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-11-08",
+        "type": "text",
+        "prompt": "Reuse keeps an object in service; recycling processes its material into a new object. Scheme A washes and refills bottles. Scheme B crushes and melts bottles to make new ones. Which is reuse rather than recycling? Enter A or B.",
+        "acceptedAnswers": [
+          "A"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Opětovné použití zachovává předmět ve službě; recyklace zpracovává materiál na nový předmět. Systém A lahve myje a znovu plní. Systém B je drtí a taví na nové. Který je opětovným použitím, nikoli recyklací? Zadejte A nebo B.",
+          "acceptedAnswers": [
+            "A"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -261,80 +294,92 @@
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "Which sampling approach best avoids choosing only places with many flowers?",
-        "choices": [
-          "Place quadrats using random coordinates",
-          "Choose the brightest flower patches",
-          "Sample only beside the path",
-          "Ask people to pick the prettiest spot"
-        ],
-        "correctIndex": 0,
         "id": "ess-11-16",
-        "reward": 10,
-        "cs": {
-          "prompt": "Který způsob vzorkování nejlépe zabrání výběru pouze míst s mnoha květinami?",
-          "choices": [
-            "Umístit vzorkovací plochy podle náhodných souřadnic",
-            "Vybrat nejvýrazněji kvetoucí místa",
-            "Vzorkovat jen vedle cesty",
-            "Požádat lidi o výběr nejhezčího místa"
-          ]
-        }
-      },
-      {
         "type": "multiple-choice",
-        "prompt": "A dark surface replaces reflective ice. More sunlight is absorbed, warming the area and melting more ice. This is…",
+        "prompt": "A park has both flowering grass and bare patches. To estimate flowers across the whole park, how should sample locations be chosen?",
         "choices": [
-          "No feedback",
-          "A closed material cycle",
-          "Positive feedback",
-          "Negative feedback"
+          "Randomly, but move any sample landing on bare ground",
+          "Only where flowers are visible",
+          "Only along the easiest path",
+          "Randomly across the whole park, counting bare samples as zero"
         ],
-        "correctIndex": 2,
-        "id": "ess-11-18",
-        "reward": 10,
+        "correctIndex": 3,
         "cs": {
-          "prompt": "Tmavý povrch nahradí odrazivý led. Pohltí více slunečního záření, což oteplí oblast a roztaje další led. Jedná se o…",
+          "prompt": "Park má kvetoucí trávu i holá místa. Jak vybrat místa odběru pro odhad počtu květů v celém parku?",
           "choices": [
-            "Žádnou zpětnou vazbu",
-            "Uzavřený látkový cyklus",
-            "Kladnou zpětnou vazbu",
-            "Zápornou zpětnou vazbu"
+            "Náhodně, ale přesunout vzorky z holých míst",
+            "Jen tam, kde jsou vidět květy",
+            "Jen podél nejsnáze přístupné cesty",
+            "Náhodně v celém parku, holá místa počítat jako nulu"
           ]
-        }
+        },
+        "reward": 10
       },
       {
+        "id": "ess-11-18",
         "type": "numerical",
-        "prompt": "A school produces 200 kg of waste. Of this, 50 kg is recycled. What percentage is not recycled?",
-        "numericAnswer": 75,
+        "prompt": "Ice reflects 80% of incoming sunlight; dark water reflects 20%. Each receives 100 units. How many more units does water absorb than ice? Assume all unreflected light is absorbed.",
+        "numericAnswer": 60,
         "tolerance": 0,
+        "cs": {
+          "prompt": "Led odráží 80 % dopadajícího světla; tmavá voda 20 %. Na každý povrch dopadne 100 jednotek. O kolik jednotek více pohltí voda než led? Všechno neodražené světlo se pohltí."
+        },
+        "reward": 10
+      },
+      {
         "id": "ess-11-19",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "Two factories each cause one identical spill. A town considers two rules: (1) everyone pays the same tax for cleanup; (2) each factory pays for its own spill. Under rule 2, a factory that prevents its spill avoids that cleanup bill. Which incentive changes most directly compared with rule 1?",
+        "choices": [
+          "Factories earn extra money by causing more spills",
+          "Cleanup becomes unnecessary even if spills continue",
+          "Residents become responsible for preventing every factory spill",
+          "Preventing pollution gives the responsible factory a more direct saving"
+        ],
+        "correctIndex": 3,
         "cs": {
-          "prompt": "Škola vyprodukuje 200 kg odpadu, z něhož se 50 kg recykluje. Kolik procent se nerecykluje?"
-        }
+          "prompt": "Dvě továrny způsobí každá jeden stejný únik. Město zvažuje dvě pravidla: (1) všichni platí stejnou daň na čištění; (2) každá továrna platí za vlastní únik. Podle pravidla 2 se továrna, která úniku zabrání, vyhne tomuto účtu. Která motivace se oproti pravidlu 1 změní nejpříměji?",
+          "choices": [
+            "Továrny vydělají více peněz způsobením dalších úniků",
+            "Čištění přestane být nutné, i když úniky pokračují",
+            "Obyvatelé začnou odpovídat za prevenci každého úniku z továren",
+            "Prevence znečištění přinese odpovědné továrně přímější úsporu"
+          ]
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "A tank starts with 20 L. It receives 12 L/min and loses 9 L/min for 5 minutes. What is its final volume in litres?",
-        "numericAnswer": 35,
-        "tolerance": 0,
         "id": "ess-11-14",
-        "reward": 10,
+        "type": "text",
+        "prompt": "Warming melts bright ice and exposes darker water. Dark water absorbs more sunlight, causing further warming and melting. Does this loop amplify or oppose the initial warming? Answer about the direction of the loop, not whether it is desirable.",
+        "acceptedAnswers": [
+          "amplify",
+          "amplifies",
+          "reinforce",
+          "reinforces"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Nádrž na začátku obsahuje 20 L. Po dobu 5 minut do ní přitéká 12 L/min a odtéká 9 L/min. Jaký je konečný objem v litrech?"
-        }
+          "prompt": "Oteplení roztaví světlý led a odkryje tmavší vodu. Tmavá voda pohltí více slunečního záření, což způsobí další oteplení a tání. Tato smyčka počáteční oteplení zesiluje, nebo tlumí? Odpovídejte o směru zpětné vazby, nikoli o její prospěšnosti.",
+          "acceptedAnswers": [
+            "zesiluje",
+            "zesílit",
+            "zesilovat",
+            "posiluje",
+            "zesilit"
+          ]
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "A habitat’s nesting bird population falls from 80 pairs to 60 pairs. How many individual nesting birds have been lost, if every pair contains two birds?",
-        "numericAnswer": 40,
-        "tolerance": 0,
         "id": "ess-11-20",
+        "type": "numerical",
+        "prompt": "A site initially has 80 pairs of birds. A later count finds 60 pairs and 10 unpaired birds. Each pair has two birds. By how many has the total number of individual birds fallen?",
+        "numericAnswer": 30,
+        "tolerance": 0,
         "reward": 10,
         "cs": {
-          "prompt": "Počet hnízdících ptáků na stanovišti klesne z 80 párů na 60 párů. O kolik jednotlivých hnízdících ptáků jde, pokud každý pár tvoří dva ptáci?"
+          "prompt": "Na stanovišti je zpočátku 80 párů ptáků. Při pozdějším sčítání najdeme 60 párů a 10 ptáků bez páru. Každý pár tvoří dva ptáci. O kolik klesl celkový počet jednotlivých ptáků?"
         }
       },
       {
@@ -351,43 +396,49 @@
     ],
     "14–16": [
       {
-        "type": "text",
-        "prompt": "A deer population grows rapidly at first, then fluctuates near 300 as food becomes limiting. What ecological term describes the approximate sustainable limit, rather than the growth rate?",
-        "acceptedAnswers": [
-          "carrying capacity"
-        ],
         "id": "ess-14-02",
-        "reward": 10,
+        "type": "text",
+        "prompt": "The maximum population a habitat can support depends on its limiting resources. A long-lasting change reduces winter food but leaves shelter and summer food unchanged. If winter food is already limiting, should the supported population increase or decrease?",
+        "acceptedAnswers": [
+          "decrease",
+          "fall",
+          "decline"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Populace jelenů nejprve rychle roste a pak kolísá kolem 300, když ji začne omezovat potrava. Jaký ekologický termín označuje přibližnou udržitelnou mez, nikoli rychlost růstu?",
+          "prompt": "Největší populace, kterou prostředí uživí, závisí na omezujících zdrojích. Dlouhodobá změna sníží zimní potravu, ale nezmění úkryt ani letní potravu. Pokud již omezuje zimní potrava, má podporovaná populace růst, nebo klesat?",
           "acceptedAnswers": [
-            "nosná kapacita",
-            "nosna kapacita",
-            "nosná kapacita prostředí",
-            "nosna kapacita prostredi",
-            "únosná kapacita prostředí",
-            "unosna kapacita prostredi"
+            "klesat",
+            "klesnout",
+            "klesne",
+            "snížit se",
+            "pokles",
+            "snizit se"
           ]
-        }
+        },
+        "reward": 10
       },
       {
-        "type": "text",
-        "prompt": "Two introduced plant species establish in a new region. Only one spreads rapidly and displaces native plants. What term, beyond simply non-native, describes that harmful spreading species?",
-        "acceptedAnswers": [
-          "invasive species",
-          "invasive alien species"
-        ],
         "id": "ess-14-07",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "An invasive species is introduced, spreads and causes harm. Which observation gives evidence of all three, rather than only introduction?",
+        "choices": [
+          "A rare native plant grows slowly",
+          "An imported plant spreads beyond gardens and displaces native plants",
+          "A local plant spreads after rain",
+          "An imported plant stays in one pot"
+        ],
+        "correctIndex": 1,
         "cs": {
-          "prompt": "V nové oblasti se uchytí dva zavlečené druhy rostlin. Jen jeden se rychle šíří a vytlačuje původní rostliny. Jak se tento škodlivě se šířící druh označuje přesněji než jen jako nepůvodní?",
-          "acceptedAnswers": [
-            "invazní druh",
-            "invazni druh",
-            "invazní nepůvodní druh",
-            "invazni nepuvodni druh"
+          "prompt": "Invazní druh je zavlečený, šíří se a působí škodu. Které pozorování dokládá všechny tři znaky, nikoli jen zavlečení?",
+          "choices": [
+            "Vzácná původní rostlina roste pomalu",
+            "Dovezená rostlina se šíří mimo zahrady a vytlačuje původní druhy",
+            "Místní rostlina se šíří po dešti",
+            "Dovezená rostlina zůstává v jednom květináči"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "multiple-choice",
@@ -412,36 +463,50 @@
         }
       },
       {
-        "type": "text",
-        "prompt": "After a lava flow cools, lichens colonise the bare rock; later, grasses and shrubs establish as soil develops. Name the ecological process linking these changes.",
-        "acceptedAnswers": [
-          "ecological succession",
-          "succession",
-          "primary succession"
-        ],
         "id": "ess-14-12",
-        "reward": 10,
+        "type": "text",
+        "prompt": "Vegetation returns to an abandoned field with intact soil and also begins colonising fresh bare lava. Which site first needs substantial soil formation before deep-rooted plants can establish: field or lava?",
+        "acceptedAnswers": [
+          "lava",
+          "bare lava"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Po ochlazení lávového proudu osídlí holou skálu lišejníky; později se s tvorbou půdy uchytí trávy a keře. Pojmenujte ekologický proces, který tyto změny spojuje.",
+          "prompt": "Vegetace se vrací na opuštěné pole se zachovanou půdou a začíná také osidlovat čerstvou holou lávu. Na kterém místě musí před uchycením hluboce kořenících rostlin nejprve vzniknout podstatná vrstva půdy: pole, nebo láva?",
           "acceptedAnswers": [
-            "sukcese",
-            "ekologická sukcese",
-            "ekologicka sukcese",
-            "primární sukcese",
-            "primarni sukcese"
+            "láva",
+            "lávě",
+            "na lávě",
+            "lava",
+            "lave",
+            "na lave"
           ]
-        }
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "A forest initially stores 120 tonnes of carbon. Over a year it takes up 15 tonnes and releases 9 tonnes. What is the net annual change in its carbon stock, in tonnes?",
-        "numericAnswer": 6,
-        "tolerance": 0,
         "id": "ess-14-03",
-        "reward": 10,
+        "type": "text",
+        "prompt": "After a field is left bare, wind carries its fertile topsoil into a neighbouring ditch. The soil has moved rather than changed into another substance. What common name describes this removal of soil by wind or water?",
+        "acceptedAnswers": [
+          "erosion",
+          "soil erosion",
+          "wind erosion"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Les na začátku obsahuje 120 tun uhlíku. Během roku pohltí 15 tun a uvolní 9 tun. Jaká je čistá roční změna zásoby uhlíku v tunách?"
-        }
+          "prompt": "Po odkrytí pole odnese vítr jeho úrodnou vrchní půdu do sousedního příkopu. Půda se přemístila, nezměnila se na jinou látku. Jak se běžně nazývá toto odnášení půdy větrem nebo vodou?",
+          "acceptedAnswers": [
+            "eroze",
+            "půdní eroze",
+            "eroze půdy",
+            "větrná eroze",
+            "pudni eroze",
+            "eroze pudy",
+            "vetrna eroze"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "multiple-choice",
@@ -466,148 +531,138 @@
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "After an algal bloom dies, dissolved oxygen drops sharply. Which process most directly uses up the oxygen?",
-        "choices": [
-          "Aerobic decomposition of dead algae",
-          "Settling of mineral particles alone",
-          "Photosynthesis by surviving algae",
-          "Evaporation of pure water alone"
-        ],
-        "correctIndex": 0,
         "id": "ess-14-06",
-        "reward": 10,
-        "cs": {
-          "prompt": "Po odumření přemnožených řas prudce klesne rozpuštěný kyslík. Který proces jej nejpříměji spotřebovává?",
-          "choices": [
-            "Aerobní rozklad mrtvých řas",
-            "Pouhé usazování minerálních částic",
-            "Fotosyntéza přeživších řas",
-            "Pouhé vypařování čisté vody"
-          ]
-        }
-      },
-      {
-        "type": "text",
-        "prompt": "Site A has 4 species with 25 individuals each. Site B has the same 4 species with counts 97, 1, 1, 1. Which site has greater species richness, not evenness? Enter A, B or equal.",
-        "id": "ess-14-20",
-        "reward": 10,
-        "acceptedAnswers": [
-          "equal",
-          "same",
-          "neither",
-          "both"
-        ],
-        "cs": {
-          "prompt": "Stanoviště A má 4 druhy po 25 jedincích. Stanoviště B má stejné 4 druhy s počty 97, 1, 1 a 1. Které má větší druhovou bohatost, nikoli vyrovnanost zastoupení? Zadejte A, B nebo stejné.",
-          "acceptedAnswers": [
-            "stejné",
-            "stejne",
-            "stejná",
-            "stejna",
-            "obě",
-            "obe",
-            "oba",
-            "žádné",
-            "zadne"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Warming increases evaporation from a wet surface; the evaporation removes heat and reduces the initial warming. What feedback is described?",
-        "choices": [
-          "Positive, because evaporation increases",
-          "Negative, because it opposes the initial change",
-          "Positive, because heat is involved",
-          "No feedback, because water moves"
-        ],
-        "correctIndex": 1,
-        "id": "ess-14-09",
-        "reward": 10,
-        "cs": {
-          "prompt": "Oteplení zvýší vypařování z mokrého povrchu; vypařování odnímá teplo a původní oteplení tlumí. Jaká zpětná vazba je popsána?",
-          "choices": [
-            "Kladná, protože vypařování roste",
-            "Záporná, protože působí proti původní změně",
-            "Kladná, protože se účastní teplo",
-            "Žádná, protože se voda pohybuje"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Fish contain a pollutant at 2 mg/kg and fish-eating birds at 20 mg/kg. Which term describes the increase between these trophic levels?",
-        "choices": [
-          "Biomagnification",
-          "Only dilution",
-          "Primary succession",
-          "Only the concentration increase within one individual over time"
-        ],
-        "correctIndex": 0,
-        "id": "ess-14-11",
-        "reward": 10,
-        "cs": {
-          "prompt": "Ryby obsahují znečišťující látku v koncentraci 2 mg/kg a rybožraví ptáci 20 mg/kg. Který termín označuje nárůst mezi těmito trofickými úrovněmi?",
-          "choices": [
-            "Biomagnifikace",
-            "Pouze ředění",
-            "Primární sukcese",
-            "Pouze nárůst koncentrace v jednom jedinci v čase"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Two river samples start with the same dissolved oxygen. After equal times in darkness at the same temperature, sample A has lost much more oxygen than B. Which explanation best fits a higher biological oxygen demand in A?",
-        "choices": [
-          "More biodegradable organic matter fuels respiration",
-          "A contains only distilled water",
-          "No microorganisms are present in A",
-          "Photosynthesis uses up oxygen in darkness"
-        ],
-        "correctIndex": 0,
-        "id": "ess-14-14",
-        "reward": 10,
-        "cs": {
-          "prompt": "Dva vzorky říční vody mají na začátku stejně rozpuštěného kyslíku. Po stejné době ve tmě a při stejné teplotě ztratí A mnohem více kyslíku než B. Co nejlépe vysvětluje vyšší biologickou spotřebu kyslíku v A?",
-          "choices": [
-            "Více rozložitelné organické hmoty podporuje dýchání",
-            "A obsahuje jen destilovanou vodu",
-            "V A nejsou mikroorganismy",
-            "Fotosyntéza ve tmě spotřebovává kyslík"
-          ]
-        }
-      },
-      {
-        "type": "text",
-        "prompt": "A wetland removes pollutants from water. After it is drained, a town must pay for extra water treatment. What term describes the benefits people previously received from the wetland?",
-        "acceptedAnswers": [
-          "ecosystem services",
-          "ecosystem service"
-        ],
-        "id": "ess-14-18",
-        "reward": 10,
-        "cs": {
-          "prompt": "Mokřad odstraňuje z vody znečišťující látky. Po jeho odvodnění musí město platit další úpravu vody. Jak se nazývají přínosy, které lidé dříve z mokřadu získávali?",
-          "acceptedAnswers": [
-            "ekosystémové služby",
-            "ekosystemove sluzby",
-            "ekosystémová služba",
-            "ekosystemova sluzba"
-          ]
-        }
-      },
-      {
         "type": "numerical",
-        "prompt": "Producers store 20000 kJ, herbivores receive 2000 kJ, and carnivores receive 200 kJ. What percentage of the producers’ energy reaches the carnivores? Percentage = final energy / initial energy × 100.",
-        "numericAnswer": 1,
+        "prompt": "Microbes remove oxygen as they decompose dead algae. Dissolved oxygen falls from 9 to 3 mg/L in a 2 L sample. How many milligrams of oxygen have been removed in total?",
+        "numericAnswer": 12,
         "tolerance": 0,
-        "id": "ess-14-05",
+        "cs": {
+          "prompt": "Mikroorganismy při rozkladu odumřelých řas spotřebovávají kyslík. Rozpuštěný kyslík ve vzorku o objemu 2 L klesne z 9 na 3 mg/L. Kolik miligramů kyslíku se celkem spotřebovalo?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-14-20",
+        "type": "multiple-choice",
+        "prompt": "Species richness is the number of species, regardless of their abundance. A has four species with 25 individuals each. B has those species in counts 97, 1, 1, 1. Which comparison is correct?",
+        "choices": [
+          "A has greater richness because its counts are equal",
+          "B has greater richness because one count is 97",
+          "Equal richness means the abundance patterns are identical",
+          "Equal richness, but A has more even abundances"
+        ],
+        "correctIndex": 3,
+        "cs": {
+          "prompt": "Druhová bohatost je počet druhů bez ohledu na početnost. Na A jsou čtyři druhy po 25 jedincích. Na B jsou tytéž druhy v počtech 97, 1, 1, 1. Které srovnání platí?",
+          "choices": [
+            "A má vyšší bohatost, protože má stejné počty",
+            "B má vyšší bohatost, protože jeden počet je 97",
+            "Stejná bohatost znamená stejné rozložení početností",
+            "Stejná bohatost, ale na A jsou početnosti rovnoměrnější"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-14-09",
+        "type": "multiple-choice",
+        "prompt": "Positive feedback reinforces a change; negative feedback opposes it. Warming increases evaporation, which removes heat and reduces the warming. Which interpretation fits?",
+        "choices": [
+          "Positive feedback because evaporation increases",
+          "No feedback because water is involved",
+          "Negative feedback, although the initial temperature change is upward",
+          "Positive feedback because temperature initially rises"
+        ],
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Kladná zpětná vazba změnu zesiluje; záporná ji tlumí. Oteplení zvyšuje vypařování, které odvádí teplo a zmenšuje oteplení. Které vysvětlení odpovídá?",
+          "choices": [
+            "Kladná vazba, protože vypařování roste",
+            "Žádná vazba, protože jde o vodu",
+            "Záporná vazba, přestože teplota zpočátku stoupá",
+            "Kladná vazba, protože teplota zpočátku stoupá"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-14-11",
+        "type": "text",
+        "prompt": "Fish tissue contains 2 mg of a pollutant per kg; bird tissue contains 10 mg per kg. This shows a higher CONCENTRATION in birds, but not necessarily more pollutant in all birds combined. To find that total, do you also need the birds’ combined mass or their average age?",
+        "acceptedAnswers": [
+          "mass",
+          "combined mass",
+          "total mass",
+          "biomass"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Rybí tkáň obsahuje 2 mg znečišťující látky na kg; ptačí tkáň 10 mg na kg. To ukazuje vyšší KONCENTRACI u ptáků, nikoli nutně více látky ve všech ptácích dohromady. Potřebujete pro tento součet také jejich celkovou hmotnost, nebo průměrný věk?",
+          "acceptedAnswers": [
+            "hmotnost",
+            "celková hmotnost",
+            "celkovou hmotnost",
+            "biomasa",
+            "biomasu",
+            "celkova hmotnost"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-14-14",
+        "type": "multiple-choice",
+        "prompt": "A river sample loses oxygen in darkness. To test whether living microbes cause the loss, which comparison is most useful? Sterilising kills microbes; otherwise keep conditions the same.",
+        "choices": [
+          "Compare an untreated portion with a sterilised portion of the same sample",
+          "Compare two untreated portions at different temperatures",
+          "Compare one portion in light and another in darkness",
+          "Compare two untreated portions with different starting oxygen"
+        ],
+        "correctIndex": 0,
         "reward": 10,
         "cs": {
-          "prompt": "Producenti obsahují 20000 kJ, býložravci získají 2000 kJ a masožravci 200 kJ. Kolik procent energie producentů se dostane k masožravcům? Procento = konečná energie / počáteční energie × 100."
+          "prompt": "Vzorek říční vody ve tmě ztrácí kyslík. Které srovnání nejlépe ověří, zda úbytek způsobují živé mikroorganismy? Sterilizace je usmrtí; ostatní podmínky ponechte stejné.",
+          "choices": [
+            "Porovnat neošetřenou a sterilizovanou část téhož vzorku",
+            "Porovnat dvě neošetřené části při různých teplotách",
+            "Porovnat jednu část na světle a druhou ve tmě",
+            "Porovnat dvě neošetřené části s různým počátečním kyslíkem"
+          ]
         }
+      },
+      {
+        "id": "ess-14-18",
+        "type": "numerical",
+        "prompt": "A wetland removes 30% of 200 kg of incoming pollutant. Treatment downstream then removes half of what remains. How many kilograms leave the treatment system?",
+        "numericAnswer": 70,
+        "tolerance": 0,
+        "cs": {
+          "prompt": "Mokřad odstraní 30 % z přitékajících 200 kg znečišťující látky. Následné čištění odstraní polovinu zbytku. Kolik kilogramů opustí celý systém?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-14-05",
+        "type": "multiple-choice",
+        "prompt": "Bus passenger numbers rise after a new route opens, but car journeys and car fuel use remain unchanged. Which claim is NOT supported by these observations alone?",
+        "choices": [
+          "More passengers used buses",
+          "Some bus trips may be newly made trips",
+          "The route reduced emissions from cars",
+          "Car use did not fall during the observation period"
+        ],
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Po otevření nové linky přibude cestujících autobusem, ale počet jízd aut i jejich spotřeba paliva zůstanou stejné. Které tvrzení tato pozorování sama o sobě NEPODPORUJÍ?",
+          "choices": [
+            "Více cestujících využilo autobusy",
+            "Některé autobusové cesty mohly být nově vzniklé cesty",
+            "Linka snížila emise z aut",
+            "Využití aut ve sledovaném období nekleslo"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -622,36 +677,36 @@
       },
       {
         "type": "numerical",
-        "prompt": "A reservoir starts with 5000 m³. Annual inflow is 1200 m³ and evaporation is 200 m³. What is the maximum annual withdrawal, in m³, that keeps its volume unchanged?",
+        "prompt": "A reservoir starts with 5000 m³ and receives 1200 m³ each year. Evaporation removes 10% of that yearly inflow; another 80 m³ must flow downstream. With no other flows, what additional annual withdrawal in m³ keeps the reservoir volume unchanged?",
         "numericAnswer": 1000,
         "tolerance": 0,
         "id": "ess-14-10",
         "reward": 10,
         "cs": {
-          "prompt": "Nádrž na začátku obsahuje 5000 m³. Roční přítok je 1200 m³ a vypařování 200 m³. Jaký největší roční odběr v m³ zachová stejný objem?"
+          "prompt": "Nádrž začíná s 5000 m³ a ročně do ní přiteče 1200 m³. Vypaří se 10 % tohoto ročního přítoku; dalších 80 m³ musí odtéct po proudu. Jaký další roční odběr v m³ zachová objem nádrže, pokud jiné toky nejsou?"
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "Two small populations become connected by a habitat corridor. Individuals move between them and breed. Which effect is most directly expected, even if total habitat area changes very little?",
-        "choices": [
-          "More gene flow between populations",
-          "All individuals become genetically identical",
-          "All predators disappear",
-          "No further migration occurs"
-        ],
-        "correctIndex": 0,
         "id": "ess-14-16",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "Two small woodland populations become connected by a suitable habitat corridor. Individuals can now move between them and breed. Which benefit follows most directly from that new connection?",
+        "choices": [
+          "Every individual immediately gains new genes without reproducing",
+          "Movement can restore exchange of inherited variants between the populations",
+          "All predators are automatically excluded",
+          "The original forest patches necessarily double in area"
+        ],
+        "correctIndex": 1,
         "cs": {
-          "prompt": "Dvě malé populace propojíme biokoridorem. Jedinci se mezi nimi pohybují a rozmnožují. Který dopad očekáváme nejpříměji, i když se celková plocha stanoviště téměř nezmění?",
+          "prompt": "Dvě malé lesní populace propojí vhodný biokoridor. Jedinci nyní mohou mezi nimi přecházet a rozmnožovat se. Která výhoda nejpříměji plyne z nového propojení?",
           "choices": [
-            "Větší tok genů mezi populacemi",
-            "Všichni jedinci se stanou geneticky shodnými",
-            "Všichni predátoři zmizí",
-            "Žádná další migrace neproběhne"
+            "Každý jedinec ihned získá nové geny bez rozmnožování",
+            "Pohyb může obnovit výměnu dědičných variant mezi populacemi",
+            "Všichni predátoři jsou automaticky vyloučeni",
+            "Původní lesní plochy se nutně zdvojnásobí"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -665,15 +720,20 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A study marks 50 fish. Later, 10 marked and 40 unmarked fish are caught. Use N = (initially marked × total caught later) / marked recaptured. Estimate population size.",
-        "numericAnswer": 250,
-        "tolerance": 0,
         "id": "ess-14-15",
-        "reward": 10,
+        "type": "text",
+        "prompt": "Model A is adjusted using all 20 years of lake data and then matches those same years closely. Model B is adjusted using only years 1–10 and successfully predicts years 11–20 without further adjustment. Which has the stronger independent test of prediction: A or B?",
+        "acceptedAnswers": [
+          "B"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Při studii označíme 50 ryb. Později ulovíme 10 označených a 40 neoznačených. Použijte N = (původně označené × později ulovené celkem) / znovu ulovené označené. Odhadněte velikost populace."
-        }
+          "prompt": "Model A se upraví podle všech 20 let dat z jezera a pak se těmto letům přesně přizpůsobí. Model B se upraví jen podle let 1–10 a bez dalších úprav úspěšně předpoví roky 11–20. Který má silnější nezávislý test předpovědí: A, nebo B?",
+          "acceptedAnswers": [
+            "B"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -687,15 +747,15 @@
         }
       },
       {
+        "id": "ess-14-13",
         "type": "numerical",
-        "prompt": "A town emits 500 tonnes/year. Emissions fall by 20%, then rise by 20% of the reduced amount. What is the overall percentage change from the original value? Use a minus sign for a decrease.",
+        "prompt": "A city’s population grows by 20%, while annual emissions PER PERSON fall by 20%. No other emissions sources change. What is the percentage change in the city’s total annual emissions relative to the original total? Use a negative sign for a decrease.",
         "numericAnswer": -4,
         "tolerance": 0,
-        "id": "ess-14-13",
-        "reward": 10,
         "cs": {
-          "prompt": "Město vypouští 500 tun/rok. Emise klesnou o 20 % a pak vzrostou o 20 % snížené hodnoty. Jaká je celková procentní změna oproti původní hodnotě? Pokles označte mínusem."
-        }
+          "prompt": "Počet obyvatel města vzroste o 20 %, zatímco roční emise NA OSOBU klesnou o 20 %. Jiné zdroje emisí se nemění. Jaká je procentní změna celkových ročních emisí města oproti původnímu součtu? Pro pokles použijte záporné znaménko."
+        },
+        "reward": 10
       }
     ],
     "17–18": [
@@ -722,215 +782,206 @@
         }
       },
       {
-        "type": "text",
-        "prompt": "Two surfaces receive equal incoming solar energy. One reflects 60% and the other 10%. Name the surface property with the higher value for the first surface, rather than the amount absorbed.",
-        "acceptedAnswers": [
-          "albedo"
-        ],
         "id": "ess-17-02",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "Albedo is the fraction of incoming light reflected. A surface with albedo 0.6 receives 200 units of light. Assuming the rest is absorbed, how many units does it absorb?",
+        "numericAnswer": 80,
+        "tolerance": 0,
         "cs": {
-          "prompt": "Dva povrchy přijímají stejnou sluneční energii. První odrazí 60 % a druhý 10 %. Pojmenujte vlastnost povrchu, která má vyšší hodnotu u prvního, nikoli množství pohlcené energie.",
-          "acceptedAnswers": [
-            "albedo"
-          ]
-        }
+          "prompt": "Albedo je podíl dopadajícího světla, který se odrazí. Na povrch s albedem 0,6 dopadne 200 jednotek světla. Zbytek se pohltí. Kolik jednotek pohltí?"
+        },
+        "reward": 10
       },
       {
-        "type": "multiple-choice",
-        "prompt": "Decomposers return mineral nutrients to soil, yet an ecosystem still needs a continuing energy input. Why does nutrient recycling not remove that need?",
-        "choices": [
-          "Nutrients and energy are the same substance",
-          "Respiration dissipates usable energy as heat even while matter is recycled",
-          "Decomposers return all energy to producers as light",
-          "Atoms disappear whenever energy is used"
-        ],
-        "correctIndex": 1,
         "id": "ess-17-04",
-        "reward": 10,
-        "cs": {
-          "prompt": "Rozkladači vracejí minerální živiny do půdy, ale ekosystém stále potřebuje průběžný přísun energie. Proč recyklace živin tuto potřebu neodstraňuje?",
-          "choices": [
-            "Živiny a energie jsou stejná látka",
-            "Dýchání rozptyluje využitelnou energii jako teplo, i když látka obíhá",
-            "Rozkladači vracejí všechnu energii producentům jako světlo",
-            "Při využití energie mizí atomy"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A small increase in nutrient input pushes a lake from clear water into a persistent turbid state. Similar earlier increases caused only small changes. Which conclusion best fits?",
-        "choices": [
-          "The response must be linear at every input level",
-          "The system may have crossed a tipping point",
-          "Nutrients cannot affect water clarity",
-          "The lake must return to clear water immediately"
+        "type": "text",
+        "prompt": "Decomposers return nutrients from dead organisms to soil, where plants can take them up again. At each feeding step some energy leaves as dispersed heat and is not reused by photosynthesis. Which is recycled within this food web: matter or usable energy?",
+        "acceptedAnswers": [
+          "matter",
+          "nutrients"
         ],
-        "correctIndex": 1,
-        "id": "ess-17-06",
-        "reward": 10,
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Malé zvýšení přísunu živin převede jezero z čisté vody do trvale zakaleného stavu. Podobná dřívější zvýšení způsobila jen malé změny. Který závěr nejlépe odpovídá?",
-          "choices": [
-            "Odezva musí být při každém přísunu lineární",
-            "Soustava mohla překročit bod zvratu",
-            "Živiny nemohou ovlivnit průhlednost vody",
-            "Jezero se musí ihned vrátit k čisté vodě"
-          ]
-        }
-      },
-      {
-        "type": "numerical",
-        "prompt": "A carbon stock contains 600 tonnes. Carbon leaves at 2.5 tonnes/month. Estimate mean residence time as stock / outflow, in years.",
-        "numericAnswer": 20,
-        "tolerance": 0,
-        "id": "ess-17-05",
-        "reward": 10,
-        "cs": {
-          "prompt": "Zásoba uhlíku obsahuje 600 tun. Uhlík odchází rychlostí 2,5 tuny/měsíc. Odhadněte průměrnou dobu zdržení jako zásoba / odtok v letech."
-        }
-      },
-      {
-        "type": "numerical",
-        "prompt": "An ecosystem has GPP = 2400 and producer respiration = 1400 kJ/m²/year. What is annual NPP for an area of 5000 m², expressed in megajoules? NPP = GPP − producer respiration; 1000 kJ = 1 MJ.",
-        "numericAnswer": 5000,
-        "tolerance": 0,
-        "id": "ess-17-03",
-        "reward": 10,
-        "cs": {
-          "prompt": "Ekosystém má GPP = 2400 a dýchání producentů = 1400 kJ/m²/rok. Jaká je roční NPP pro plochu 5000 m² v megajoulech? NPP = GPP − dýchání producentů; 1000 kJ = 1 MJ."
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A lake is accessible to all local fishers. A fish caught by one fisher is no longer available to others. Which classification matches both features?",
-        "id": "ess-17-08",
-        "reward": 10,
-        "cs": {
-          "prompt": "Jezero je přístupné všem místním rybářům. Ryba ulovená jedním už není k dispozici ostatním. Které zařazení odpovídá oběma vlastnostem?",
-          "choices": [
-            "Zdroj společného užívání: přístup se obtížně omezuje a spotřeba snižuje dostupnost",
-            "Čistý veřejný statek: využití nikdy nesnižuje dostupnost",
-            "Soukromý statek: ostatní jsou účinně vyloučeni",
-            "Neomezený zdroj: úlovky nemohou nikoho ovlivnit"
+          "prompt": "Rozkladači vracejí živiny z mrtvých organismů do půdy, odkud je mohou rostliny znovu přijmout. Při každém potravním přenosu část energie odchází jako rozptýlené teplo, které fotosyntéza znovu nevyužije. Co se v této potravní síti recykluje: hmota, nebo využitelná energie?",
+          "acceptedAnswers": [
+            "hmota",
+            "látky",
+            "živiny",
+            "latky",
+            "ziviny"
           ]
         },
-        "choices": [
-          "A common-pool resource: access is hard to exclude and consumption reduces availability",
-          "A pure public good: use never reduces availability",
-          "A private good: others are effectively excluded",
-          "An unlimited resource: catches cannot affect anyone"
-        ],
-        "correctIndex": 0
+        "reward": 10
       },
       {
+        "id": "ess-17-06",
         "type": "multiple-choice",
-        "prompt": "What is a major limitation of setting catches at a modelled maximum sustainable yield?",
+        "prompt": "A tipping point is a threshold beyond which a small further change can cause a large lasting shift. Which lake observation best fits?",
         "choices": [
-          "Fishing never affects food webs",
-          "Population estimates and environmental conditions are uncertain",
-          "Models guarantee no collapse",
-          "All fish reproduce at a constant rate forever"
-        ],
-        "correctIndex": 1,
-        "id": "ess-17-09",
-        "reward": 10,
-        "cs": {
-          "prompt": "Jaké je hlavní omezení při stanovení úlovků na úrovni modelovaného maximálního udržitelného výnosu?",
-          "choices": [
-            "Rybolov nikdy neovlivňuje potravní sítě",
-            "Odhady populace a podmínky prostředí jsou nejisté",
-            "Modely zaručují, že nedojde ke kolapsu",
-            "Všechny ryby se navždy rozmnožují stálou rychlostí"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "In life-cycle assessment, comparing electric and petrol cars fairly requires…",
-        "choices": [
-          "A common functional unit and stated system boundaries",
-          "Ignoring electricity production",
-          "Counting only paint colour",
-          "Comparing unrelated journey distances"
+          "A small extra nutrient input triggers a persistent turbid state",
+          "Each extra unit of nutrients causes the same small change",
+          "A passing cloud briefly darkens the water",
+          "Nutrient input and water clarity both stay constant"
         ],
         "correctIndex": 0,
-        "id": "ess-17-12",
-        "reward": 10,
         "cs": {
-          "prompt": "Při posuzování životního cyklu vyžaduje spravedlivé porovnání elektrických a benzinových aut…",
+          "prompt": "Bod zvratu je práh, za kterým malá další změna může způsobit velký trvalý přechod. Které pozorování jezera tomu nejlépe odpovídá?",
           "choices": [
-            "Společnou funkční jednotku a stanovené hranice soustavy",
-            "Ignorování výroby elektřiny",
-            "Započítání pouze barvy laku",
-            "Porovnání nesouvisejících délek cest"
+            "Malé další množství živin vyvolá přetrvávající zakalení",
+            "Každá další jednotka živin způsobí stejně malou změnu",
+            "Mrak na chvíli ztmaví vodu",
+            "Přísun živin i průhlednost vody zůstávají stejné"
           ]
-        }
+        },
+        "reward": 10
       },
       {
-        "type": "multiple-choice",
-        "prompt": "A lake becomes turbid at high nutrient input. Input is reduced to its previous level, but the lake stays turbid and needs a much larger reduction to clear. Which interpretation is supported?",
-        "choices": [
-          "Only current input matters; history cannot affect the state",
-          "The lake shows hysteresis: recovery follows a different threshold from degradation",
-          "The original measurements must all be wrong",
-          "The lake must recover instantly after any reduction"
-        ],
-        "correctIndex": 1,
-        "id": "ess-17-18",
-        "reward": 10,
-        "cs": {
-          "prompt": "Při vysokém přísunu živin se jezero zakalí. Přísun snížíme na původní úroveň, ale jezero zůstane zakalené a vyčistí se až po mnohem větším snížení. Který výklad je podložen?",
-          "choices": [
-            "Záleží jen na současném přísunu; historie nemůže stav ovlivnit",
-            "Jezero vykazuje hysterezi: obnova má jiný práh než zhoršení",
-            "Všechna původní měření musí být chybná",
-            "Jezero se musí ihned obnovit po jakémkoli snížení"
-          ]
-        }
-      },
-      {
+        "id": "ess-17-05",
         "type": "text",
-        "prompt": "Seawater pH falls from 8.2 to 8.1 because it absorbs atmospheric CO₂. It is still alkaline. What is the name of this process?",
+        "prompt": "A planet initially receives and loses equal amounts of energy each second. More greenhouse gas temporarily reduces infrared energy escaping to space, while absorbed sunlight stays unchanged. Before a new balance is reached, should the planet’s stored energy increase or decrease?",
         "acceptedAnswers": [
-          "ocean acidification"
+          "increase",
+          "rise"
         ],
-        "id": "ess-17-14",
-        "reward": 10,
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "pH mořské vody klesne z 8,2 na 8,1 pohlcováním atmosférického CO₂. Voda je stále zásaditá. Jak se tento proces nazývá?",
+          "prompt": "Planeta nejprve každou sekundu přijímá a ztrácí stejné množství energie. Více skleníkového plynu dočasně omezí únik infračervené energie do vesmíru, zatímco pohlcené sluneční záření se nemění. Má před dosažením nové rovnováhy uložená energie planety růst, nebo klesat?",
           "acceptedAnswers": [
-            "okyselování oceánů",
-            "okyselovani oceanu",
-            "acidifikace oceánů",
-            "acidifikace oceanu",
-            "okyselování oceánu",
-            "okyselovani oceanu"
+            "růst",
+            "vzrůst",
+            "vzroste",
+            "zvýšit se",
+            "zvyšovat se",
+            "rust",
+            "vzrust",
+            "zvysit se",
+            "zvysovat se"
           ]
-        }
+        },
+        "reward": 10
       },
       {
+        "id": "ess-17-03",
         "type": "multiple-choice",
-        "prompt": "A persistent, fat-soluble pollutant has low concentration in water but high concentration in a long-lived fish. Which explanation is most plausible?",
+        "prompt": "Harvest removes nitrogen from a field. Recycling crop remains only returns nitrogen already in that field. Some root bacteria can convert atmospheric nitrogen into compounds plants use. Which process adds NEW nitrogen across the field boundary?",
         "choices": [
-          "Uptake over time exceeds the fish’s elimination of the pollutant",
-          "The pollutant must have zero toxicity",
-          "Low water concentration prevents all uptake",
-          "The pollutant is necessarily created by the fish"
+          "Decomposition of that field’s own fallen leaves",
+          "Moving nitrogen from roots into seeds within the field",
+          "Conversion of atmospheric nitrogen by those bacteria",
+          "Evaporation of pure water from the field"
         ],
-        "correctIndex": 0,
-        "id": "ess-17-15",
-        "reward": 10,
+        "correctIndex": 2,
         "cs": {
-          "prompt": "Perzistentní látka rozpustná v tucích má nízkou koncentraci ve vodě, ale vysokou v dlouhověké rybě. Které vysvětlení je nejpravděpodobnější?",
+          "prompt": "Sklizeň odnáší dusík z pole. Recyklace zbytků plodin jen vrací dusík, který už v poli byl. Některé kořenové bakterie převádějí vzdušný dusík na sloučeniny využitelné rostlinami. Který proces přidá NOVÝ dusík přes hranici pole?",
           "choices": [
-            "Příjem látky v čase převyšuje její vylučování rybou",
-            "Látka musí mít nulovou toxicitu",
-            "Nízká koncentrace ve vodě brání veškerému příjmu",
-            "Látku nutně vytváří sama ryba"
+            "Rozklad spadaných listů z téhož pole",
+            "Přesun dusíku z kořenů do semen uvnitř pole",
+            "Přeměna vzdušného dusíku těmito bakteriemi",
+            "Odpařování čisté vody z pole"
           ]
-        }
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-17-08",
+        "type": "multiple-choice",
+        "prompt": "A common-pool resource is hard to exclude users from, and one user’s consumption leaves less for others. Which example has both properties?",
+        "choices": [
+          "A film behind a paid online subscription",
+          "Fish in an open-access lake",
+          "A weather forecast anyone can read",
+          "Fish in a securely fenced private pond"
+        ],
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Ze společně využívaného zdroje se těžko vylučují uživatelé a spotřeba jednoho ponechává méně ostatním. Který příklad má obě vlastnosti?",
+          "choices": [
+            "Film dostupný po zaplacení předplatného",
+            "Ryby ve volně přístupném jezeře",
+            "Předpověď počasí, kterou může číst každý",
+            "Ryby v zabezpečeném soukromém rybníku"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-17-09",
+        "type": "text",
+        "prompt": "Two factories make the same output. A has private costs of 20 units and causes 10 units of cleanup paid by the public. B has private costs of 25 and no cleanup cost. Using total cost to society as the ONLY criterion, which is cheaper: A or B?",
+        "acceptedAnswers": [
+          "B"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Dvě továrny mají stejnou produkci. A má vlastní náklady 20 jednotek a způsobí čištění za 10 jednotek placené veřejností. B má vlastní náklady 25 a žádné náklady na čištění. Pokud je JEDINÝM kritériem celkový náklad pro společnost, která je levnější: A, nebo B?",
+          "acceptedAnswers": [
+            "B"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-17-12",
+        "type": "numerical",
+        "prompt": "For equal 100 km journeys, car A emits 12 kg CO₂ carrying one person; car B emits 18 kg carrying three people. Counts include drivers. How many kg less does B emit per person than A?",
+        "numericAnswer": 6,
+        "tolerance": 0,
+        "cs": {
+          "prompt": "Na stejné cestě 100 km vypustí auto A 12 kg CO₂ a veze jednu osobu; auto B vypustí 18 kg a veze tři osoby. Počty zahrnují řidiče. O kolik kg méně vypustí B na osobu než A?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-17-18",
+        "type": "multiple-choice",
+        "prompt": "A lake turns turbid above nutrient input 10 units/day. Once turbid, it clears only below 6 units/day. It is turbid at input 12; input is reduced to 8. What does this model predict?",
+        "choices": [
+          "It clears because any reduction is sufficient",
+          "It alternates daily because 8 is halfway between 6 and 10",
+          "It stays turbid because the recovery threshold has not been crossed",
+          "It clears because input is now below 10"
+        ],
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Jezero se zakalí při přísunu živin nad 10 jednotek/den. Jakmile je zakalené, vyčistí se až pod 6 jednotkami/den. Při přísunu 12 je zakalené; přísun klesne na 8. Co model předpovídá?",
+          "choices": [
+            "Vyčistí se, protože stačí jakékoli snížení",
+            "Střídá stavy každý den, protože 8 je mezi 6 a 10",
+            "Zůstane zakalené, protože nebyl překročen práh obnovy",
+            "Vyčistí se, protože přísun je nyní pod 10"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-17-14",
+        "type": "text",
+        "prompt": "A fictional water-quality rule sets a maximum concentration of 10 units. A measurement is reported as 9 with an uncertainty range of 7–11. Based only on this range, is exceeding the limit certain, possible or impossible?",
+        "acceptedAnswers": [
+          "possible"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Fiktivní pravidlo kvality vody stanoví nejvyšší koncentraci 10 jednotek. Měření uvádí 9 s intervalem nejistoty 7–11. Je pouze podle tohoto intervalu překročení limitu jisté, možné, nebo nemožné?",
+          "acceptedAnswers": [
+            "možné",
+            "možná",
+            "mozne",
+            "mozna"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "ess-17-15",
+        "type": "numerical",
+        "prompt": "A fish starts with 10 mg of a pollutant. Each day it takes up 4 mg and eliminates 1 mg. After 5 days its mass is 0.5 kg. What is the final pollutant concentration in mg/kg?",
+        "numericAnswer": 50,
+        "tolerance": 0,
+        "cs": {
+          "prompt": "Ryba má na začátku v těle 10 mg znečišťující látky. Denně přijme 4 mg a vyloučí 1 mg. Po 5 dnech má hmotnost 0,5 kg. Jaká je konečná koncentrace látky v mg/kg?"
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -944,26 +995,48 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "Use growth = rN(1 − N/K), with r = 0.4/year and K = 1000 tonnes. At the start of a year the stock is 250 tonnes. What harvest would exactly equal that year’s modelled growth, in tonnes?",
-        "numericAnswer": 75,
-        "tolerance": 0,
         "id": "ess-17-10",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "Two groups accept the same forecasts for a dam’s electricity output and habitat loss. One values habitat even without human use; the other counts only financial costs and benefits. Why might more precise forecasts fail to resolve their disagreement?",
+        "choices": [
+          "They must disagree about the measured electricity output",
+          "One extra decimal place always resolves differences in values",
+          "They apply different value criteria to the same predicted outcomes",
+          "Environmental choices never depend on evidence"
+        ],
+        "correctIndex": 2,
         "cs": {
-          "prompt": "Použijte přírůstek = rN(1 − N/K), kde r = 0,4/rok a K = 1000 tun. Na začátku roku je zásoba 250 tun. Jaký odlov v tunách by se přesně rovnal modelovanému ročnímu přírůstku?"
-        }
+          "prompt": "Dvě skupiny přijímají stejné předpovědi výroby elektřiny a ztráty stanovišť kvůli přehradě. Jedna oceňuje stanoviště i bez využití člověkem; druhá počítá jen finanční náklady a výnosy. Proč přesnější předpovědi nemusejí jejich spor vyřešit?",
+          "choices": [
+            "Nutně se neshodují na naměřené výrobě elektřiny",
+            "Jedno další desetinné místo vždy vyřeší hodnotové rozdíly",
+            "Na stejné předpovídané výsledky používají jiná hodnotová kritéria",
+            "Environmentální volby nikdy nezávisí na důkazech"
+          ]
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "Use Simpson’s diversity index D = 1 − Σ[n(n−1)]/[N(N−1)]. Counts of three species are 4, 1 and 1, so N = 6. Calculate D. Σ means sum across all three species.",
-        "numericAnswer": 0.6,
-        "tolerance": 0,
         "id": "ess-17-11",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "An observer records 50 birds in one hour before habitat restoration and 100 birds in two hours afterwards using the same route and method. Which conclusion is justified by these counts alone?",
+        "choices": [
+          "The population certainly doubled",
+          "Restoration certainly had no biological effect",
+          "Each bird must now live twice as long",
+          "The count per hour is unchanged, so the raw counts alone do not show population growth"
+        ],
+        "correctIndex": 3,
         "cs": {
-          "prompt": "Použijte Simpsonův index diverzity D = 1 − Σ[n(n−1)]/[N(N−1)]. Počty tří druhů jsou 4, 1 a 1, tedy N = 6. Vypočítejte D. Symbol Σ znamená součet přes všechny tři druhy."
-        }
+          "prompt": "Pozorovatel před obnovou stanoviště zaznamená 50 ptáků za jednu hodinu a po obnově 100 za dvě hodiny na stejné trase a stejnou metodou. Který závěr odůvodňují samotné tyto počty?",
+          "choices": [
+            "Populace se určitě zdvojnásobila",
+            "Obnova určitě neměla žádný biologický účinek",
+            "Každý pták musí nyní žít dvakrát déle",
+            "Počet za hodinu se nezměnil, takže samotné hrubé počty nedokazují růst populace"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -977,15 +1050,26 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A population falls by 10% in each of two successive years. What is the total percentage decrease from the original population?",
-        "numericAnswer": 19,
-        "tolerance": 0,
         "id": "ess-17-16",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "A country has many young people approaching reproductive age. Average births per woman fall, but births still exceed deaths and migration is zero. Which explanation fits continued population growth?",
+        "choices": [
+          "Falling births per woman must immediately make total population fall",
+          "Many people entering parenthood can keep total births above deaths despite fewer births per woman",
+          "Population growth can occur only through immigration",
+          "The number of births per woman and total births are the same quantity"
+        ],
+        "correctIndex": 1,
         "cs": {
-          "prompt": "Populace klesne o 10 % v každém ze dvou po sobě jdoucích let. Jaký je celkový procentní pokles oproti původní populaci?"
-        }
+          "prompt": "V zemi je mnoho mladých lidí blížících se reprodukčnímu věku. Průměrný počet dětí na ženu klesá, ale narozených je stále více než zemřelých a migrace je nulová. Které vysvětlení odpovídá pokračujícímu růstu populace?",
+          "choices": [
+            "Méně dětí na ženu musí okamžitě snížit celkový počet obyvatel",
+            "Mnoho lidí vstupujících do rodičovství může udržet narozené nad zemřelými i při méně dětech na ženu",
+            "Populace může růst jen přistěhovalectvím",
+            "Počet dětí na ženu a celkový počet narozených jsou stejná veličina"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -1000,13 +1084,13 @@
       },
       {
         "type": "numerical",
-        "prompt": "A 2 km² catchment receives 1000 mm of annual precipitation. Evapotranspiration is 600 mm and runoff is 350 mm. Assuming no other flows, find its annual increase in water storage in m³. Use 1 km² = 1000000 m².",
+        "prompt": "A 2 km² catchment receives 1000 mm of annual rain. Evaporation plus plant water loss is 600 mm; runoff is 350 mm. All depths refer to the whole catchment. With no other flows, find the annual storage increase in m³. Use 1 km² = 1000000 m².",
         "numericAnswer": 100000,
         "tolerance": 0,
         "id": "ess-17-19",
         "reward": 10,
         "cs": {
-          "prompt": "Povodí o rozloze 2 km² přijme ročně 1000 mm srážek. Evapotranspirace je 600 mm a odtok 350 mm. Bez dalších toků určete roční přírůstek zásoby vody v m³. Použijte 1 km² = 1000000 m²."
+          "prompt": "Povodí o rozloze 2 km² přijme ročně 1000 mm deště. Výpar a ztráta vody rostlinami dohromady činí 600 mm; odtok 350 mm. Všechny výšky se vztahují k celému povodí. Bez jiných toků určete roční přírůstek zásoby vody v m³. Platí 1 km² = 1000000 m²."
         }
       },
       {

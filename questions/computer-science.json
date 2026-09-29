@@ -58,23 +58,30 @@
         }
       },
       {
-        "type": "text",
-        "prompt": "Eight independent yes/no flags are packed into one byte. What three-letter unit describes the smallest amount of storage needed for one flag?",
-        "acceptedAnswers": [
-          "bit"
-        ],
         "id": "computer-science-11-04",
-        "reward": 10,
+        "type": "text",
+        "prompt": "RAM holds a program’s working data only while power is on; a saved file stays on storage. A student types a paragraph but does not save it before a power cut. Which component held the unsaved paragraph: RAM or storage?",
+        "acceptedAnswers": [
+          "RAM",
+          "memory",
+          "working memory"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Osm nezávislých příznaků ano/ne je uloženo do jednoho bajtu. Jaká třípísmenná jednotka označuje nejmenší množství paměti potřebné pro jeden příznak?",
+          "prompt": "RAM uchovává pracovní data programu jen při zapnutém napájení; uložený soubor zůstává na úložišti. Student napíše odstavec, ale před výpadkem proudu jej neuloží. Která část uchovávala neuložený odstavec: RAM, nebo úložiště?",
           "acceptedAnswers": [
-            "bit"
+            "RAM",
+            "operační paměť",
+            "paměť",
+            "operacni pamet",
+            "pamet"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "What value is printed? Assignments happen in the order shown.\nx = 3\ny = x\nx = x + 4\nPRINT y",
+        "prompt": "What value is printed? Assignments happen in the order shown; PRINT displays a value.\nx = 3\ny = x\nx = x + 4\nPRINT y",
         "numericAnswer": 3,
         "tolerance": 0,
         "id": "computer-science-11-05",
@@ -84,26 +91,26 @@
         }
       },
       {
+        "id": "computer-science-11-06",
         "type": "multiple-choice",
-        "prompt": "A weather program reads a sensor, calculates the daily average, then displays a graph. Which item is input data rather than a calculated output?",
+        "prompt": "Two students share the same name but have different permanent student IDs. A school database must still distinguish them after either changes their name. Which field should identify each record?",
         "choices": [
-          "The graph",
-          "The calculated average",
-          "A temperature reading from the sensor",
-          "A warning generated from the average"
+          "The first name",
+          "The number of letters in the name",
+          "The permanent student ID",
+          "The current row position, which changes when sorted"
         ],
         "correctIndex": 2,
-        "id": "computer-science-11-06",
-        "reward": 10,
         "cs": {
-          "prompt": "Program pro počasí přečte čidlo, spočítá denní průměr a zobrazí graf. Co je vstupní údaj, nikoli vypočítaný výstup?",
+          "prompt": "Dva studenti mají stejné jméno, ale různá trvalá studentská ID. Školní databáze je musí rozlišit i po změně jména. Který údaj má určovat jejich záznam?",
           "choices": [
-            "Graf",
-            "Vypočítaný průměr",
-            "Teplotní údaj z čidla",
-            "Varování vytvořené z průměru"
+            "Křestní jméno",
+            "Počet písmen ve jméně",
+            "Trvalé studentské ID",
+            "Aktuální pořadí řádku, které se mění při řazení"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -117,95 +124,118 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A message contains 16 bits of data and an 8-bit header. There are 8 bits per byte. How many bytes does the complete message contain?",
-        "numericAnswer": 3,
-        "tolerance": 0,
         "id": "computer-science-11-14",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "A message is split into numbered packets 1, 2 and 3. They arrive in order 3, 1, 2, with none missing. What should the receiver do to recover the original message?",
+        "choices": [
+          "Combine them in arrival order",
+          "Keep packet 3 only because it arrived first",
+          "Ask the sender to change the original message",
+          "Put the packets in number order, then combine their contents"
+        ],
+        "correctIndex": 3,
         "cs": {
-          "prompt": "Zpráva obsahuje 16 bitů dat a 8bitovou hlavičku. Jeden bajt má 8 bitů. Kolik bajtů obsahuje celá zpráva?"
-        }
+          "prompt": "Zpráva je rozdělena do očíslovaných paketů 1, 2 a 3. Dorazí v pořadí 3, 1, 2 a žádný nechybí. Co má příjemce udělat, aby obnovil původní zprávu?",
+          "choices": [
+            "Spojit je v pořadí doručení",
+            "Ponechat jen paket 3, protože dorazil první",
+            "Požádat odesílatele o změnu původní zprávy",
+            "Seřadit pakety podle čísel a spojit jejich obsah"
+          ]
+        },
+        "reward": 10
       },
       {
+        "id": "computer-science-11-08",
         "type": "multiple-choice",
-        "prompt": "A robot must keep asking for a code until the correct one is entered. The number of attempts is unknown. Which instruction structure fits?",
+        "prompt": "A robot has just read a code. It must ask again after a wrong code and stop asking after a correct code. Which instruction works for any number of attempts?",
         "choices": [
-          "Repeat exactly ten times",
-          "Ask once, then stop",
-          "Repeat while the entered code is wrong",
-          "Never check the code"
+          "While the code is correct, read a new code",
+          "Read exactly three more codes",
+          "While the code is wrong, read a new code",
+          "If the code is wrong, stop asking"
         ],
         "correctIndex": 2,
-        "id": "computer-science-11-08",
         "reward": 10,
         "cs": {
-          "prompt": "Robot má opakovaně žádat o kód, dokud není zadán správný. Počet pokusů není znám. Která struktura je vhodná?",
+          "prompt": "Robot právě přečetl kód. Po chybném se musí zeptat znovu a po správném se přestat ptát. Který příkaz funguje pro libovolný počet pokusů?",
           "choices": [
-            "Opakuj přesně desetkrát",
-            "Zeptej se jednou a skonči",
-            "Opakuj, dokud je zadaný kód chybný",
-            "Kód nikdy nekontroluj"
+            "Dokud je kód správný, načti nový",
+            "Načti přesně tři další kódy",
+            "Dokud je kód chybný, načti nový",
+            "Pokud je kód chybný, přestaň se ptát"
           ]
         }
       },
       {
-        "type": "text",
-        "prompt": "A program runs, but its total is wrong. You trace variable values, locate the error and correct it. What English five-letter verb describes this work?",
-        "acceptedAnswers": [
-          "debug"
-        ],
         "id": "computer-science-11-09",
-        "reward": 10,
-        "cs": {
-          "prompt": "Program běží, ale součet je chybný. Sledujete hodnoty proměnných, najdete chybu a opravíte ji. Které anglické pětipísmenné sloveso popisuje tuto práci?",
-          "acceptedAnswers": [
-            "debug"
-          ]
-        }
-      },
-      {
-        "type": "numerical",
-        "prompt": "How many times is HELLO printed in total?\nPRINT \"HELLO\"\nREPEAT 4 TIMES\n  PRINT \"HELLO\"",
-        "numericAnswer": 5,
-        "tolerance": 0,
-        "id": "computer-science-11-11",
-        "reward": 10,
-        "cs": {
-          "prompt": "Kolikrát se celkem vypíše HELLO? REPEAT 4 TIMES znamená „opakuj čtyřikrát“.\nPRINT \"HELLO\"\nREPEAT 4 TIMES\n  PRINT \"HELLO\""
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A student uses the same long password on two websites. One website leaks that password. Which change most directly protects the other account?",
-        "choices": [
-          "Make its username longer",
-          "Give the other account a different password",
-          "Change the leaked password only on the first site",
-          "Keep both passwords because they are long"
+        "type": "text",
+        "prompt": "Trace the code and enter the word printed. IF runs its first branch when the condition is true.\nx = 3\nx = x + 2\nIF x > 5 THEN\n  PRINT \"YES\"\nELSE\n  PRINT \"NO\"",
+        "acceptedAnswers": [
+          "NO"
         ],
-        "correctIndex": 1,
-        "id": "computer-science-11-12",
-        "reward": 10,
         "cs": {
-          "prompt": "Student používá na dvou webech stejné dlouhé heslo. Jeden web heslo prozradí. Která změna nejpříměji ochrání druhý účet?",
-          "choices": [
-            "Prodloužit uživatelské jméno",
-            "Nastavit druhému účtu jiné heslo",
-            "Změnit prozrazené heslo jen na prvním webu",
-            "Ponechat obě hesla, protože jsou dlouhá"
+          "prompt": "Projděte kód a zadejte vypsané slovo. IF provede první větev, když podmínka platí.\nx = 3\nx = x + 2\nIF x > 5 THEN\n  PRINT \"ANO\"\nELSE\n  PRINT \"NE\"",
+          "acceptedAnswers": [
+            "NE"
           ]
-        }
+        },
+        "reward": 10
+      },
+      {
+        "id": "computer-science-11-11",
+        "type": "text",
+        "prompt": "A picture classifier was trained with apples always on red backgrounds and pears always on blue backgrounds. It calls an apple on blue a pear. Which non-fruit feature might it be using: background or shape?",
+        "acceptedAnswers": [
+          "background",
+          "background colour",
+          "background color"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Klasifikátor obrázků se učil z jablek vždy na červeném pozadí a hrušek vždy na modrém. Jablko na modrém označí jako hrušku. Který znak nesouvisející s ovocem možná využívá: pozadí, nebo tvar?",
+          "acceptedAnswers": [
+            "pozadí",
+            "barva pozadí",
+            "barvu pozadí",
+            "pozadi",
+            "barva pozadi",
+            "barvu pozadi"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "computer-science-11-12",
+        "type": "text",
+        "prompt": "On this system the LAST filename extension determines type: .jpg is a picture and .exe is a program. A downloaded file is named holiday.jpg.exe. Is its type picture or program?",
+        "acceptedAnswers": [
+          "program",
+          "a program",
+          "executable"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "V tomto systému určuje typ POSLEDNÍ přípona názvu: .jpg je obrázek a .exe program. Stažený soubor se jmenuje holiday.jpg.exe. Jeho typ je obrázek, nebo program?",
+          "acceptedAnswers": [
+            "program",
+            "spustitelný program",
+            "spustitelný soubor",
+            "spustitelny program",
+            "spustitelny soubor"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "What is printed?\nx = 5\nIF x > 5 THEN\n  PRINT x - 2\nELSE\n  PRINT x + 2",
+        "prompt": "What is printed? IF chooses the first branch when true; ELSE runs otherwise.\nx = 4\nx = x + 3\nIF x < 7 THEN\n  PRINT x - 2\nELSE\n  PRINT x",
         "numericAnswer": 7,
         "tolerance": 0,
         "id": "computer-science-11-13",
         "reward": 10,
         "cs": {
-          "prompt": "Co se vypíše? IF znamená „pokud“, ELSE „jinak“.\nx = 5\nIF x > 5 THEN\n  PRINT x - 2\nELSE\n  PRINT x + 2"
+          "prompt": "Co se vypíše? IF při pravdivé podmínce vybere první větev; ELSE se provede jinak.\nx = 4\nx = x + 3\nIF x < 7 THEN\n  PRINT x - 2\nELSE\n  PRINT x"
         }
       },
       {
@@ -232,7 +262,7 @@
       },
       {
         "type": "multiple-choice",
-        "prompt": "A program accepts whole-number ages using age >= 12. Which pair tests the closest rejected and accepted values at the boundary?",
+        "prompt": "A program accepts whole-number ages using age >= 12, meaning 12 or older. Which pair tests the closest rejected and accepted values at the boundary?",
         "choices": [
           "0 and 20",
           "11 and 12",
@@ -243,7 +273,7 @@
         "id": "computer-science-11-18",
         "reward": 10,
         "cs": {
-          "prompt": "Program přijímá celočíselný věk pomocí age >= 12. Která dvojice testuje nejbližší odmítnutou a přijatou hodnotu na hranici?",
+          "prompt": "Program přijímá celočíselný věk pomocí age >= 12, tedy 12 a více. Která dvojice testuje nejbližší odmítnutou a přijatou hodnotu na hranici?",
           "choices": [
             "0 a 20",
             "11 a 12",
@@ -310,100 +340,106 @@
     ],
     "14–16": [
       {
+        "id": "computer-science-14-01",
         "type": "multiple-choice",
-        "prompt": "A program reads the characters false from a text box and stores them without conversion as \"false\". What type is the stored value?",
+        "prompt": "A string stores a sequence of characters; a Boolean stores TRUE or FALSE. A program keeps the typed characters \"false\" without converting them. Which description fits the stored value?",
         "choices": [
-          "Boolean",
-          "String",
-          "Integer",
-          "Floating-point number"
+          "A Boolean because the characters spell false",
+          "A string containing five characters",
+          "An empty string because false means nothing",
+          "The number zero because false always means zero"
         ],
         "correctIndex": 1,
-        "id": "computer-science-14-01",
         "reward": 10,
         "cs": {
-          "prompt": "Program přečte znaky false z textového pole a bez převodu je uloží jako \"false\". Jakého typu je uložená hodnota?",
+          "prompt": "Řetězec ukládá posloupnost znaků; logický typ ukládá TRUE nebo FALSE. Program ponechá napsané znaky \"false\" bez převodu. Který popis uložené hodnoty platí?",
           "choices": [
-            "Logický typ (Boolean)",
-            "Řetězec (String)",
-            "Celé číslo (Integer)",
-            "Číslo s plovoucí řádovou čárkou"
+            "Logická hodnota, protože znaky tvoří false",
+            "Řetězec obsahující pět znaků",
+            "Prázdný řetězec, protože false znamená nic",
+            "Číslo nula, protože false vždy znamená nulu"
           ]
         }
       },
       {
-        "type": "text",
-        "prompt": "A named block accepts a price, calculates the price after tax and returns the result. It prints nothing. What is the usual term for this reusable block?",
-        "acceptedAnswers": [
-          "function"
-        ],
         "id": "computer-science-14-03",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "A function returns price + 3 without changing price. What number is printed?\nFUNCTION total(price)\n  RETURN price + 3\nprice = 7\nPRINT total(price) - price",
+        "numericAnswer": 3,
+        "tolerance": 0,
         "cs": {
-          "prompt": "Pojmenovaný blok přijme cenu, vypočítá cenu s daní a vrátí výsledek. Nic nevypisuje. Jak se tento opakovaně použitelný blok obvykle nazývá?",
-          "acceptedAnswers": [
-            "funkce"
-          ]
-        }
+          "prompt": "Funkce vrací price + 3, ale price nemění. Jaké číslo se vypíše?\nFUNCTION total(price)\n  RETURN price + 3\nprice = 7\nPRINT total(price) - price"
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "An unsigned 4-bit field has 16 values starting at zero. Zero is reserved to mean “no sensor”; every other value identifies one sensor. How many sensors can it identify?",
-        "numericAnswer": 15,
-        "tolerance": 0,
         "id": "computer-science-14-09",
-        "reward": 10,
-        "cs": {
-          "prompt": "Nezáporné 4bitové pole má 16 hodnot počínaje nulou. Nula je vyhrazena pro „žádné čidlo“ a každá další hodnota označuje jedno čidlo. Kolik čidel lze označit?"
-        }
-      },
-      {
         "type": "text",
-        "prompt": "A program saves edits A, then B, then C. Undo removes C first and B next. Name the data structure whose removal order fits this behaviour.",
+        "prompt": "An encoding stores a repeat count followed by a letter. For example, 2A means AA. Decode 3A2B1A. Enter the resulting letters together, without spaces.",
         "acceptedAnswers": [
-          "stack",
-          "a stack"
+          "AAABBA"
         ],
-        "id": "computer-science-14-10",
-        "reward": 10,
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Program ukládá úpravy A, pak B, pak C. Vrácení změn odstraní nejprve C a pak B. Pojmenujte datovou strukturu, jejíž pořadí odebírání odpovídá tomuto chování.",
+          "prompt": "Kód ukládá počet opakování a za ním písmeno. Například 2A znamená AA. Dekódujte 3A2B1A. Zadejte výsledná písmena dohromady bez mezer.",
           "acceptedAnswers": [
-            "zásobník",
-            "zasobnik"
+            "AAABBA"
           ]
-        }
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "Using zero-based indexing, what is printed? Index 0 refers to the first item.\nvalues = [10, 20, 30, 40]\ni = 1\nPRINT values[i + 1] - values[i]",
-        "numericAnswer": 10,
-        "tolerance": 0,
+        "id": "computer-science-14-10",
+        "type": "multiple-choice",
+        "prompt": "A stack removes the most recently added item first. After adding A, B, C in that order and removing one item, which item will be removed next?",
+        "choices": [
+          "C",
+          "The stack is empty",
+          "B",
+          "A"
+        ],
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Zásobník odebírá naposledy přidanou položku jako první. Přidáme A, B, C v tomto pořadí a jednu položku odebereme. Kterou odebereme jako další?",
+          "choices": [
+            "C",
+            "Zásobník je prázdný",
+            "B",
+            "A"
+          ]
+        },
+        "reward": 10
+      },
+      {
         "id": "computer-science-14-04",
+        "type": "numerical",
+        "prompt": "Using zero-based indexing, what is printed? Index 0 refers to the first item.\nvalues = [10, 20, 50, 90]\ni = 1\nPRINT values[i + 1] - values[i]",
+        "numericAnswer": 30,
+        "tolerance": 0,
         "reward": 10,
         "cs": {
-          "prompt": "Co se vypíše při indexování od nuly? Index 0 označuje první prvek.\nvalues = [10, 20, 30, 40]\ni = 1\nPRINT values[i + 1] - values[i]"
+          "prompt": "Co se vypíše při indexování od nuly? Index 0 označuje první prvek.\nvalues = [10, 20, 50, 90]\ni = 1\nPRINT values[i + 1] - values[i]"
         }
       },
       {
+        "id": "computer-science-14-05",
         "type": "multiple-choice",
-        "prompt": "Evaluate NOT (TRUE AND FALSE). Parentheses are evaluated first. AND is true only when both inputs are true; NOT reverses the result.",
+        "prompt": "Let a = TRUE and b = FALSE. Evaluate (a AND b), then NOT b. AND is true only when both inputs are true; NOT reverses its input. Give the results in that order.",
         "choices": [
-          "TRUE",
-          "FALSE",
-          "Both",
-          "Neither"
+          "FALSE, TRUE",
+          "TRUE, FALSE",
+          "TRUE, TRUE",
+          "FALSE, FALSE"
         ],
         "correctIndex": 0,
-        "id": "computer-science-14-05",
         "reward": 10,
         "cs": {
-          "prompt": "Vyhodnoťte NOT (TRUE AND FALSE). Nejprve se vyhodnotí závorka. AND je pravdivé, jen když jsou oba vstupy pravdivé; NOT výsledek obrací.",
+          "prompt": "Nechť a = TRUE a b = FALSE. Vyhodnoťte (a AND b) a pak NOT b. AND je pravdivé jen při dvou pravdivých vstupech; NOT vstup obrací. Uveďte výsledky v tomto pořadí.",
           "choices": [
-            "TRUE",
-            "FALSE",
-            "Obojí",
-            "Ani jedno"
+            "FALSE, TRUE",
+            "TRUE, FALSE",
+            "TRUE, TRUE",
+            "FALSE, FALSE"
           ]
         }
       },
@@ -431,10 +467,10 @@
       },
       {
         "type": "multiple-choice",
-        "prompt": "A page uses HTTPS with a valid certificate. Which statement is supported by this fact alone?",
+        "prompt": "HTTPS encrypts data in transit between browser and website. A page uses HTTPS with a valid certificate. Which claim follows from that fact alone?",
         "choices": [
           "Its content must be truthful",
-          "Its connection uses TLS encryption",
+          "Data is encrypted during transmission",
           "Its operator cannot be malicious",
           "Its downloads cannot contain malware"
         ],
@@ -442,102 +478,104 @@
         "id": "computer-science-14-08",
         "reward": 10,
         "cs": {
-          "prompt": "Stránka používá HTTPS s platným certifikátem. Které tvrzení lze odvodit jen z této skutečnosti?",
+          "prompt": "HTTPS šifruje přenos dat mezi prohlížečem a webem. Stránka používá HTTPS s platným certifikátem. Které tvrzení plyne pouze z této skutečnosti?",
           "choices": [
             "Její obsah musí být pravdivý",
-            "Připojení používá šifrování TLS",
+            "Data se při přenosu šifrují",
             "Její provozovatel nemůže mít škodlivé úmysly",
             "Stažené soubory nemohou obsahovat malware"
           ]
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "An array is sorted by student name. You want to binary-search it by student ID. What is required first?",
-        "choices": [
-          "Sort or index it by ID",
-          "Reverse its current name order",
-          "Remove every repeated first name",
-          "Convert each ID to text"
-        ],
-        "correctIndex": 0,
         "id": "computer-science-14-12",
-        "reward": 10,
+        "type": "text",
+        "prompt": "DNS translates website names into network addresses. A site opens using its numeric address, but its correct name cannot be resolved. The network connection works. Which service should be checked first?",
+        "acceptedAnswers": [
+          "DNS",
+          "domain name system"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Pole je seřazeno podle jména studenta. Chcete v něm binárně vyhledávat podle ID studenta. Co je nejprve nutné?",
-          "choices": [
-            "Seřadit nebo indexovat pole podle ID",
-            "Obrátit současné pořadí podle jmen",
-            "Odstranit každé opakující se křestní jméno",
-            "Převést každé ID na text"
+          "prompt": "DNS převádí názvy webů na síťové adresy. Web lze otevřít přes číselnou adresu, ale jeho správný název nelze přeložit. Síťové spojení funguje. Kterou službu je vhodné nejdříve zkontrolovat?",
+          "acceptedAnswers": [
+            "DNS"
           ]
-        }
+        },
+        "reward": 10
       },
       {
+        "id": "computer-science-14-15",
         "type": "multiple-choice",
-        "prompt": "A table uses student ID as its primary key. Two different students have the same name but different IDs. Which operation violates the primary-key rule?",
+        "prompt": "Student IDs must be unique; names may repeat. The table contains IDs 10 and 20, both named Sam. Which pair of new rows can both be added without breaking the ID rule?",
         "choices": [
-          "Keep both students",
-          "Change a name",
-          "Insert another row with an existing ID",
-          "Sort rows by name"
+          "(10, Lee) and (30, Sam)",
+          "(30, Lee) and (30, Sam)",
+          "(30, Sam) and (40, Sam)",
+          "(20, Lee) and (40, Sam)"
         ],
         "correctIndex": 2,
-        "id": "computer-science-14-15",
         "reward": 10,
         "cs": {
-          "prompt": "Tabulka používá ID studenta jako primární klíč. Dva studenti mají stejné jméno, ale různá ID. Která operace porušuje pravidlo primárního klíče?",
+          "prompt": "ID studentů musí být jedinečná; jména se smí opakovat. Tabulka obsahuje ID 10 a 20, obě se jménem Sam. Kterou dvojici nových řádků lze celou přidat bez porušení pravidla ID?",
           "choices": [
-            "Ponechat oba studenty",
-            "Změnit jméno",
-            "Vložit další řádek s již existujícím ID",
-            "Seřadit řádky podle jména"
+            "(10, Lee) a (30, Sam)",
+            "(30, Lee) a (30, Sam)",
+            "(30, Sam) a (40, Sam)",
+            "(20, Lee) a (40, Sam)"
           ]
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "A calculation uses 12 / (x − 1). An input check rejects x = 0 but accepts every other number. Which accepted input still causes division by zero?",
-        "choices": [
-          "−1",
-          "1",
-          "2",
-          "12"
-        ],
-        "correctIndex": 1,
         "id": "computer-science-14-18",
-        "reward": 10,
+        "type": "text",
+        "prompt": "Two classifiers see the same previously unseen test examples. Model M gets 95% correct on training examples and 55% on the test. Model N gets 80% on each. Which model performs better on NEW examples in this test? Enter M or N.",
+        "acceptedAnswers": [
+          "N",
+          "model N"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Výpočet používá 12 / (x − 1). Kontrola odmítá x = 0 a přijímá ostatní čísla. Který přijatý vstup přesto způsobí dělení nulou?",
-          "choices": [
-            "−1",
-            "1",
-            "2",
-            "12"
+          "prompt": "Dva klasifikátory dostanou stejné dosud neviděné testovací příklady. Model M má 95 % správně při učení a 55 % v testu. Model N má v obou 80 %. Který model v tomto testu lépe zvládá NOVÉ příklady? Zadejte M nebo N.",
+          "acceptedAnswers": [
+            "N",
+            "model N"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "What is printed?\nx = 1\ncount = 0\nWHILE x <= 8\n  x = x * 2\n  count = count + 1\nPRINT count",
+        "prompt": "WHILE repeats its body while the condition is true. What is printed?\nx = 1\ncount = 0\nWHILE x <= 8\n  x = x * 2\n  count = count + 1\nPRINT count",
         "numericAnswer": 4,
         "tolerance": 0,
         "id": "computer-science-14-13",
         "reward": 10,
         "cs": {
-          "prompt": "Co se vypíše? WHILE opakuje tělo, dokud platí podmínka.\nx = 1\ncount = 0\nWHILE x <= 8\n  x = x * 2\n  count = count + 1\nPRINT count"
+          "prompt": "WHILE opakuje tělo, dokud podmínka platí. Co se vypíše?\nx = 1\ncount = 0\nWHILE x <= 8\n  x = x * 2\n  count = count + 1\nPRINT count"
         }
       },
       {
-        "type": "numerical",
-        "prompt": "What does double(double(3) + 1) return?\nFUNCTION double(x)\n  RETURN 2 * x",
-        "numericAnswer": 14,
-        "tolerance": 0,
         "id": "computer-science-14-16",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "A temperature model learned only from readings between 10 °C and 25 °C. It is used to predict conditions at −15 °C. Why should that prediction be checked especially carefully?",
+        "choices": [
+          "It is outside the range represented in the training data",
+          "Negative numbers cannot be stored by computers",
+          "Every model is exact outside its training range",
+          "A large training set guarantees every possible prediction"
+        ],
+        "correctIndex": 0,
         "cs": {
-          "prompt": "Co vrátí double(double(3) + 1)? RETURN znamená „vrať výsledek“.\nFUNCTION double(x)\n  RETURN 2 * x"
-        }
+          "prompt": "Teplotní model se učil jen z měření mezi 10 °C a 25 °C. Použijeme jej k předpovědi při −15 °C. Proč je třeba tuto předpověď zvlášť ověřit?",
+          "choices": [
+            "Leží mimo rozsah zastoupený v trénovacích datech",
+            "Počítače nemohou ukládat záporná čísla",
+            "Každý model je mimo trénovací rozsah přesný",
+            "Velká trénovací sada zaručuje každou možnou předpověď"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -562,26 +600,42 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A loop checks pairs (i, j), where i runs from 0 to 4 inclusive and j runs from 1 to 3 inclusive. How many pairs satisfy i < j?",
-        "numericAnswer": 6,
-        "tolerance": 0,
         "id": "computer-science-14-17",
-        "reward": 10,
+        "type": "text",
+        "prompt": "A query first keeps scores of at least 8, then sorts names alphabetically. Records are (Eva, 8), (Karel, 5), (Ada, 9). What name appears FIRST in the result?",
+        "acceptedAnswers": [
+          "Ada"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Cyklus kontroluje dvojice (i, j), kde i nabývá hodnot 0 až 4 včetně a j hodnot 1 až 3 včetně. Kolik dvojic splňuje i < j?"
-        }
+          "prompt": "Dotaz nejprve ponechá skóre alespoň 8 a pak seřadí jména abecedně. Záznamy jsou (Eva, 8), (Karel, 5), (Ada, 9). Které jméno bude ve výsledku PRVNÍ?",
+          "acceptedAnswers": [
+            "Ada"
+          ]
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "Start with unsigned binary 1101. Shift it left by one position (append 0), then subtract binary 10. There is no overflow. What is the final decimal value?",
-        "numericAnswer": 24,
-        "tolerance": 0,
         "id": "computer-science-14-02",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "Objects store their own state. a and b refer to the SAME counter, initially 0; c refers to a separate counter, initially 0. a.increment() adds 1 to its counter and is called twice. What values do b and c now show?",
+        "choices": [
+          "b = 2, c = 0",
+          "b = 0, c = 0",
+          "b = 2, c = 2",
+          "b = 0, c = 2"
+        ],
+        "correctIndex": 0,
         "cs": {
-          "prompt": "Začněte nezáporným binárním číslem 1101. Posuňte je o jednu pozici doleva (připojte 0) a potom odečtěte binární 10. K přetečení nedojde. Jaká je výsledná desítková hodnota?"
-        }
+          "prompt": "Objekty uchovávají vlastní stav. a a b odkazují na STEJNÉ počitadlo s počáteční hodnotou 0; c na jiné, také s hodnotou 0. a.increment() přičte 1 ke svému počitadlu a zavolá se dvakrát. Jaké hodnoty nyní ukazují b a c?",
+          "choices": [
+            "b = 2, c = 0",
+            "b = 0, c = 0",
+            "b = 2, c = 2",
+            "b = 0, c = 2"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -608,168 +662,174 @@
     ],
     "17–18": [
       {
+        "id": "computer-science-17-01",
         "type": "multiple-choice",
-        "prompt": "A route planner models towns as vertices and roads as weighted edges. It omits individual trees. Which task would require adding information to this model?",
+        "prompt": "A route map records towns, roads between them, and each road’s distance in km. It has no other data. Which task needs additional information?",
         "choices": [
-          "Find whether two towns are connected",
-          "Find a route with the smallest total edge weight",
-          "Count individual trees along a road",
-          "List the towns directly linked to one town"
+          "Find the route with the shortest total distance",
+          "Find towns directly connected to one town",
+          "Find the route with the shortest travel time",
+          "Check whether a route between two towns exists"
         ],
         "correctIndex": 2,
-        "id": "computer-science-17-01",
         "reward": 10,
         "cs": {
-          "prompt": "Plánovač tras modeluje města jako vrcholy a silnice jako ohodnocené hrany. Jednotlivé stromy vynechává. Která úloha by vyžadovala doplnění informací do modelu?",
+          "prompt": "Mapa tras obsahuje města, silnice mezi nimi a délku každé silnice v km. Jiná data nemá. Která úloha potřebuje další informace?",
           "choices": [
-            "Zjistit, zda jsou dvě města propojena",
-            "Najít trasu s nejmenším součtem vah hran",
-            "Spočítat jednotlivé stromy podél silnice",
-            "Vypsat města přímo propojená s jedním městem"
+            "Najít trasu s nejmenší celkovou délkou",
+            "Najít města přímo spojená s jedním městem",
+            "Najít trasu s nejkratší dobou jízdy",
+            "Zjistit, zda existuje trasa mezi dvěma městy"
           ]
         }
       },
       {
-        "type": "text",
-        "prompt": "Jobs A and B arrive, A is processed, and then C arrives. The next jobs processed are B and C in that order. Name the standard data structure matching this order.",
-        "acceptedAnswers": [
-          "queue",
-          "a queue"
-        ],
         "id": "computer-science-17-03",
-        "reward": 10,
-        "cs": {
-          "prompt": "Přijdou úlohy A a B, A se zpracuje a pak přijde C. Dále se zpracují B a C v tomto pořadí. Pojmenujte standardní datovou strukturu odpovídající tomuto pořadí.",
-          "acceptedAnswers": [
-            "fronta"
-          ]
-        }
-      },
-      {
         "type": "text",
-        "prompt": "Many order rows may contain the same CustomerID, but every CustomerID must refer to an existing customer row. What type of key should Order.CustomerID be?",
+        "prompt": "A queue serves the earliest remaining arrival first. A arrives, then B; A is served, then C arrives. Which job is served next? Enter its letter.",
         "acceptedAnswers": [
-          "foreign key"
+          "B"
         ],
-        "id": "computer-science-17-10",
-        "reward": 10,
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Více objednávek může obsahovat stejné CustomerID, ale každé CustomerID musí odkazovat na existujícího zákazníka. Jakým typem klíče má být Order.CustomerID?",
+          "prompt": "Fronta obsluhuje nejdříve příchozí zbývající úlohu. Přijde A, potom B; A se obslouží a pak přijde C. Která úloha se obslouží jako další? Zadejte její písmeno.",
           "acceptedAnswers": [
-            "cizí klíč",
-            "cizi klic"
+            "B"
           ]
-        }
+        },
+        "reward": 10
       },
       {
+        "id": "computer-science-17-10",
         "type": "multiple-choice",
-        "prompt": "A transfer subtracts money from A but crashes before adding it to B. The database rolls back the subtraction. Which transaction property is being enforced?",
+        "prompt": "A foreign key must refer to an existing row in another table. Customers have IDs 10 and 20. Which order has an invalid CustomerID?",
         "choices": [
-          "Compression",
-          "Atomicity",
-          "Sorting",
-          "Recursion"
+          "Order 4: CustomerID 30",
+          "Order 1: CustomerID 10",
+          "Order 2: CustomerID 20",
+          "Order 3: CustomerID 10"
         ],
-        "correctIndex": 1,
-        "id": "computer-science-17-12",
-        "reward": 10,
+        "correctIndex": 0,
         "cs": {
-          "prompt": "Převod odečte peníze z A, ale před připsáním do B nastane pád. Databáze odečtení vrátí zpět. Která vlastnost transakce se tím vynucuje?",
+          "prompt": "Cizí klíč musí odkazovat na existující řádek jiné tabulky. Zákazníci mají ID 10 a 20. Která objednávka má neplatné CustomerID?",
           "choices": [
-            "Komprese",
-            "Atomicita",
-            "Řazení",
-            "Rekurze"
+            "Objednávka 4: CustomerID 30",
+            "Objednávka 1: CustomerID 10",
+            "Objednávka 2: CustomerID 20",
+            "Objednávka 3: CustomerID 10"
           ]
-        }
+        },
+        "reward": 10
+      },
+      {
+        "id": "computer-science-17-12",
+        "type": "multiple-choice",
+        "prompt": "Atomicity means all changes in a transaction happen, or none do. A transfer subtracts 5 from account A but fails before adding 5 to B. Which result preserves atomicity?",
+        "choices": [
+          "Leave A lower and B unchanged",
+          "Add 5 to both accounts",
+          "Subtract another 5 from A",
+          "Restore the 5 to A; leave B unchanged"
+        ],
+        "correctIndex": 3,
+        "cs": {
+          "prompt": "Atomicita znamená, že proběhnou všechny změny transakce, nebo žádná. Převod odečte 5 z účtu A, ale selže před připsáním 5 do B. Který výsledek zachovává atomicitu?",
+          "choices": [
+            "Ponechat nižší A a nezměněné B",
+            "Přidat 5 na oba účty",
+            "Odečíst dalších 5 z A",
+            "Vrátit 5 na A; B ponechat beze změny"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "An unsigned 8-bit counter contains 255. It is incremented by 2 using arithmetic modulo 256. What value is stored?",
+        "prompt": "An 8-bit counter stores values 0–255 and wraps from 255 to 0. It starts at 255 and increases by 2. What value is stored?",
         "numericAnswer": 1,
         "tolerance": 0,
         "id": "computer-science-17-04",
         "reward": 10,
         "cs": {
-          "prompt": "Nezáporný 8bitový čítač obsahuje 255. Zvýší se o 2 v aritmetice modulo 256. Jaká hodnota se uloží?"
+          "prompt": "8bitový čítač ukládá hodnoty 0–255 a po 255 přejde na 0. Začíná na 255 a zvýší se o 2. Jaká hodnota se uloží?"
         }
       },
       {
-        "type": "numerical",
-        "prompt": "An unsigned integer has hexadecimal value 2F. After adding 1, what is its decimal value? In hexadecimal, F means 15 and adjacent place values differ by a factor of 16.",
-        "numericAnswer": 48,
-        "tolerance": 0,
         "id": "computer-science-17-02",
-        "reward": 10,
-        "cs": {
-          "prompt": "Nezáporné celé číslo má šestnáctkový zápis 2F. Jaká je jeho desítková hodnota po přičtení 1? V šestnáctkové soustavě znamená F hodnotu 15 a sousední řády se liší faktorem 16."
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Why use a parameterised SQL query for user input?",
-        "choices": [
-          "To remove the need for backups",
-          "To make all data public",
-          "To prevent input from being interpreted as SQL code",
-          "To guarantee zero latency"
-        ],
-        "correctIndex": 2,
-        "id": "computer-science-17-07",
-        "reward": 10,
-        "cs": {
-          "prompt": "Proč používat parametrizovaný SQL dotaz pro uživatelský vstup?",
-          "choices": [
-            "Aby nebyly potřeba zálohy",
-            "Aby byla všechna data veřejná",
-            "Aby se vstup neinterpretoval jako kód SQL",
-            "Aby byla zaručena nulová latence"
-          ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "An algorithm scans all n items, then scans all n items again. Each item check takes constant time. What is its tight asymptotic time complexity? Constant multipliers do not change the growth class.",
-        "choices": [
-          "Θ(1)",
-          "Θ(log n)",
-          "Θ(n)",
-          "Θ(n²)"
-        ],
-        "correctIndex": 2,
-        "id": "computer-science-17-05",
-        "reward": 10,
-        "cs": {
-          "prompt": "Algoritmus jednou projde všech n položek a pak všech n položek projde znovu. Kontrola položky trvá konstantní čas. Jaká je jeho těsná asymptotická časová složitost? Konstantní násobky nemění třídu růstu.",
-          "choices": [
-            "Θ(1)",
-            "Θ(log n)",
-            "Θ(n)",
-            "Θ(n²)"
-          ]
-        }
-      },
-      {
         "type": "numerical",
-        "prompt": "Treat 11111110 as an 8-bit two’s-complement value. Add decimal 3 and give the signed decimal result. When the leading bit is 1, subtract 256 from the unsigned binary value.",
+        "prompt": "A file has 24 bytes of data and an 8-byte header. One byte is 8 bits. How many bits are in the complete file?",
+        "numericAnswer": 256,
+        "tolerance": 0,
+        "cs": {
+          "prompt": "Soubor má 24 bajtů dat a 8bajtovou hlavičku. Jeden bajt má 8 bitů. Kolik bitů obsahuje celý soubor?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "computer-science-17-07",
+        "type": "text",
+        "prompt": "A user’s role allows read and write. A particular file explicitly denies write. In this system an explicit denial overrides a role’s allowance. Which operation is blocked on this file: read or write?",
+        "acceptedAnswers": [
+          "write",
+          "writing"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Role uživatele povoluje čtení a zápis. Konkrétní soubor výslovně zakazuje zápis. V tomto systému výslovný zákaz přebíjí povolení role. Která operace je u souboru blokována: čtení, nebo zápis?",
+          "acceptedAnswers": [
+            "zápis",
+            "zapisování",
+            "psaní",
+            "zapis",
+            "zapisovani",
+            "psani"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "computer-science-17-05",
+        "type": "multiple-choice",
+        "prompt": "A fraud detector is tested on 100 transactions, of which 2 are fraudulent. It labels EVERY transaction legitimate and reports 98% accuracy. Which conclusion is justified?",
+        "choices": [
+          "It detects 98% of fraudulent transactions",
+          "There are no fraudulent transactions in the test",
+          "The result proves it will work equally well on any dataset",
+          "High overall accuracy hides failure to detect any fraud"
+        ],
+        "correctIndex": 3,
+        "cs": {
+          "prompt": "Detektor podvodů se testuje na 100 transakcích, z nichž 2 jsou podvodné. VŠECHNY označí jako legitimní a vykáže přesnost 98 %. Který závěr je oprávněný?",
+          "choices": [
+            "Zachytí 98 % podvodných transakcí",
+            "V testu nejsou žádné podvodné transakce",
+            "Výsledek dokazuje stejně dobrý výkon na libovolných datech",
+            "Vysoká celková přesnost skrývá nezachycení jediného podvodu"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "computer-science-17-08",
+        "type": "numerical",
+        "prompt": "A signed code stores values by subtracting 256 from any unsigned value of 128 or more. A stored unsigned value is 254. Decode it, then add 3. What is the signed result?",
         "numericAnswer": 1,
         "tolerance": 0,
-        "id": "computer-science-17-08",
-        "reward": 10,
         "cs": {
-          "prompt": "Interpretujte 11111110 jako 8bitové číslo ve dvojkovém doplňku. Přičtěte desítkové 3 a uveďte výsledek jako desítkové číslo se znaménkem. Je-li nejvyšší bit 1, odečtěte od nezáporné binární hodnoty 256."
-        }
+          "prompt": "Kód se znaménkem převádí nezáporné hodnoty 128 a vyšší odečtením 256. Uložená nezáporná hodnota je 254. Dekódujte ji a přičtěte 3. Jaký je výsledek se znaménkem?"
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "How many times is f called in total when evaluating f(4), including the initial call and the base-case call? Count the calls, not the value of the returned product.\nFUNCTION f(n)\n  IF n = 0 THEN RETURN 1\n  RETURN n * f(n - 1)",
-        "numericAnswer": 5,
-        "tolerance": 0,
         "id": "computer-science-17-06",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "Count how many times X is printed. Indentation shows which instructions are inside each REPEAT.\nREPEAT 3 TIMES\n  PRINT \"X\"\n  REPEAT 2 TIMES\n    PRINT \"X\"",
+        "numericAnswer": 9,
+        "tolerance": 0,
         "cs": {
-          "prompt": "Kolikrát je celkem volána funkce f při výpočtu f(4), včetně počátečního volání i volání základního případu? Počítejte volání, ne hodnotu vráceného součinu.\nFUNCTION f(n)\n  IF n = 0 THEN RETURN 1\n  RETURN n * f(n - 1)"
-        }
+          "prompt": "Spočítejte, kolikrát se vypíše X. Odsazení ukazuje, které příkazy patří do každého REPEAT.\nREPEAT 3 TIMES\n  PRINT \"X\"\n  REPEAT 2 TIMES\n    PRINT \"X\""
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -783,91 +843,93 @@
         }
       },
       {
+        "id": "computer-science-17-18",
         "type": "multiple-choice",
-        "prompt": "Two different keys map to the same hash-table index. The table handles collisions by keeping a list at each index. Which statement is correct?",
+        "prompt": "A hash table keeps a list when different keys share an index. Index 3 contains (\"oak\", 8) and (\"elm\", 5). A lookup for \"elm\" also selects index 3. Which step returns the correct value?",
         "choices": [
-          "The keys must be equal",
-          "Both entries can remain, and lookup must compare keys in the list",
-          "The entire table must be cleared",
-          "The second entry must overwrite the first"
+          "Return 8 because it is first in the list",
+          "Match the key \"elm\" in the list and return 5",
+          "Add both values and return 13",
+          "Return 3 because it is the shared index"
         ],
         "correctIndex": 1,
-        "id": "computer-science-17-18",
         "reward": 10,
         "cs": {
-          "prompt": "Dva různé klíče se zobrazí na stejný index hašovací tabulky. Tabulka řeší kolize seznamem na každém indexu. Které tvrzení je správné?",
+          "prompt": "Hašovací tabulka ukládá seznam, když různé klíče sdílejí index. Na indexu 3 jsou (\"oak\", 8) a (\"elm\", 5). Hledání \"elm\" také vybere index 3. Který krok vrátí správnou hodnotu?",
           "choices": [
-            "Klíče musí být stejné",
-            "Obě položky mohou zůstat a vyhledávání musí porovnat klíče v seznamu",
-            "Celá tabulka se musí vymazat",
-            "Druhá položka musí přepsat první"
+            "Vrátit 8, protože je v seznamu první",
+            "Najít v seznamu klíč \"elm\" a vrátit 5",
+            "Sečíst obě hodnoty a vrátit 13",
+            "Vrátit 3, protože jde o společný index"
           ]
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A cache lookup always takes 2 ms. In 10% of requests it misses, adding a further 20 ms. What is the mean total time per request, in milliseconds?",
-        "numericAnswer": 4,
-        "tolerance": 0,
         "id": "computer-science-17-13",
-        "reward": 10,
-        "cs": {
-          "prompt": "Vyhledání v mezipaměti trvá vždy 2 ms. V 10 % požadavků není záznam nalezen, což přidá dalších 20 ms. Jaká je průměrná celková doba na požadavek v milisekundách?"
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "Two processes each read a balance of 10, each add 1, and each write 11. What problem occurred?",
-        "choices": [
-          "A syntax error",
-          "Lossless compression",
-          "A lost update",
-          "A successful atomic increment"
+        "type": "text",
+        "prompt": "A program repeatedly moves needed data between disk and RAM because the working data does not fit in RAM. The CPU is often waiting. Which upgrade directly addresses this cause: more RAM or a faster CPU?",
+        "acceptedAnswers": [
+          "more RAM",
+          "RAM",
+          "additional RAM"
         ],
-        "correctIndex": 2,
-        "id": "computer-science-17-15",
-        "reward": 10,
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Dva procesy přečtou zůstatek 10, každý přičte 1 a oba zapíší 11. K jakému problému došlo?",
-          "choices": [
-            "Syntaktická chyba",
-            "Bezeztrátová komprese",
-            "Ztracená aktualizace",
-            "Úspěšné atomické zvýšení"
+          "prompt": "Program opakovaně přesouvá potřebná data mezi diskem a RAM, protože se pracovní data do RAM nevejdou. Procesor často čeká. Která úprava přímo řeší tuto příčinu: více RAM, nebo rychlejší procesor?",
+          "acceptedAnswers": [
+            "více RAM",
+            "RAM",
+            "větší RAM",
+            "více operační paměti",
+            "vice RAM",
+            "vetsi RAM",
+            "vice operacni pameti"
           ]
-        }
+        },
+        "reward": 10
       },
       {
+        "id": "computer-science-17-15",
         "type": "numerical",
-        "prompt": "For each i from 0 to 11 inclusive, a loop checks every j from 0 to 11 inclusive except j = i. How many checks occur in total?",
-        "numericAnswer": 132,
+        "prompt": "Two devices read score 10. A adds 3 and saves 13; B adds 4 to its old value and saves 14, overwriting A. How many points lower is the saved score than if both additions had been preserved?",
+        "numericAnswer": 3,
         "tolerance": 0,
-        "id": "computer-science-17-11",
-        "reward": 10,
         "cs": {
-          "prompt": "Pro každé i od 0 do 11 včetně cyklus kontroluje každé j od 0 do 11 včetně kromě j = i. Kolik kontrol celkem provede?"
-        }
+          "prompt": "Dvě zařízení přečtou skóre 10. A přičte 3 a uloží 13; B přičte 4 ke své staré hodnotě a uloží 14, čímž přepíše A. O kolik bodů je uložené skóre nižší, než kdyby se zachovala obě přičtení?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "computer-science-17-11",
+        "type": "numerical",
+        "prompt": "A base class defines cost() to return 4; a subclass overrides it to return 7. Objects a and b are base-class objects, c is a subclass object. The list is [a, c, c, b]. Every list entry calls cost(), using the object’s actual class. What total is returned? Repeated references are not removed.",
+        "numericAnswer": 22,
+        "tolerance": 0,
+        "cs": {
+          "prompt": "Základní třída má cost() vracející 4; odvozená třída ji přepisuje a vrací 7. Objekty a a b jsou základní třídy, c odvozené. Seznam je [a, c, c, b]. Každá položka zavolá cost() podle skutečné třídy objektu. Jaký součet vznikne? Opakované odkazy se neodstraňují."
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "Uncompressed stereo audio uses 8000 samples per second per channel, 16 bits per sample and two channels for 5 seconds. How many bytes are needed, excluding headers?",
+        "prompt": "Uncompressed stereo audio uses 8000 samples per second per channel, 16 bits per sample and two channels for 5 seconds. How many bytes are needed, excluding headers? One byte = 8 bits.",
         "numericAnswer": 160000,
         "tolerance": 0,
         "id": "computer-science-17-14",
         "reward": 10,
         "cs": {
-          "prompt": "Nekomprimovaný stereofonní zvuk používá 8000 vzorků za sekundu na kanál, 16 bitů na vzorek a dva kanály po dobu 5 sekund. Kolik bajtů zabere bez hlavičky?"
+          "prompt": "Nekomprimovaný stereofonní zvuk používá 8000 vzorků za sekundu na kanál, 16 bitů na vzorek a dva kanály po dobu 5 sekund. Kolik bajtů zabere bez hlavičky? Jeden bajt = 8 bitů."
         }
       },
       {
+        "id": "computer-science-17-16",
         "type": "numerical",
-        "prompt": "A graph has directed edges A→B (2), B→D (3), A→C (1), D→C (1), and C→B (1). What is the total weight of the shortest path from C to D? Follow the arrow directions.",
+        "prompt": "Roads can be followed only in the arrow direction. Their distances are A→B (2 km), B→D (3 km), A→C (1 km), D→C (1 km), C→B (1 km), and C→D (6 km). Find the shortest distance from C to D in km.",
         "numericAnswer": 4,
         "tolerance": 0,
-        "id": "computer-science-17-16",
         "reward": 10,
         "cs": {
-          "prompt": "Graf má orientované hrany A→B (2), B→D (3), A→C (1), D→C (1) a C→B (1). Jaký je součet vah nejkratší cesty z C do D? Dodržujte směry šipek."
+          "prompt": "Po silnicích lze jet jen ve směru šipky. Délky jsou A→B (2 km), B→D (3 km), A→C (1 km), D→C (1 km), C→B (1 km) a C→D (6 km). Určete nejkratší vzdálenost z C do D v km."
         }
       },
       {
@@ -882,25 +944,30 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "What is printed? A loop with its start larger than its end runs zero times.\ncount = 0\nFOR i FROM 1 TO 4 INCLUSIVE\n  FOR j FROM 1 TO i - 1 INCLUSIVE\n    count = count + 1\nPRINT count",
-        "numericAnswer": 6,
-        "tolerance": 0,
         "id": "computer-science-17-17",
-        "reward": 10,
+        "type": "text",
+        "prompt": "A report groups orders by customer, keeps customers with at least TWO orders, then returns the one with the largest total. Orders: Jan 6, Eva 20, Karel 5, Jan 6, Karel 8. Which customer is returned?",
+        "acceptedAnswers": [
+          "Karel"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Co se vypíše? Cyklus, jehož počáteční hodnota je větší než koncová, neproběhne ani jednou.\ncount = 0\nFOR i FROM 1 TO 4 INCLUSIVE\n  FOR j FROM 1 TO i - 1 INCLUSIVE\n    count = count + 1\nPRINT count"
-        }
+          "prompt": "Přehled seskupí objednávky podle zákazníka, ponechá zákazníky s alespoň DVĚMA objednávkami a vrátí toho s nejvyšším součtem. Objednávky: Jan 6, Eva 20, Karel 5, Jan 6, Karel 8. Kterého zákazníka vrátí?",
+          "acceptedAnswers": [
+            "Karel"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "Two independent servers each work with probability 0.9. A separate network works with probability 0.8, independently of both servers. The service needs the network and at least one server. Find its availability as a percentage.",
+        "prompt": "The service needs a network and at least one of two servers. Each server works with probability 0.9; the network with 0.8. All are independent. Multiply probabilities for independent events; “at least one works” = 1 − “both fail”. Find service availability as a percentage.",
         "numericAnswer": 79.2,
         "tolerance": 0,
         "id": "computer-science-17-19",
         "reward": 10,
         "cs": {
-          "prompt": "Dva nezávislé servery fungují každý s pravděpodobností 0,9. Samostatná síť funguje s pravděpodobností 0,8 nezávisle na obou serverech. Služba potřebuje síť a alespoň jeden server. Určete její dostupnost v procentech."
+          "prompt": "Služba potřebuje síť a alespoň jeden ze dvou serverů. Každý server funguje s pravděpodobností 0,9, síť s 0,8. Vše je nezávislé. Pravděpodobnosti nezávislých jevů násobte; „alespoň jeden funguje“ = 1 − „oba selžou“. Určete dostupnost služby v procentech."
         }
       }
     ]

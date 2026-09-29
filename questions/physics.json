@@ -15,7 +15,7 @@
         "id": "physics-11-01",
         "reward": 10,
         "cs": {
-          "prompt": "Smícháme stejná množství vody o stejné hmotnosti při 20 °C a 40 °C. Teplo neuniká a nádoba žádné nepohltí. Jaká je konečná teplota?",
+          "prompt": "Smícháme dvě dávky vody o stejné hmotnosti, jednu při 20 °C a druhou při 40 °C. Teplo neuniká a nádoba žádné nepohltí. Jaká je výsledná teplota?",
           "choices": [
             "20 °C",
             "30 °C",
@@ -58,45 +58,51 @@
         }
       },
       {
-        "type": "text",
-        "prompt": "A ball is thrown vertically upward. After it leaves the hand, it slows down even if air resistance is ignored. Name the force causing this slowing.",
-        "acceptedAnswers": [
-          "gravity",
-          "gravitational force",
-          "gravitation"
-        ],
         "id": "physics-11-04",
-        "reward": 10,
+        "type": "text",
+        "prompt": "A ball is thrown straight up. At its highest point it is briefly not moving. Gravity continues acting throughout the flight. In which direction is the force on the ball at that instant? Ignore air resistance.",
+        "acceptedAnswers": [
+          "down",
+          "downward",
+          "downwards",
+          "toward Earth",
+          "towards Earth",
+          "towards the ground"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Míč vyhodíme svisle vzhůru. Po opuštění ruky zpomaluje, i když zanedbáme odpor vzduchu. Pojmenujte sílu způsobující toto zpomalování.",
+          "prompt": "Míč vyhodíme svisle vzhůru. V nejvyšším bodě se na okamžik nepohybuje. Gravitace působí po celou dobu letu. Kterým směrem v tomto okamžiku působí síla na míč? Odpor vzduchu zanedbejte.",
           "acceptedAnswers": [
-            "gravitace",
-            "gravitační síla",
-            "gravitacni sila",
-            "tíhová síla",
-            "tihova sila"
+            "dolů",
+            "směrem dolů",
+            "k Zemi",
+            "směrem k Zemi",
+            "dolu",
+            "smerem dolu",
+            "smerem k Zemi"
           ]
-        }
+        },
+        "reward": 10
       },
       {
+        "id": "physics-11-10",
         "type": "multiple-choice",
-        "prompt": "Two identical bulbs are in series with a battery. One bulb is removed, leaving a gap. What happens to the other?",
+        "prompt": "Two identical bulbs are in series: they share one unbroken path for current through a battery. One bulb is removed, leaving a gap. What happens to the other?",
         "choices": [
           "It goes out",
-          "It flashes continuously",
-          "It becomes brighter",
-          "It stays equally bright"
+          "It becomes brighter because there is one less bulb",
+          "It stays equally bright because the battery is unchanged",
+          "It becomes dimmer but stays lit"
         ],
         "correctIndex": 0,
-        "id": "physics-11-10",
         "reward": 10,
         "cs": {
-          "prompt": "Dvě stejné žárovky jsou zapojeny sériově k baterii. Jednu vyjmeme a vznikne mezera. Co se stane s druhou?",
+          "prompt": "Dvě stejné žárovky jsou zapojeny sériově: proud má přes baterii jedinou souvislou cestu. Jednu žárovku vyjmeme a vznikne mezera. Co se stane s druhou?",
           "choices": [
             "Zhasne",
-            "Bude nepřetržitě blikat",
-            "Bude svítit jasněji",
-            "Bude svítit stejně"
+            "Svítí jasněji, protože je o jednu žárovku méně",
+            "Svítí stejně, protože baterie se nezměnila",
+            "Svítí slaběji, ale nezhasne"
           ]
         }
       },
@@ -145,22 +151,26 @@
         }
       },
       {
-        "type": "text",
-        "prompt": "A wet towel loses water in a warm room, although the water never boils. Name the change of state occurring at its surface.",
-        "acceptedAnswers": [
-          "evaporation"
-        ],
         "id": "physics-11-08",
-        "reward": 10,
+        "type": "text",
+        "prompt": "Droplets appear on the OUTSIDE of a cold, sealed bottle. The bottle does not leak. Water vapour can turn to liquid when cooled. Did the water in the droplets come from the drink or the surrounding air? Enter drink or air.",
+        "acceptedAnswers": [
+          "air",
+          "the air",
+          "surrounding air"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Mokrý ručník ztrácí vodu v teplé místnosti, přestože voda nevře. Pojmenujte změnu skupenství probíhající na jeho povrchu.",
+          "prompt": "Na VNĚJŠÍ straně studené uzavřené lahve vzniknou kapky. Lahev neteče. Vodní pára může při ochlazení zkapalnět. Pochází voda v kapkách z nápoje, nebo z okolního vzduchu? Zadejte nápoj nebo vzduch.",
           "acceptedAnswers": [
-            "vypařování",
-            "vyparovani",
-            "odpařování",
-            "odparovani"
+            "vzduch",
+            "vzduchu",
+            "ze vzduchu",
+            "okolní vzduch",
+            "okolni vzduch"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "multiple-choice",
@@ -185,48 +195,36 @@
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "Ice at 0 °C melts in water at 20 °C. While ice remains, which statement about the net heat transfer and the ice temperature is correct?",
-        "choices": [
-          "Heat flows from ice to water; ice warms",
-          "Heat flows from water to ice; ice stays at 0 °C while melting",
-          "No heat flows because ice stays at 0 °C",
-          "Heat flows from water to ice; ice immediately reaches 20 °C"
-        ],
-        "correctIndex": 1,
         "id": "physics-11-14",
-        "reward": 10,
+        "type": "text",
+        "prompt": "A heater steadily supplies energy to pure ice at 0 °C. The temperature stays at 0 °C while the amount of ice decreases. What change of state is using the energy?",
+        "acceptedAnswers": [
+          "melting",
+          "melting of ice",
+          "ice melting"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Led při 0 °C taje ve vodě při 20 °C. Dokud led zůstává, které tvrzení o celkovém přenosu tepla a teplotě ledu je správné?",
-          "choices": [
-            "Teplo přechází z ledu do vody; led se ohřívá",
-            "Teplo přechází z vody do ledu; led při tání zůstává na 0 °C",
-            "Teplo se nepřenáší, protože led zůstává na 0 °C",
-            "Teplo přechází z vody do ledu; led ihned dosáhne 20 °C"
+          "prompt": "Ohřívač rovnoměrně dodává energii čistému ledu při 0 °C. Teplota zůstává na 0 °C, ale ledu ubývá. Která změna skupenství tuto energii spotřebovává?",
+          "acceptedAnswers": [
+            "tání",
+            "tání ledu",
+            "tani",
+            "tani ledu"
           ]
-        }
+        },
+        "reward": 10
       },
       {
-        "type": "multiple-choice",
-        "prompt": "A toy is moving left. Two forces act horizontally: 9 N right and 4 N left. In which direction is the resultant force?",
-        "choices": [
-          "There is no resultant force",
-          "Left",
-          "Right",
-          "Up"
-        ],
-        "correctIndex": 2,
         "id": "physics-11-17",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "A toy moves left. Its only horizontal forces are 9 N right and 4 N left. Find the resultant horizontal force in newtons; right is positive and left is negative.",
+        "numericAnswer": 5,
+        "tolerance": 0,
         "cs": {
-          "prompt": "Hračka se pohybuje doleva. Vodorovně působí dvě síly: 9 N doprava a 4 N doleva. Jaký směr má výsledná síla?",
-          "choices": [
-            "Výsledná síla je nulová",
-            "Doleva",
-            "Doprava",
-            "Vzhůru"
-          ]
-        }
+          "prompt": "Hračka se pohybuje doleva. Jediné vodorovné síly jsou 9 N doprava a 4 N doleva. Určete výslednou vodorovnou sílu v newtonech; doprava je kladný směr, doleva záporný."
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -240,15 +238,27 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A cyclist moves at 4 m/s for 15 s, then waits for 5 s. How far does the cyclist travel in total, in metres? While moving, distance = speed × time.",
-        "numericAnswer": 60,
-        "tolerance": 0,
         "id": "physics-11-06",
-        "reward": 10,
+        "type": "text",
+        "prompt": "Like magnetic poles repel; unlike poles attract. X repels the north pole of a known magnet. Y attracts X. Both X and Y are ends of permanent bar magnets, and each magnet has opposite poles at its two ends. Is the OTHER end of Y’s magnet north or south?",
+        "acceptedAnswers": [
+          "north",
+          "north pole",
+          "N"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Cyklista jede rychlostí 4 m/s po dobu 15 s a pak 5 s stojí. Jakou celkovou vzdálenost ujede v metrech? Při pohybu platí dráha = rychlost × čas."
-        }
+          "prompt": "Stejné magnetické póly se odpuzují, opačné se přitahují. X odpuzuje severní pól známého magnetu. Y přitahuje X. X i Y jsou konce trvalých tyčových magnetů a každý magnet má na koncích opačné póly. Je DRUHÝ konec magnetu s koncem Y severní, nebo jižní?",
+          "acceptedAnswers": [
+            "severní",
+            "severní pól",
+            "sever",
+            "N",
+            "severni",
+            "severni pol"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -262,26 +272,48 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "An object has mass 2000 g. Use g = 10 N/kg and W = mg. What is its weight in newtons?",
-        "numericAnswer": 20,
-        "tolerance": 0,
         "id": "physics-11-15",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "The Moon pulls less strongly on a rock than Earth does. The same rock is taken to the Moon without losing any material. What changes?",
+        "choices": [
+          "Its mass decreases, but its weight stays the same",
+          "Its weight decreases, but its mass stays the same",
+          "Both its mass and weight decrease",
+          "Its mass and weight both become zero"
+        ],
+        "correctIndex": 1,
         "cs": {
-          "prompt": "Těleso má hmotnost 2000 g. Použijte g = 10 N/kg a W = mg. Jaká je jeho tíha v newtonech?"
-        }
+          "prompt": "Měsíc přitahuje kámen slaběji než Země. Tentýž kámen přeneseme na Měsíc bez ztráty materiálu. Co se změní?",
+          "choices": [
+            "Jeho hmotnost klesne, tíha zůstane stejná",
+            "Jeho tíha klesne, hmotnost zůstane stejná",
+            "Jeho hmotnost i tíha klesnou",
+            "Jeho hmotnost i tíha klesnou na nulu"
+          ]
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "An object speeds up from 2 m/s to 10 m/s in 4 s. What is its average acceleration in m/s²? Acceleration = change in velocity / time.",
-        "numericAnswer": 2,
-        "tolerance": 0,
         "id": "physics-11-16",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "In an atom experiment, most tiny projectiles pass straight through thin foil. A very small number bounce back. Which model best fits BOTH observations?",
+        "choices": [
+          "Solid atoms filled evenly throughout",
+          "Completely empty atoms with nothing inside",
+          "Mostly empty atoms with small, dense centres",
+          "Dense centres occupying almost the whole atom"
+        ],
+        "correctIndex": 2,
         "cs": {
-          "prompt": "Těleso zrychlí z 2 m/s na 10 m/s za 4 s. Jaké je jeho průměrné zrychlení v m/s²? Zrychlení = změna rychlosti / čas."
-        }
+          "prompt": "Při pokusu s atomy projde většina drobných částic tenkou fólií přímo. Velmi malá část se odrazí zpět. Který model nejlépe odpovídá OBĚMA pozorováním?",
+          "choices": [
+            "Pevné atomy rovnoměrně vyplněné v celém objemu",
+            "Zcela prázdné atomy bez čehokoli uvnitř",
+            "Atomy s převážně prázdným prostorem a malými hustými středy",
+            "Husté středy zabírající téměř celý atom"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -296,25 +328,30 @@
       },
       {
         "type": "numerical",
-        "prompt": "A lever is balanced. A 6 N force acts 20 cm from the pivot on one side. What force, in newtons, must act 30 cm from the pivot on the other side?",
+        "prompt": "For perpendicular forces on a light lever, balance requires equal force × distance from the pivot on both sides. A 6 N force acts 20 cm from the pivot. What force balances it 30 cm from the pivot on the other side, in newtons?",
         "numericAnswer": 4,
         "tolerance": 0,
         "id": "physics-11-18",
         "reward": 10,
         "cs": {
-          "prompt": "Páka je v rovnováze. Na jedné straně působí síla 6 N ve vzdálenosti 20 cm od osy. Jaká síla v newtonech musí působit 30 cm od osy na druhé straně?"
+          "prompt": "U kolmých sil na lehké páce vyžaduje rovnováha stejný součin síly a vzdálenosti od osy na obou stranách. Síla 6 N působí 20 cm od osy. Jaká síla v newtonech ji vyrovná na druhé straně 30 cm od osy?"
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A wave has frequency 5 Hz and wavelength 200 cm. Speed = frequency × wavelength in metres. What is its speed in m/s?",
-        "numericAnswer": 10,
-        "tolerance": 0,
         "id": "physics-11-19",
-        "reward": 10,
+        "type": "text",
+        "prompt": "In a simplified spectrum, gas A absorbs at 450 and 600 nm, B at 450 and 650 nm, and C at 500 and 600 nm. Each gas present produces BOTH of its listed lines. A star’s atmosphere shows only 450, 600 and 650 nm, with no 500 nm line. B is present. Which OTHER gas must also be present: A or C? Ignore shifts caused by motion.",
+        "acceptedAnswers": [
+          "A"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Vlna má frekvenci 5 Hz a vlnovou délku 200 cm. Rychlost = frekvence × vlnová délka v metrech. Jaká je její rychlost v m/s?"
-        }
+          "prompt": "Ve zjednodušeném spektru plyn A pohlcuje při 450 a 600 nm, B při 450 a 650 nm a C při 500 a 600 nm. Každý přítomný plyn vytváří OBĚ uvedené čáry. Atmosféra hvězdy ukazuje jen 450, 600 a 650 nm, bez čáry 500 nm. B je přítomen. Který DALŠÍ plyn musí být také přítomen: A, nebo C? Posuny způsobené pohybem zanedbejte.",
+          "acceptedAnswers": [
+            "A"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -330,25 +367,19 @@
     ],
     "14–16": [
       {
-        "type": "text",
-        "prompt": "For a resistor, a student divides voltage in volts by current in amperes. Name the SI unit of the resulting quantity, not the quantity itself.",
-        "acceptedAnswers": [
-          "ohm",
-          "ohms"
-        ],
         "id": "physics-14-03",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "Resistance = voltage / current in amperes. A resistor has 6 V across it and a current of 2000 mA. Use 1000 mA = 1 A. Find its resistance in ohms.",
+        "numericAnswer": 3,
+        "tolerance": 0,
         "cs": {
-          "prompt": "U rezistoru student vydělí napětí ve voltech proudem v ampérech. Pojmenujte jednotku SI výsledné veličiny, nikoli veličinu samotnou.",
-          "acceptedAnswers": [
-            "ohm",
-            "ohmy"
-          ]
-        }
+          "prompt": "Odpor = napětí / proud v ampérech. Na rezistoru je napětí 6 V a protéká jím proud 2000 mA. Platí 1000 mA = 1 A. Určete odpor v ohmech."
+        },
+        "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "A student walks 3 m east and 3 m west, returning to the start after 6 s. Which pair gives average speed and average velocity for the complete trip?",
+        "prompt": "A student walks 3 m east and 3 m west, returning to the start after 6 s. Average speed = total distance / time; average velocity = displacement / time. Which pair gives these quantities for the whole trip, in that order?",
         "choices": [
           "0 m/s and 0 m/s",
           "1 m/s and 1 m/s east",
@@ -359,7 +390,7 @@
         "id": "physics-14-05",
         "reward": 10,
         "cs": {
-          "prompt": "Student ujde 3 m na východ a 3 m na západ a za 6 s se vrátí na začátek. Která dvojice udává průměrnou velikost rychlosti (dráha/čas) a průměrnou vektorovou rychlost (posunutí/čas) za celou cestu?",
+          "prompt": "Student ujde 3 m na východ a 3 m na západ a za 6 s se vrátí na začátek. Průměrná velikost rychlosti = celková dráha / čas; průměrná vektorová rychlost = posunutí / čas. Která dvojice udává tyto veličiny za celou cestu v tomto pořadí?",
           "choices": [
             "0 m/s a 0 m/s",
             "1 m/s a 1 m/s na východ",
@@ -380,42 +411,42 @@
         }
       },
       {
+        "id": "physics-14-10",
         "type": "text",
-        "prompt": "Water waves enter a gap without changing speed. Beyond the gap, the wavefronts curve and spread into the region behind the barrier. Name the effect responsible for the spreading.",
+        "prompt": "Water waves meet a barrier with a narrow opening. Beyond the opening they spread into a fan instead of continuing only straight ahead. Choose the process: reflection, diffraction or absorption.",
         "acceptedAnswers": [
           "diffraction"
         ],
-        "id": "physics-14-10",
-        "reward": 10,
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Vodní vlny vstoupí do štěrbiny, aniž se změní jejich rychlost. Za štěrbinou se vlnoplochy zakřiví a rozšíří do oblasti za překážkou. Pojmenujte jev způsobující toto rozšíření.",
+          "prompt": "Vodní vlny narazí na překážku s úzkým otvorem. Za ním se rozšíří do vějíře místo pohybu pouze přímo vpřed. Vyberte děj: odraz, ohyb nebo pohlcení.",
           "acceptedAnswers": [
-            "difrakce",
             "ohyb",
-            "ohyb vlnění",
-            "ohyb vlneni"
+            "ohyb vln",
+            "difrakce"
           ]
-        }
+        },
+        "reward": 10
       },
       {
+        "id": "physics-14-01",
         "type": "multiple-choice",
-        "prompt": "A bus moves east at constant speed on a straight road. Its engine provides 600 N of forward force. What is the resultant horizontal force?",
+        "prompt": "A bus travels straight at constant speed, so horizontal forces balance. The engine provides 600 N forward and rolling resistance is 150 N backward. What other backward force balances the engine?",
         "choices": [
-          "600 N east",
-          "600 N west",
-          "0 N",
-          "1200 N east"
+          "600 N",
+          "750 N",
+          "450 N",
+          "0 N"
         ],
         "correctIndex": 2,
-        "id": "physics-14-01",
         "reward": 10,
         "cs": {
-          "prompt": "Autobus jede po přímé silnici na východ stálou rychlostí. Motor působí dopřednou silou 600 N. Jaká je výsledná vodorovná síla?",
+          "prompt": "Autobus jede přímo stálou rychlostí, takže vodorovné síly jsou vyrovnané. Motor působí 600 N dopředu a valivý odpor 150 N dozadu. Jaká další síla dozadu vyrovná tah motoru?",
           "choices": [
-            "600 N na východ",
-            "600 N na západ",
-            "0 N",
-            "1200 N na východ"
+            "600 N",
+            "750 N",
+            "450 N",
+            "0 N"
           ]
         }
       },
@@ -453,37 +484,49 @@
         }
       },
       {
+        "id": "physics-14-13",
         "type": "multiple-choice",
-        "prompt": "A metal spoon and a wooden spoon are in the same room overnight. The metal feels colder because it…",
+        "prompt": "A metal spoon and a wooden spoon have both reached the same room temperature, below skin temperature. Metal conducts heat faster than wood. Why does the metal spoon feel colder when held?",
         "choices": [
-          "Reflects all heat",
-          "Has a lower temperature",
-          "Conducts thermal energy away from your hand faster",
-          "Contains no thermal energy"
+          "It must have a lower temperature than the wood",
+          "It transfers heat into the hand faster",
+          "It transfers heat out of the hand faster",
+          "It prevents heat from leaving the hand"
         ],
         "correctIndex": 2,
-        "id": "physics-14-13",
         "reward": 10,
         "cs": {
-          "prompt": "Kovová a dřevěná lžíce jsou přes noc ve stejné místnosti. Kovová působí chladněji, protože…",
+          "prompt": "Kovová a dřevěná lžíce dosáhly stejné pokojové teploty, nižší než teplota pokožky. Kov vede teplo rychleji než dřevo. Proč kovová lžíce při držení působí chladněji?",
           "choices": [
-            "Odráží veškeré teplo",
-            "Má nižší teplotu",
+            "Musí mít nižší teplotu než dřevo",
+            "Rychleji předává teplo do ruky",
             "Rychleji odvádí teplo z ruky",
-            "Neobsahuje žádnou tepelnou energii"
+            "Brání úniku tepla z ruky"
           ]
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A car covers 150 m in 10 s, then stops for 5 s. What is its average speed over the whole journey, in m/s? Average speed = total distance / total time.",
-        "numericAnswer": 10,
-        "tolerance": 0,
         "id": "physics-14-02",
-        "reward": 10,
+        "type": "text",
+        "prompt": "A hammer and a feather are released together from the same height in a vacuum. They start at rest; gravity gives each the same acceleration. Which lands first: hammer, feather, or together?",
+        "acceptedAnswers": [
+          "together",
+          "at the same time",
+          "simultaneously"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Auto ujede 150 m za 10 s a pak na 5 s zastaví. Jaká je průměrná rychlost za celou cestu v m/s? Průměrná rychlost = celková dráha / celkový čas."
-        }
+          "prompt": "Kladivo a pírko pustíme současně ze stejné výšky ve vakuu. Začínají v klidu; gravitace jim dává stejné zrychlení. Co dopadne dřív: kladivo, pírko, nebo současně?",
+          "acceptedAnswers": [
+            "současně",
+            "zároveň",
+            "ve stejnou dobu",
+            "najednou",
+            "soucasne",
+            "zaroven"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -508,15 +551,28 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "Sound travels at 340 m/s with frequency 170 Hz. What is its wavelength in centimetres? Wavelength = speed / frequency.",
-        "numericAnswer": 200,
-        "tolerance": 0,
         "id": "physics-14-11",
-        "reward": 10,
+        "type": "text",
+        "prompt": "A siren emits a steady tone. Moving toward a listener crowds its sound waves together; moving away spreads them apart. A listener hears a lower frequency than the emitted tone. Is the siren moving toward or away from that listener?",
+        "acceptedAnswers": [
+          "away",
+          "away from the listener",
+          "moving away"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Zvuk se šíří rychlostí 340 m/s a má frekvenci 170 Hz. Jaká je jeho vlnová délka v centimetrech? Vlnová délka = rychlost / frekvence."
-        }
+          "prompt": "Siréna vydává stálý tón. Při pohybu k posluchači se její zvukové vlny zhušťují; při pohybu od něj se rozestupují. Posluchač slyší nižší frekvenci, než siréna vydává. Pohybuje se siréna k posluchači, nebo od něj?",
+          "acceptedAnswers": [
+            "od posluchače",
+            "od něj",
+            "vzdaluje se",
+            "pryč",
+            "od posluchace",
+            "od nej",
+            "pryc"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -530,30 +586,41 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A 2 kg trolley travels at 4 m/s and then at 1 m/s in the same direction. What is the magnitude of its momentum decrease, in kg m/s?",
-        "numericAnswer": 6,
-        "tolerance": 0,
         "id": "physics-14-14",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "An astronaut and spacecraft orbit Earth together. Gravity pulls both toward Earth. Why can the astronaut float relative to the spacecraft?",
+        "choices": [
+          "There is no gravity anywhere above the atmosphere",
+          "The astronaut has lost all mass",
+          "The spacecraft blocks Earth’s gravitational field",
+          "Both are falling around Earth together"
+        ],
+        "correctIndex": 3,
         "cs": {
-          "prompt": "Vozík o hmotnosti 2 kg jede nejprve rychlostí 4 m/s a pak 1 m/s stejným směrem. O kolik se zmenší velikost jeho hybnosti v kg m/s?"
-        }
+          "prompt": "Astronaut a kosmická loď společně obíhají Zemi. Gravitace přitahuje oba k Zemi. Proč se astronaut může vznášet vzhledem k lodi?",
+          "choices": [
+            "Nad atmosférou nikde nepůsobí gravitace",
+            "Astronaut ztratil veškerou hmotnost",
+            "Loď odstíní gravitační pole Země",
+            "Oba společně padají kolem Země"
+          ]
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "A 60 W lamp is on for 2 minutes. How much energy does it transfer, in kilojoules?",
-        "numericAnswer": 7.2,
-        "tolerance": 0,
         "id": "physics-14-15",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "An atom has energy levels 1, 3 and 6 units. Emitting a photon removes energy equal to the drop. In one route an electron falls 6→3→1; in another it falls directly 6→1. How much MORE energy does the direct photon carry than the FIRST photon of the two-step route?",
+        "numericAnswer": 2,
+        "tolerance": 0,
         "cs": {
-          "prompt": "Žárovka o příkonu 60 W svítí 2 minuty. Kolik energie přenese v kilojoulech?"
-        }
+          "prompt": "Atom má energetické hladiny 1, 3 a 6 jednotek. Vyzařovaný foton odnáší energii rovnou poklesu. V jednom ději elektron přejde 6→3→1, v druhém přímo 6→1. O kolik VĚTŠÍ energii nese přímý foton než PRVNÍ foton dvoukrokového děje?"
+        },
+        "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "A radioactive sample’s half-life is 10 minutes. What fraction of the original unstable nuclei has decayed after 20 minutes?",
+        "prompt": "A radioactive sample has a half-life of 10 minutes: half the remaining unstable nuclei decay in each such interval. What fraction of the original unstable nuclei has decayed after 20 minutes?",
         "choices": [
           "One quarter",
           "One half",
@@ -564,7 +631,7 @@
         "id": "physics-14-16",
         "reward": 10,
         "cs": {
-          "prompt": "Radioaktivní vzorek má poločas přeměny 10 minut. Jaká část původních nestabilních jader se přeměnila po 20 minutách?",
+          "prompt": "Radioaktivní vzorek má poločas přeměny 10 minut: v každém takovém intervalu se přemění polovina zbývajících nestabilních jader. Jaká část původních nestabilních jader se přeměnila po 20 minutách?",
           "choices": [
             "Jedna čtvrtina",
             "Jedna polovina",
@@ -574,25 +641,36 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A 500 g sample warms from 18 °C to 22 °C. Its specific heat capacity is 800 J/(kg °C). Find the energy transferred in joules.",
-        "numericAnswer": 1600,
-        "tolerance": 0,
         "id": "physics-14-17",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "Two identical cups contain equal masses of water initially at 70 °C in a 20 °C room. Insulation makes one cool more slowly. Both eventually reach 20 °C. Ignoring evaporation and heat stored in the cups, compare the total energy lost by the WATER by that final time.",
+        "choices": [
+          "The insulated water loses less total energy because it cools more slowly",
+          "The insulated water loses more total energy because cooling takes longer",
+          "Both lose the same total energy, but at different rates",
+          "The insulated water loses no energy"
+        ],
+        "correctIndex": 2,
         "cs": {
-          "prompt": "Vzorek o hmotnosti 500 g se ohřeje z 18 °C na 22 °C. Jeho měrná tepelná kapacita je 800 J/(kg °C). Určete přenesenou energii v joulech."
-        }
+          "prompt": "Dva stejné kelímky obsahují stejné hmotnosti vody, zpočátku při 70 °C, v místnosti o 20 °C. Izolace zpomalí chladnutí jednoho. Oba nakonec dosáhnou 20 °C. Zanedbejte výpar a teplo uložené v kelímcích. Porovnejte celkovou energii ztracenou VODOU do tohoto konečného okamžiku.",
+          "choices": [
+            "Izolovaná voda ztratí méně energie, protože chladne pomaleji",
+            "Izolovaná voda ztratí více energie, protože chladnutí trvá déle",
+            "Obě ztratí stejné celkové množství energie, ale různou rychlostí",
+            "Izolovaná voda neztratí žádnou energii"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A 6 Ω resistor and a 3 Ω resistor are in series across 18 V. What is the potential difference across the 3 Ω resistor, in volts?",
+        "prompt": "A 6 Ω resistor and a 3 Ω resistor are in series across 18 V. In series, resistances add and current is the same through both. Using V = IR, find the voltage across the 3 Ω resistor. Give volts.",
         "numericAnswer": 6,
         "tolerance": 0,
         "id": "physics-14-18",
         "reward": 10,
         "cs": {
-          "prompt": "Rezistory 6 Ω a 3 Ω jsou zapojeny sériově na napětí 18 V. Jaké je napětí na rezistoru 3 Ω ve voltech?"
+          "prompt": "Rezistory 6 Ω a 3 Ω jsou sériově připojeny na 18 V. Při sériovém zapojení se odpory sčítají a oběma protéká stejný proud. Pomocí V = IR určete napětí na rezistoru 3 Ω ve voltech."
         }
       },
       {
@@ -620,42 +698,42 @@
     ],
     "17–18": [
       {
-        "type": "multiple-choice",
-        "prompt": "An object travels in a circle at constant speed. Which statement about its velocity and resultant force is correct?",
-        "choices": [
-          "Velocity is constant, so the force is zero",
-          "Velocity changes direction, and the force points toward the centre",
-          "Velocity changes direction, and the force points along the motion",
-          "Speed is constant, so acceleration points outward"
-        ],
-        "correctIndex": 1,
         "id": "physics-17-05",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "For circular motion, force = mass × speed² / radius. Two equal masses move at the same speed in circles of radii 2 m and 4 m. Compare the force in the smaller circle with the force in the larger one.",
+        "choices": [
+          "Half as large",
+          "The same",
+          "Four times as large",
+          "Twice as large"
+        ],
+        "correctIndex": 3,
         "cs": {
-          "prompt": "Těleso se pohybuje po kružnici stálou velikostí rychlosti. Které tvrzení o jeho vektorové rychlosti a výsledné síle je správné?",
+          "prompt": "Při pohybu po kružnici platí síla = hmotnost × rychlost² / poloměr. Dvě stejná tělesa se pohybují stejnou rychlostí po kružnicích o poloměrech 2 m a 4 m. Porovnejte sílu na menší kružnici se silou na větší.",
           "choices": [
-            "Vektorová rychlost je stálá, proto je síla nulová",
-            "Vektorová rychlost mění směr a síla míří do středu",
-            "Vektorová rychlost mění směr a síla míří ve směru pohybu",
-            "Velikost rychlosti je stálá, proto zrychlení míří ven"
+            "Poloviční",
+            "Stejná",
+            "Čtyřikrát větší",
+            "Dvakrát větší"
           ]
-        }
+        },
+        "reward": 10
       },
       {
-        "type": "text",
-        "prompt": "Two trolleys collide and stick together, with negligible external horizontal force. Their total kinetic energy decreases. Which vector quantity must still have the same total before and after?",
-        "acceptedAnswers": [
-          "momentum",
-          "linear momentum"
-        ],
         "id": "physics-17-03",
-        "reward": 10,
+        "type": "text",
+        "prompt": "A train moves east at constant velocity. Inside, a ball is tossed straight up and returns to the thrower’s hand. Neglect air resistance. To someone on the platform, does the ball have eastward horizontal velocity during its flight? Enter yes or no.",
+        "acceptedAnswers": [
+          "yes"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Dva vozíky se srazí a spojí; vnější vodorovná síla je zanedbatelná. Jejich celková kinetická energie klesne. Která vektorová veličina musí mít přesto stejný celkový součet před srážkou i po ní?",
+          "prompt": "Vlak jede na východ stálou rychlostí. Uvnitř vyhodí cestující míč svisle a chytí jej zpět do ruky. Odpor vzduchu zanedbejte. Má míč během letu z pohledu člověka na nástupišti vodorovnou rychlost na východ? Zadejte ano nebo ne.",
           "acceptedAnswers": [
-            "hybnost"
+            "ano"
           ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -669,30 +747,30 @@
         }
       },
       {
-        "type": "multiple-choice",
-        "prompt": "Light below a metal’s threshold frequency ejects no electrons. Its intensity is doubled, but its frequency is unchanged. Which outcome follows from a photon needing enough energy to eject an electron?",
         "id": "physics-17-11",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "Dim blue light releases electrons from a metal, but brighter red light does not. Which model best explains why increasing red-light brightness alone fails?",
+        "choices": [
+          "Each light packet must have enough energy; blue packets carry more than red ones",
+          "Only the total energy delivered per second matters",
+          "Electrons are released only when the metal looks bright",
+          "Red light has no energy at all"
+        ],
+        "correctIndex": 0,
         "cs": {
-          "prompt": "Světlo pod mezní frekvencí kovu nevyráží elektrony. Intenzitu zdvojnásobíme, frekvence však zůstane stejná. Co plyne z toho, že foton musí mít k vyražení elektronu dost energie?",
+          "prompt": "Slabé modré světlo uvolňuje z kovu elektrony, ale jasnější červené ne. Který model nejlépe vysvětluje, proč nestačí zvýšit jas červeného světla?",
           "choices": [
-            "Žádné elektrony se nevyrazí",
-            "Vyrazí se dvojnásobek elektronů",
-            "Každý elektron má dvojnásobnou kinetickou energii",
-            "Mezní frekvence klesne na polovinu"
+            "Každý světelný balíček musí mít dost energie; modré nesou více než červené",
+            "Záleží pouze na celkové energii dodané za sekundu",
+            "Elektrony se uvolní jen tehdy, když kov vypadá jasně",
+            "Červené světlo nemá žádnou energii"
           ]
         },
-        "choices": [
-          "No electrons are ejected",
-          "Twice as many electrons are ejected",
-          "Each electron has twice the kinetic energy",
-          "The threshold frequency halves"
-        ],
-        "correctIndex": 0
+        "reward": 10
       },
       {
         "type": "multiple-choice",
-        "prompt": "On a velocity–time graph, velocity is negative but the line slopes upward toward zero. Which statement describes the motion?",
+        "prompt": "On a velocity–time graph, velocity is negative but the line slopes upward toward zero. Acceleration is the slope; speed is the magnitude of velocity. Which statement describes the motion?",
         "choices": [
           "Negative acceleration, increasing speed",
           "Positive acceleration, decreasing speed",
@@ -703,7 +781,7 @@
         "id": "physics-17-01",
         "reward": 10,
         "cs": {
-          "prompt": "V grafu rychlosti v závislosti na čase je rychlost záporná, ale přímka stoupá k nule. Které tvrzení popisuje pohyb?",
+          "prompt": "V grafu rychlosti v závislosti na čase je rychlost záporná, ale přímka stoupá k nule. Zrychlení je sklon grafu; velikost rychlosti je absolutní hodnota rychlosti. Které tvrzení popisuje pohyb?",
           "choices": [
             "Záporné zrychlení, rostoucí velikost rychlosti",
             "Kladné zrychlení, klesající velikost rychlosti",
@@ -724,59 +802,69 @@
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A 4 kg body is pulled east by 10 N while friction acts west with 4 N. What is its acceleration toward the east, in m/s²? Use a = resultant force / mass.",
-        "numericAnswer": 1.5,
-        "tolerance": 0,
         "id": "physics-17-04",
-        "reward": 10,
+        "type": "text",
+        "prompt": "A positive particle moving east through a magnetic field feels an upward force. An otherwise identical negative particle moves east through the same field. Reversing charge reverses magnetic force. What is the force direction on the negative particle?",
+        "acceptedAnswers": [
+          "down",
+          "downward",
+          "downwards"
+        ],
+        "ignorePunctuation": false,
         "cs": {
-          "prompt": "Na těleso 4 kg působí tah 10 N na východ a tření 4 N na západ. Jaké je jeho zrychlení na východ v m/s²? Použijte a = výsledná síla / hmotnost."
-        }
+          "prompt": "Kladná částice letící na východ v magnetickém poli pociťuje sílu vzhůru. Jinak stejná záporná částice letí na východ týmž polem. Obrácení náboje obrátí magnetickou sílu. Jaký směr má síla na zápornou částici?",
+          "acceptedAnswers": [
+            "dolů",
+            "směrem dolů",
+            "dolu",
+            "smerem dolu"
+          ]
+        },
+        "reward": 10
       },
       {
+        "id": "physics-17-08",
         "type": "multiple-choice",
-        "prompt": "Two coherent waves of equal amplitude arrive with a path difference of half a wavelength. They began in phase. What occurs at that point?",
+        "prompt": "Wave displacements add, with signs. At one point wave A gives +3 mm and wave B gives −0.2 cm. What is their combined displacement in millimetres?",
         "choices": [
-          "Maximum constructive interference",
-          "Complete destructive interference",
-          "A doubling of frequency",
-          "A halving of wave speed"
+          "+1 mm",
+          "+2.8 mm",
+          "+5 mm",
+          "−1 mm"
+        ],
+        "correctIndex": 0,
+        "cs": {
+          "prompt": "Výchylky vln se sčítají včetně znamének. V jednom bodě má vlna A výchylku +3 mm a vlna B −0,2 cm. Jaká je jejich společná výchylka v milimetrech?",
+          "choices": [
+            "+1 mm",
+            "+2,8 mm",
+            "+5 mm",
+            "−1 mm"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "physics-17-14",
+        "type": "multiple-choice",
+        "prompt": "A hotter star has its peak emission at a shorter wavelength. Star A peaks at 500 nm and B at 1000 nm. Their distances are unknown. What can be concluded from these data alone?",
+        "choices": [
+          "A is cooler because its peak wavelength is smaller",
+          "A has a higher surface temperature; which looks brighter is not determined",
+          "A must look brighter because it is hotter",
+          "B must be twice as far away"
         ],
         "correctIndex": 1,
-        "id": "physics-17-08",
-        "reward": 10,
         "cs": {
-          "prompt": "Dvě koherentní vlny stejné amplitudy dorazí s dráhovým rozdílem poloviny vlnové délky. Na začátku byly ve fázi. Co v tomto bodě nastane?",
+          "prompt": "Teplejší hvězda má maximum vyzařování na kratší vlnové délce. Hvězda A má maximum při 500 nm a B při 1000 nm. Jejich vzdálenosti neznáme. Co plyne pouze z těchto údajů?",
           "choices": [
-            "Maximální konstruktivní interference",
-            "Úplná destruktivní interference",
-            "Zdvojnásobení frekvence",
-            "Poloviční rychlost vlnění"
+            "A je chladnější, protože má kratší vlnovou délku maxima",
+            "A má vyšší povrchovou teplotu; zdánlivý jas nelze určit",
+            "A musí vypadat jasnější, protože je teplejší",
+            "B musí být dvakrát dál"
           ]
-        }
-      },
-      {
-        "type": "multiple-choice",
-        "prompt": "A satellite is in a circular orbit with engines off. Why does it not move in a straight line?",
-        "choices": [
-          "Space pushes it forward",
-          "Its mass changes continuously",
-          "There is no gravity",
-          "Gravity provides centripetal acceleration"
-        ],
-        "correctIndex": 3,
-        "id": "physics-17-14",
-        "reward": 10,
-        "cs": {
-          "prompt": "Družice obíhá po kružnici s vypnutými motory. Proč se nepohybuje přímočaře?",
-          "choices": [
-            "Prostor ji tlačí dopředu",
-            "Její hmotnost se neustále mění",
-            "Nepůsobí gravitace",
-            "Gravitace způsobuje dostředivé zrychlení"
-          ]
-        }
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
@@ -813,91 +901,102 @@
       },
       {
         "type": "numerical",
-        "prompt": "A spring has k = 200 N/m. Its extension increases from 10 cm to 20 cm, within its elastic limit. Using E = ½kx², find the increase in stored energy, in joules. Calculate the energy at each extension, using x in metres.",
+        "prompt": "A spring has k = 200 N/m. Its extension increases from 10 cm to 20 cm. Stored energy is E = ½kx², with x in metres. Find the increase in energy in joules.",
         "numericAnswer": 3,
         "tolerance": 0,
         "id": "physics-17-06",
         "reward": 10,
         "cs": {
-          "prompt": "Pružina má k = 200 N/m. Její prodloužení vzroste z 10 cm na 20 cm v mezích pružnosti. Pomocí E = ½kx² určete přírůstek uložené energie v joulech. Vypočítejte energii v každém stavu s x v metrech."
+          "prompt": "Pružina má k = 200 N/m. Prodloužení vzroste z 10 cm na 20 cm. Uložená energie je E = ½kx², kde x je v metrech. Určete přírůstek energie v joulech."
         }
       },
       {
-        "type": "numerical",
-        "prompt": "A wave has a period of 4 milliseconds and travels at 20 m/s. Find its wavelength in centimetres.",
-        "numericAnswer": 8,
-        "tolerance": 0,
         "id": "physics-17-13",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "A 1.2 m string fixed at both ends forms a standing wave with three equal loops. Each loop is half a wavelength. The vibration frequency is 250 Hz. Find wave speed in m/s using speed = frequency × wavelength.",
+        "numericAnswer": 200,
+        "tolerance": 0,
         "cs": {
-          "prompt": "Vlna má periodu 4 milisekundy a šíří se rychlostí 20 m/s. Určete vlnovou délku v centimetrech."
-        }
+          "prompt": "Struna délky 1,2 m upevněná na obou koncích vytvoří stojaté vlnění se třemi stejnými kmitnami. Každý úsek mezi sousedními uzly má délku poloviny vlnové délky. Frekvence je 250 Hz. Určete rychlost vlnění v m/s pomocí rychlost = frekvence × vlnová délka."
+        },
+        "reward": 10
       },
       {
-        "type": "numerical",
-        "prompt": "Light has wavelength 600 nm. Use c = 3.00 × 10^8 m/s, h = 6.63 × 10^-34 J s, and E = hc/λ. Express the photon energy as a coefficient × 10^-19 J; enter only the coefficient.",
-        "numericAnswer": 3.315,
-        "tolerance": 0.005,
         "id": "physics-17-16",
-        "reward": 10,
+        "type": "multiple-choice",
+        "prompt": "Experiment A gives 10.0 ± 0.2 s. B gives 10.2 ± 0.2 s. Treat these as possible-value intervals. A separate check finds that both timers also read 0.5 s too high. Which conclusion is supported?",
+        "choices": [
+          "B is certainly longer because its central value is larger",
+          "Subtracting the common offset would remove the overlap",
+          "Repeating measurements alone must remove the shared calibration offset",
+          "The intervals overlap; removing the common offset would not change their difference"
+        ],
+        "correctIndex": 3,
         "cs": {
-          "prompt": "Světlo má vlnovou délku 600 nm. Použijte c = 3,00 × 10^8 m/s, h = 6,63 × 10^-34 J s a E = hc/λ. Vyjádřete energii fotonu jako koeficient × 10^-19 J; zadejte jen koeficient."
-        }
+          "prompt": "Pokus A dává 10,0 ± 0,2 s, B dává 10,2 ± 0,2 s. Berte je jako intervaly možných hodnot. Samostatná kontrola navíc zjistí, že oba časovače ukazují o 0,5 s více. Který závěr je podložený?",
+          "choices": [
+            "B je určitě delší, protože jeho střední hodnota je větší",
+            "Odečtení společné odchylky by odstranilo překryv",
+            "Samotné opakování měření musí odstranit společnou kalibrační odchylku",
+            "Intervaly se překrývají; odečtení společné odchylky by nezměnilo jejich rozdíl"
+          ]
+        },
+        "reward": 10
       },
       {
         "type": "numerical",
-        "prompt": "A heat engine rejects 500 J per cycle and does 300 J of work per cycle. What is its efficiency as a percentage?",
+        "prompt": "A heat engine rejects 500 J as heat and does 300 J of useful work in each cycle. Energy input equals those two outputs together. Find useful work / energy input as a percentage.",
         "numericAnswer": 37.5,
         "tolerance": 0,
         "id": "physics-17-17",
         "reward": 10,
         "cs": {
-          "prompt": "Tepelný motor odevzdá za cyklus 500 J tepla a vykoná práci 300 J. Jaká je jeho účinnost v procentech?"
+          "prompt": "Tepelný motor v každém cyklu odevzdá 500 J tepla a vykoná 300 J užitečné práce. Vstupní energie je součtem obou výstupů. Určete užitečná práce / vstupní energie v procentech."
         }
       },
       {
         "type": "numerical",
-        "prompt": "Resistors of 6 Ω and 3 Ω are in parallel. That combination is in series with a 4 Ω resistor across a 12 V battery. Find the total current from the battery, in amperes.",
+        "prompt": "Resistors 6 Ω and 3 Ω are in parallel, so 1/Rp = 1/6 + 1/3. This pair is in series with 4 Ω across 12 V. Series resistances add. Using I = V/Rtotal, find the total current in amperes.",
         "numericAnswer": 2,
         "tolerance": 0,
         "id": "physics-17-15",
         "reward": 10,
         "cs": {
-          "prompt": "Rezistory 6 Ω a 3 Ω jsou zapojeny paralelně. Tato kombinace je sériově spojena s rezistorem 4 Ω a připojena k baterii 12 V. Určete celkový proud z baterie v ampérech."
+          "prompt": "Rezistory 6 Ω a 3 Ω jsou paralelně, takže 1/Rp = 1/6 + 1/3. Tato dvojice je sériově spojena se 4 Ω na 12 V. Sériové odpory se sčítají. Pomocí I = V/Rcelkový určete celkový proud v ampérech."
         }
       },
       {
         "type": "numerical",
-        "prompt": "A detector initially reads 850 counts/min, including a constant background of 50 counts/min. After 18 hours it reads 150 counts/min. Treat count rate as proportional to undecayed nuclei. Find the half-life in hours.",
+        "prompt": "A detector reads 850 counts/min initially and 150 counts/min after 18 hours. Both readings include constant background of 50 counts/min. The sample’s own rate halves every half-life. Find the half-life in hours.",
         "numericAnswer": 6,
         "tolerance": 0,
         "id": "physics-17-18",
         "reward": 10,
         "cs": {
-          "prompt": "Detektor na začátku zaznamená 850 impulzů/min včetně stálého pozadí 50 impulzů/min. Po 18 hodinách zaznamená 150 impulzů/min. Předpokládejte, že četnost impulzů je úměrná počtu nepřeměněných jader. Určete poločas přeměny v hodinách."
+          "prompt": "Detektor zpočátku ukazuje 850 impulzů/min a po 18 hodinách 150 impulzů/min. Oba údaje zahrnují stálé pozadí 50 impulzů/min. Vlastní četnost impulzů vzorku klesne za každý poločas na polovinu. Určete poločas v hodinách."
         }
       },
       {
         "type": "numerical",
-        "prompt": "A 2 kg trolley at +5 m/s sticks to a 3 kg trolley at −1 m/s. Neglect external horizontal forces. How much kinetic energy is lost in the collision, in joules? Use conservation of momentum and kinetic energy E = ½mv².",
+        "prompt": "A 2 kg trolley at +5 m/s sticks to a 3 kg trolley at −1 m/s. Neglect external horizontal forces. How much kinetic energy is lost, in joules? Momentum = mass × signed velocity and total momentum is conserved. Kinetic energy = ½mv².",
         "numericAnswer": 21.6,
         "tolerance": 0.01,
         "id": "physics-17-19",
         "reward": 10,
         "cs": {
-          "prompt": "Vozík 2 kg s rychlostí +5 m/s se srazí s vozíkem 3 kg s rychlostí −1 m/s a spojí se. Zanedbejte vnější vodorovné síly. Kolik kinetické energie se při srážce ztratí v joulech? Použijte zákon zachování hybnosti a kinetickou energii E = ½mv²."
+          "prompt": "Vozík o hmotnosti 2 kg a rychlosti +5 m/s se spojí s vozíkem o hmotnosti 3 kg a rychlosti −1 m/s. Vnější vodorovné síly zanedbejte. Kolik joulů kinetické energie se ztratí? Hybnost = hmotnost × rychlost se znaménkem a celková hybnost se zachovává. Kinetická energie = ½mv²."
         }
       },
       {
-        "type": "numerical",
-        "prompt": "Light passes from air (n = 1.00) into glass (n = 1.50). Its incident ray makes an angle of 60° with the surface. Use n₁ sin θ₁ = n₂ sin θ₂, with angles measured from the normal. Find the refracted angle to the normal in degrees, to one decimal place.",
-        "numericAnswer": 19.5,
-        "tolerance": 0.1,
         "id": "physics-17-20",
-        "reward": 10,
+        "type": "numerical",
+        "prompt": "For this metal, each emitted electron receives photon energy minus a 2 eV escape energy. Photon energy is proportional to light frequency. Initially photons carry 5 eV. Frequency is halved and brightness doubled. Find the maximum energy per emitted electron in eV; brightness changes photon number, not energy per photon.",
+        "numericAnswer": 0.5,
+        "tolerance": 0,
         "cs": {
-          "prompt": "Světlo přechází ze vzduchu (n = 1,00) do skla (n = 1,50). Dopadající paprsek svírá s povrchem úhel 60°. Použijte n₁ sin θ₁ = n₂ sin θ₂, kde úhly měříme od kolmice. Určete úhel lomu vůči kolmici ve stupních na jedno desetinné místo."
-        }
+          "prompt": "U tohoto kovu získá každý vyražený elektron energii fotonu minus výstupní energii 2 eV. Energie fotonu je úměrná frekvenci světla. Zpočátku mají fotony 5 eV. Frekvence klesne na polovinu a jas se zdvojnásobí. Určete nejvyšší energii vyraženého elektronu v eV; jas mění počet fotonů, nikoli energii jednoho fotonu."
+        },
+        "reward": 10
       }
     ]
   }

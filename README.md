@@ -74,7 +74,7 @@ There is **one JSON file per subject**, each containing all age categories:
 
 Each has `subject` and `tracks`, with keys `11–13`, `14–16`, `17–18` (en dashes). Array order is competition order. There are 20 questions in each supplied track. More or fewer are supported. Read [questions/README.md](questions/README.md) for the schema and examples.
 
-All 15 tracks rise gradually in age-relative difficulty from the first question. There is no warm-up block or fixed jump at question 5: opening items already require interpretation or a short calculation, and later items progressively combine more concepts, conditions and steps. Obvious recall-only questions have been strengthened while retaining the more demanding final questions. English and Czech are kept aligned. See the editing guidance in [questions/README.md](questions/README.md).
+All 15 tracks aim for a gradual, age-relative ramp from question 1 to 20, with no fixed jump at question 5. Calculations sit alongside predictions, experiments, model comparisons and short answers using familiar words or supplied labels. Younger questions build subject intuition; older questions combine more conditions, evidence and operations. Unfamiliar rules are supplied where useful, and English and Czech provide equivalent information. The bank samples the major IB themes rather than covering an entire course. See [coverage and progression](questions/COVERAGE.md) for the topic map and [editing guidance](questions/README.md) for the schema. Difficulty is an editorial estimate; rehearsal with students is the best way to check balance across subjects.
 
 Question IDs remain stable even when their position changes; progress follows array order. Start a fresh round after loading this reordered bank.
 
