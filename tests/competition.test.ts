@@ -183,7 +183,7 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal((await request('/team/game/contract', a.cookie, { contract: 'ground-a', current: null })).status, 200)
     // A device that has not seen its teammate's choice cannot silently replace it.
     assert.equal((await request('/team/game/contract', b.cookie, { contract: 'survey', current: null })).status, 409)
-    assert.equal((await request('/team/game/contract', b.cookie, { contract: 'unknown', current: 'ground-a' })).status, 400)
+    assert.equal((await request('/team/game/contract', b.cookie, { contract: 'unknown', current: 'ground-a', taken: 1 })).status, 400)
     assert.equal((await request<TeamState>('/team/state', c.cookie)).body.game.teams.find(t => t.id === create.body.id)!.contract, 'ground-a')
     assert.equal((await request<TeamState>('/team/state', c.cookie)).body.game.own.contract, null)
     const startedAt = (await request<CompetitionState>('/competition')).body.startedAt!
@@ -204,7 +204,7 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.deepEqual(fished.game.last!.boats, [{ boat: 1, from: 0, order: 0, action: 'fish', paid: 5, caught: 2 }, { boat: 2, from: 0, order: 0, action: 'fish', paid: 5, caught: 2 }])
     // How many boats paid at a ground is kept for the history, not published.
     assert.deepEqual(fished.game.last!.grounds[0], { id: 0, before: 9, caught: 4, growth: 3, after: 8 })
-    assert.deepEqual(fished.game.own, { fish: 4, bonus: 0, contract: { id: 'ground-a', progress: 4 }, completed: [] })
+    assert.deepEqual(fished.game.own, { fish: 4, bonus: 0, contract: { id: 'ground-a', progress: 4, taken: 1 }, completed: [] })
     assert.deepEqual(fished.standings.teams.map(t => t.score), [4, 0])
     const rival = (await request<TeamState>('/team/state', c.cookie)).body
     assert.deepEqual(rival.game.last!.boats.map(r => r.action), ['unpaid', 'idle'])
@@ -213,10 +213,15 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert(!JSON.stringify(rival.game.teams).includes('research'))
     assert.equal(rival.game.last!.boats.length, 2)
     assert.equal((await request<AdminTeam[]>('/admin/teams', admin)).body.find(t => t.id === create.body.id)!.score, 4)
-    // Abandoning loses progress; the contract can be taken again from zero.
-    assert.equal((await request('/team/game/contract', b.cookie, { contract: null, current: 'ground-a' })).status, 200)
+    // Abandoning names the taking it drops: without its number it is refused.
+    assert.equal((await request('/team/game/contract', b.cookie, { contract: null, current: 'ground-a' })).status, 409)
+    // Abandoning loses progress; the contract can be taken again from zero, as a new taking.
+    assert.equal((await request('/team/game/contract', b.cookie, { contract: null, current: 'ground-a', taken: 1 })).status, 200)
     assert.equal((await request('/team/game/contract', b.cookie, { contract: 'ground-a', current: null })).status, 200)
-    assert.deepEqual((await request<TeamState>('/team/state', a.cookie)).body.game.own.contract, { id: 'ground-a', progress: 0 })
+    assert.deepEqual((await request<TeamState>('/team/state', a.cookie)).body.game.own.contract, { id: 'ground-a', progress: 0, taken: 2 })
+    // A device that still shows the first taking cannot drop the second one, though the contract is the same.
+    assert.equal((await request('/team/game/contract', a.cookie, { contract: null, current: 'ground-a', taken: 1 })).status, 409)
+    assert.equal((await request<TeamState>('/team/state', b.cookie)).body.game.own.contract?.taken, 2)
     const saved = (await request<TeamState>('/team/state', a.cookie)).body
     await close(); db.close(); db = openDatabase(path); server = createApp(db, bank, 'test-password').listen(0, '127.0.0.1'); await new Promise<void>(resolve => server.once('listening', resolve)); base = `http://127.0.0.1:${(server.address() as { port: number }).port}/api`
     const restored = (await request<TeamState>('/team/state', a.cookie)).body
@@ -540,6 +545,8 @@ test('a diamond-prototype database upgrades to The Commons; an unreset diamond r
     assert.equal(count(db, gridTables), 3)
     assert.deepEqual(standings(db).teams, [{ id: 't', name: 'Existing team', color: '#176b58', score: 7 }])
     assert.equal(count(db, 'commons_grounds'), 0)
+    // Admin reads scores from the Commons tables, so the final diamonds are carried there.
+    assert.equal(count(db, "commons_teams WHERE team_id = 't' AND fish = 7 AND bonus = 0"), 1)
     assert.match(warnings[0]!, /never reset.*Final diamonds: Existing team 7\.$/)
     db.close()
     // A round that ended at the prototype's 45 minutes would run again under 60.
@@ -552,6 +559,8 @@ test('a diamond-prototype database upgrades to The Commons; an unreset diamond r
     assert.deepEqual(team.body.standings, { frozenAt: 1, teams: [{ id: 't', name: 'Existing team', color: '#176b58', score: 3 }] })
     assert.deepEqual([team.body.game.resolution.done, team.body.game.grounds.length], [0, 0])
     assert.equal(count(db, gridTables), 3)
+    // The organizer announcing winners from admin sees the final diamonds, not zeros.
+    assert.deepEqual((await server.call<AdminTeam[]>('/admin/teams', admin)).body.map(t => [t.name, t.score]), [['Existing team', 7]])
     // A restart changes nothing but repeats the reminder.
     await server.close(); db.close(); db = openDatabase(path); server = await serve(db)
     const restarted = (await server.call<TeamState>('/team/state', team.cookie)).body
@@ -560,12 +569,38 @@ test('a diamond-prototype database upgrades to The Commons; an unreset diamond r
     // Reset discards the round and its tables, so a later round is never taken for it.
     assert.equal((await server.call('/admin/reset', admin, { confirmation: 'RESET' })).status, 200)
     assert.equal(count(db, gridTables), 0)
+    assert.deepEqual((await server.call<AdminTeam[]>('/admin/teams', admin)).body.map(t => t.score), [0])
     await server.call('/admin/start', admin, {})
     await server.close(); db.close(); db = openDatabase(path); server = await serve(db)
     const next = (await server.call<TeamState>('/team/state', team.cookie)).body
     assert.deepEqual([next.competition.status, next.game.grounds.length, next.standings.frozenAt], ['running', 2, null])
     assert.equal(warnings.length, 3)
   } finally { console.warn = warn; await server?.close(); db.close(); rmSync(dir, { recursive: true, force: true }) }
+})
+
+test('a Commons database from before contract takings were numbered keeps its active contract', async () => {
+  const db = openDatabase(':memory:')
+  db.exec(`
+    CREATE TABLE commons_teams (
+      team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE,
+      fish INTEGER NOT NULL DEFAULT 0, bonus INTEGER NOT NULL DEFAULT 0,
+      contract TEXT, progress INTEGER NOT NULL DEFAULT 0, visited TEXT NOT NULL DEFAULT '[]', completed TEXT NOT NULL DEFAULT '[]'
+    );
+    INSERT INTO teams (id, name, age, code, color) VALUES ('t', 'Existing team', '14–16', 'ABCD', '#176b58');
+    INSERT INTO commons_teams (team_id, fish, contract, progress) VALUES ('t', 4, 'ground-a', 4);
+  `)
+  for (const subject of subjects) db.prepare("INSERT INTO progress (team_id, subject) VALUES ('t', ?)").run(subject)
+  db.prepare("INSERT INTO config VALUES ('started_at', ?)").run(String(Date.now()))
+  const { call, close } = await serve(db)
+  try {
+    // The active contract counts as taking 0, so a device can still abandon it.
+    const team = await call<TeamState>('/team/login', '', { code: 'ABCD' })
+    assert.deepEqual([team.body.game.own.fish, team.body.game.own.contract], [4, { id: 'ground-a', progress: 4, taken: 0 }])
+    assert.equal((await call('/team/game/contract', team.cookie, { contract: null, current: 'ground-a', taken: 0 })).status, 200)
+    // Initializing again finds the column and leaves the match alone.
+    createApp(db, bank, 'test-password')
+    assert.deepEqual((await call<TeamState>('/team/state', team.cookie)).body.game.own, { fish: 4, bonus: 0, contract: null, completed: [] })
+  } finally { await close(); db.close() }
 })
 
 test('reset needs no catch-up, so it also recovers a match whose resolutions cannot run', async () => {
@@ -581,7 +616,8 @@ test('reset needs no catch-up, so it also recovers a match whose resolutions can
     const log = console.error
     console.error = () => {}
     try {
-      for (const [url, cookie] of [['/team/state', team], ['/admin/history', admin]]) assert.equal((await call(url, cookie)).status, 500)
+      // A 500 rather than a 401 for the roster, so the admin screen still shows its reset.
+      for (const [url, cookie] of [['/team/state', team], ['/admin/teams', admin], ['/admin/history', admin]]) assert.equal((await call(url, cookie)).status, 500)
       // A roster edit cannot take a correct snapshot first, so it fails too.
       assert.equal((await call('/admin/teams', admin, { name: 'Beta', age: '11–13' })).status, 500)
     } finally { console.error = log }

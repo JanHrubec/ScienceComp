@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { t, fish, boats } from '../i18n'
 import { computed, reactive, ref, watch } from 'vue'
-import { teamState, acceptState, refreshState } from '../state'
+import { teamState, acceptState, refreshState, session } from '../state'
 import { api, errorMessage } from '../api'
 import { competition, secondsLeft } from '../competition'
 import type { BoatOrder, BoatReport, GameState, TeamState } from '../../shared/domain'
 import TeamScores from './TeamScores.vue'
 type Contract = GameState['contracts'][number]
+interface Taking { id: string; taken: number }
 const busy = ref(false), error = ref(''), selected = ref(0)
-// The contract the player asked to abandon, until they confirm. It never carries over to a later contract.
-const abandoning = ref<string | null>(null)
+// The taking of a contract the player asked to abandon, until they confirm. A later taking,
+// even of the same contract, never inherits it.
+const abandoning = ref<Taking | null>(null)
 // Orders given while a request is in flight wait here, the latest per boat, and follow in turn rather than being dropped.
 const queued = reactive(new Map<number, number | null>()), sending = ref<{ boat: number; ground: number | null } | null>(null)
 const game = computed(() => teamState.value!.game)
@@ -71,16 +73,18 @@ function boatResult(b: BoatReport) {
   return t('Boat {boat} was idle.', values)
 }
 const completedBonus = computed(() => game.value.contracts.find(c => c.id === game.value.last?.completed)?.bonus ?? 0)
+// A response or failure that arrives once the session has changed belongs to the old session and is dropped.
 async function request(path: 'order' | 'contract', input: object) {
-  try { acceptState(await api<TeamState>(`/team/game/${path}`, input)) }
-  catch (e) { error.value = errorMessage(e); await refreshState() }
+  const from = session.value
+  try { const value = await api<TeamState>(`/team/game/${path}`, input); if (from === session.value) acceptState(value) }
+  catch (e) { if (from === session.value) { error.value = errorMessage(e); await refreshState() } }
 }
-// One request at a time: an optional contract action, then every waiting order. Stops if the device signs out meanwhile.
+// One request at a time: an optional contract action, then every waiting order.
 async function run(first?: () => Promise<void>) {
   busy.value = true
   try {
     await first?.()
-    for (let next = [...queued][0]; next && teamState.value; next = [...queued][0]) {
+    for (let next = [...queued][0]; next; next = [...queued][0]) {
       const [i, ground] = next; queued.delete(i)
       if (myBoats.value[i]?.order === ground) continue // already so: a teammate gave the same order meanwhile
       sending.value = { boat: i, ground }; await request('order', { boat: i + 1, ground })
@@ -95,15 +99,17 @@ function order(ground: number | null) {
   if (ground === (sending.value?.boat === i ? sending.value.ground : b.order)) queued.delete(i); else queued.set(i, ground)
   if (!busy.value) return run()
 }
-// Contract buttons are disabled while busy. `current` is the contract the player acted on, so the server refuses the change if it has moved on.
-function choose(contract: string | null, current = own.value.contract?.id ?? null) {
+// Contract buttons are disabled while busy. `current` is the taking the player acted on, so the server
+// refuses the change if it has moved on, even to the same contract abandoned and taken again.
+function choose(contract: string | null, current: Taking | null = own.value.contract) {
   if (busy.value) return
   abandoning.value = null; error.value = ''
-  return run(() => request('contract', { contract, current }))
+  return run(() => request('contract', { contract, current: current?.id ?? null, taken: current?.taken }))
 }
-function abandon() { const c = own.value.contract; if (c?.progress) abandoning.value = c.id; else return choose(null) }
-// Any change of active contract cancels a pending abandon, including the same contract taken again (its progress restarts).
-watch(() => teamState.value?.game.own.contract, (now, before) => { if (now?.id !== before?.id || (now?.progress ?? 0) < (before?.progress ?? 0)) abandoning.value = null })
+function abandon() { const c = own.value.contract; if (c?.progress) abandoning.value = { id: c.id, taken: c.taken }; else return choose(null) }
+// Waiting orders belong to the session that gave them: they are dropped the moment it ends,
+// before anything renders, so they never go out with the next session's cookie.
+watch(session, () => queued.clear(), { flush: 'sync' })
 </script>
 <template>
   <main class="commons">
@@ -151,7 +157,7 @@ watch(() => teamState.value?.game.own.contract, (now, before) => { if (now?.id !
               </span>
             </li>
           </ul>
-          <div v-if="abandoning && abandoning === own.contract?.id && activeContract" class="abandon-confirm" role="alertdialog" :aria-label="t('Abandon contract')">
+          <div v-if="abandoning && abandoning.taken === own.contract?.taken && activeContract" class="abandon-confirm" role="alertdialog" :aria-label="t('Abandon contract')">
             <p>{{ t('Abandon “{contract}”? Its progress ({progress}/{target}) will be lost.', { contract: contractTitle(activeContract), progress: own.contract.progress, target: activeContract.target }) }}</p>
             <div><button class="danger-button" :disabled="busy" @click="choose(null, abandoning)">{{ t('Abandon') }}</button><button class="text-button" @click="abandoning = null">{{ t('Keep it') }}</button></div>
           </div>

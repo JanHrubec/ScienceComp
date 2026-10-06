@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test'
 import { loadQuestions } from '../../server/questions.js'
+import type { TeamState } from '../../shared/domain.js'
 const bank = loadQuestions('./questions')
 async function join(page: Page, code: string) { await page.goto('/'); await page.getByLabel('Team code').fill(code); await page.getByRole('button', { name: 'Join', exact: true }).click(); await expect(page.getByRole('heading', { level: 1 })).toBeVisible() }
 async function chooseCorrect(page: Page, subject: 'physics' | 'chemistry' | 'biology', index: number) { const q = bank[subject]['11–13'][index]; if (q.type === 'multiple-choice') await page.locator('.choice').nth(q.correctIndex).click(); else await page.getByLabel('Your answer').fill(q.type === 'text' ? q.acceptedAnswers[0] : String(q.numericAnswer)) }
@@ -98,18 +99,47 @@ test('real browser: admin, multiple sessions, subject progress, shared game and 
   await a.getByRole('button', { name: 'Leave boat 2 idle', exact: true }).click()
   await expect(a.getByRole('button', { name: /^Boat 2/ })).toContainText('Idle at B')
   await expect(c.getByRole('button', { name: /^Ground B:.*; 0 boats fishing next\./ })).toBeVisible()
-  // A pending abandon belongs to that contract: a teammate's change cancels it, and it never resurfaces for the next one.
-  await a.getByRole('button', { name: 'Abandon', exact: true }).click()
-  await expect(a.getByRole('alertdialog')).toContainText('Its progress (4/16) will be lost.')
+  // A pending abandon belongs to one taking of a contract. A teammate abandons it and takes the same contract again:
+  // a device that sees this closes its confirmation for good, and one that has not is refused rather than drop the new taking.
+  const contextD = await browser.newContext(), d = await contextD.newPage(); d.on('pageerror', e => pageErrors.push(e.message))
+  await join(d, 'K7MP'); await d.getByRole('link', { name: 'Game', exact: true }).click()
+  for (const p of [a, d]) { await p.getByRole('button', { name: 'Abandon', exact: true }).click(); await expect(p.getByRole('alertdialog')).toContainText('Its progress (4/16) will be lost.') }
+  // d stops receiving updates, as on a slow network.
+  let resumeState = () => {}, stateStalled = () => {}; const stateHeld = new Promise<void>(r => { resumeState = r }), stalled = new Promise<void>(r => { stateStalled = r })
+  await d.route('**/api/team/state', async route => { const response = await route.fetch(); stateStalled(); await stateHeld; await route.fulfill({ response }) }, { times: 1 })
+  await stalled
   await b.getByRole('link', { name: 'Game', exact: true }).click(); await b.getByRole('button', { name: 'Abandon', exact: true }).click()
   await b.getByRole('alertdialog').getByRole('button', { name: 'Abandon', exact: true }).click()
-  await expect(a.locator('.contracts li.active')).toHaveCount(0); await expect(a.getByRole('alertdialog')).toHaveCount(0)
-  await expect(c.locator('.contracts li', { hasText: 'Catch 16 fish' }).locator('.chip')).toHaveCount(0)
-  await b.getByRole('button', { name: 'Take: Catch 8 fish' }).click()
-  await expect(a.locator('.contracts li.active')).toContainText(/Catch 8 fish.*0\/8/)
-  await expect(a.getByRole('alertdialog')).toHaveCount(0)
+  await expect(b.locator('.contracts li.active')).toHaveCount(0)
+  await b.getByRole('button', { name: 'Take: Catch 16 fish' }).click()
+  await expect(b.locator('.contracts li.active')).toContainText(/Catch 16 fish.*0\/16/)
+  await expect(a.locator('.contracts li.active')).toContainText(/Catch 16 fish.*0\/16/); await expect(a.getByRole('alertdialog')).toHaveCount(0)
+  await expect(d.getByRole('alertdialog')).toContainText('Its progress (4/16) will be lost.')
+  await d.getByRole('alertdialog').getByRole('button', { name: 'Abandon', exact: true }).click()
+  await expect(d.locator('.commons .feedback')).toHaveText('A teammate has changed your contract. Check it again.')
+  await expect(d.locator('.contracts li.active')).toContainText(/Catch 16 fish.*0\/16/); await expect(d.getByRole('alertdialog')).toHaveCount(0)
+  resumeState(); await d.unrouteAll({ behavior: 'wait' }); await contextD.close()
+  await expect(c.locator('.contracts li', { hasText: 'Catch 16 fish' }).locator('.chip')).toHaveText('PP')
+  // With no progress at stake, abandoning needs no confirmation.
   await a.getByRole('button', { name: 'Abandon', exact: true }).click()
   await expect(a.locator('.contracts li.active')).toHaveCount(0)
+  await expect(c.locator('.contracts li', { hasText: 'Catch 16 fish' }).locator('.chip')).toHaveCount(0)
+  // Orders still waiting when a device signs out are dropped: they never go out with the next team's session.
+  const sent: unknown[] = []; b.on('request', r => { if (r.url().endsWith('/api/team/game/order')) sent.push(r.postDataJSON()) })
+  let deliver = () => {}, delivered = () => {}; const orderHeld = new Promise<void>(r => { deliver = r }), landed = new Promise<void>(r => { delivered = r })
+  await b.route('**/api/team/game/order', async route => { const response = await route.fetch(); await orderHeld; await route.fulfill({ response }); delivered() }, { times: 1 })
+  await b.getByRole('button', { name: /^Ground B:.*Send boat 1 here/ }).click()
+  await b.getByRole('button', { name: /^Boat 2/ }).click(); await b.getByRole('button', { name: /^Ground A:.*Send boat 2 here/ }).click()
+  await expect(b.getByRole('button', { name: /^Boat 2/ })).toContainText('Travels to A at the next resolution · Sending…')
+  await b.getByRole('button', { name: 'Leave', exact: true }).click()
+  await b.getByLabel('Team code').fill('OWL7'); await b.getByRole('button', { name: 'Join', exact: true }).click()
+  await expect(b.locator('.team-heading')).toContainText('Older Owls')
+  // The held response arrives for the old session, then a poll completes for the new one.
+  deliver(); await landed; await b.waitForResponse(r => r.url().endsWith('/api/team/state'))
+  expect(sent).toEqual([{ boat: 1, ground: 1 }])
+  await expect(b.locator('.team-heading')).toContainText('Older Owls')
+  const boatsAfter = ((await (await b.request.get('/api/team/state')).json()) as TeamState).game.teams.map(t => [t.name, t.boats.map(boat => boat.order)])
+  expect(boatsAfter).toEqual([['Older Owls', [null, null]], ['Photon Pigeons', [1, null]]])
   await a.getByRole('link', { name: 'Questions', exact: true }).click(); await expect(a.getByRole('heading', { level: 1 })).toHaveText(bank.physics['11–13'][1].prompt)
   await a.setViewportSize({ width: 390, height: 844 }); await a.screenshot({ path: testInfo.outputPath('questions-mobile.png'), fullPage: true })
   expect(await a.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
@@ -255,4 +285,24 @@ test('Czech UI and grading share progress without changing drafts or attempts', 
   await expect(page.getByRole('heading', { name: 'Týmy', exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Přidat tým' })).toBeVisible()
   await otherContext.close()
+})
+
+test('the admin dashboard and its reset stay reachable when the roster cannot load', async ({ page }) => {
+  // As when game catch-up fails on the server: past the admin check, the roster read answers 500.
+  const failure = 'The server could not complete this request. Please try again.'
+  await page.route('**/api/admin/teams', async route => {
+    if (route.request().method() !== 'GET') return route.continue()
+    const response = await route.fetch()
+    await route.fulfill(response.status() === 401 ? { response } : { status: 500, json: { error: failure } })
+  })
+  await page.goto('/admin'); await page.getByLabel('Admin password').fill('browser-test-password'); await page.getByRole('button', { name: 'Sign in', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Teams', exact: true })).toBeVisible()
+  await expect(page.getByRole('alert')).toHaveText(failure)
+  await expect(page.getByText('No teams yet.')).toHaveCount(0)
+  // A reload (or another device) still opens the dashboard rather than the sign-in form.
+  await page.reload()
+  await page.getByRole('button', { name: 'Reset competition…' }).click(); await page.getByLabel('Type RESET to confirm.').fill('RESET')
+  await page.getByRole('button', { name: 'Confirm reset', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Start game', exact: true })).toBeVisible()
+  await expect(page.getByLabel('Admin password')).toHaveCount(0)
 })

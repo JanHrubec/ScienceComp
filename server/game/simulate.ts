@@ -263,11 +263,15 @@ export function setup(args: string[]) {
     if (arg === '--history') { history = args[++i]; if (history === undefined) throw new Error('--history needs a match history file.') }
     else if (/^\d+$/.test(arg)) runs = Number(arg)
     else {
-      const [key, value] = arg.split('=')
-      if (!(key! in config) || typeof config[key as keyof CommonsConfig] !== 'number' || !Number.isFinite(Number(value))) throw new Error(`Unknown numeric setting: ${arg}`)
-      Object.assign(config, { [key!]: Number(value) })
+      const [key = '', ...values] = arg.split('='), value = values.join('=')
+      if (!Object.hasOwn(config, key) || typeof config[key as keyof CommonsConfig] !== 'number') throw new Error(`Unknown numeric setting: ${arg}`)
+      // Number('') is 0, so an empty value would quietly zero the setting.
+      if (values.length !== 1 || !value.trim() || !Number.isFinite(Number(value))) throw new Error(`${arg}: give ${key} a single number, as in ${key}=${commonsConfig[key as keyof CommonsConfig]}.`)
+      Object.assign(config, { [key]: Number(value) })
     }
   }
+  // Every match needs at least one resolution: none leaves no standings to compare, and 0 seconds never ends.
+  if (!(config.resolutionSeconds > 0 && config.resolutionSeconds <= DURATION_SECONDS)) throw new Error(`resolutionSeconds must be more than 0 and at most ${DURATION_SECONDS} (the match length), so a match has at least one resolution.`)
   const calibrated = history === undefined ? null : calibrate(JSON.parse(readFileSync(history, 'utf8')) as MatchHistory, config)
   // The rehearsal's team count joins the field sizes. A lone team still calibrates
   // income and attention, but one team is no field to evaluate.

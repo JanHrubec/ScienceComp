@@ -178,6 +178,12 @@ test('the simulation applies every override to the calibration, in any order, an
     assert([...Object.values(one.using.incomes), ...one.using.attention].every(Number.isFinite))
     assert.throws(() => setup(['--history']), /needs a match history/)
     assert.throws(() => setup(['speed=3']), /Unknown numeric setting/)
+    // An empty value is not 0, and a malformed one is not its first number.
+    for (const arg of ['fishingCost=', 'fishingCost= ', 'fishingCost=5=9', 'fishingCost', 'fishingCost=five']) assert.throws(() => setup([arg]), /give fishingCost a single number/, arg)
+    // A match needs a resolution: 4000 s leaves none, and 0 s would never end.
+    for (const seconds of [4000, 0, -180]) assert.throws(() => setup([`resolutionSeconds=${seconds}`]), /at least one resolution/)
+    const single = setup(['resolutionSeconds=3600']).config
+    assert(evaluate(single, 1, [3]).every(r => Number.isFinite(r.convergence.mixed.leaderHolds.mean)))
   } finally { rmSync(dir, { recursive: true, force: true }) }
   // Called directly with a single team, experiments that need a field are skipped rather than NaN.
   const [alone] = evaluate(commonsConfig, 2, [1])
@@ -212,6 +218,23 @@ test('fixed-strategy bots break ties between equal grounds evenly', () => {
     }
     assert(chosen.every(count => Math.abs(count / seeds - 0.25) < 0.03), `${strategy}: ${chosen.join(' ')}`)
   }
+})
+
+test('follow bots pick evenly among rivals tied for the lead, then keep to the one they follow', () => {
+  // Rivals b, c and d share the lead, fishing grounds 1, 2 and 3; team a follows from harbour.
+  const scores = new Map([['a', 0], ['b', 4], ['c', 4], ['d', 4]]), bot = { strategy: 'follow', contracts: 'none', income: 5, attention: 1 } as const
+  const follow = (seed: number, own: Partial<TeamPlay['boats'][number]> = {}) => {
+    const state = match([team('a', 0, { boats: [{ ground: null, order: null, ...own }, { ground: null, order: null }] }), ...['b', 'c', 'd'].map((id, i) => team(id, 0, { boats: [at(i + 1), at(i + 1)] }))], [6, 6, 6, 6])
+    decide({ state, me: state.teams[0]!, config, scores, left: 20, random: rng(seed) }, bot)
+    return state.teams[0]!.boats[0]!.order!
+  }
+  const chosen = [0, 0, 0, 0], seeds = 6000
+  for (let seed = 0; seed < seeds; seed++) chosen[follow(seed)]!++
+  assert(chosen[0] === 0 && chosen.slice(1).every(count => Math.abs(count / seeds - 1 / 3) < 0.03), chosen.join(' '))
+  // A boat already at a tied leader's ground stays there, and a sole leader is always followed.
+  for (let seed = 0; seed < 200; seed++) assert.equal(follow(seed, at(3)), 3)
+  scores.set('c', 5)
+  for (let seed = 0; seed < 200; seed++) assert.equal(follow(seed, at(3)), 2)
 })
 
 test('bots forecast with the same catch split and contract eligibility as resolution', () => {

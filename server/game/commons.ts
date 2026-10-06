@@ -7,18 +7,14 @@ import { commonsConfig as config } from './config.js'
 import { BOATS_PER_TEAM, availableContracts, contractBonus, groundName, growth, newGrounds, resolve, type MatchState } from './rules.js'
 
 export const orderSchema = z.object({ boat: z.number().int().min(1).max(BOATS_PER_TEAM), ground: z.number().int().min(0).nullable() }).strict()
-// `current` is the contract the device last saw, so a teammate's choice is never silently replaced.
-export const contractSchema = z.object({ contract: z.string().min(1).max(60).nullable(), current: z.string().min(1).max(60).nullable() }).strict()
+// `current` is the contract the device last saw and `taken` which taking of it, so a teammate's
+// choice is never silently replaced, not even the same contract abandoned and taken again.
+export const contractSchema = z.object({ contract: z.string().min(1).max(60).nullable(), current: z.string().min(1).max(60).nullable(), taken: z.number().int().min(0).optional() }).strict()
 export const totalResolutions = () => Math.floor(DURATION_SECONDS / config.resolutionSeconds)
-interface TeamRow { id: string; research: number; fish: number; bonus: number; contract: string | null; progress: number; visited: string; completed: string }
+interface TeamRow { id: string; research: number; fish: number; bonus: number; contract: string | null; progress: number; visited: string; completed: string; taken: number }
 const legacyTables = ['grid_cells', 'grid_scores', 'grid_positions']
 
 export function initializeGame(db: DatabaseSync, now = Date.now()) {
-  const legacy = db.prepare(`SELECT name FROM sqlite_master WHERE type = 'table' AND name IN (${legacyTables.map(() => '?').join(', ')})`).all(...legacyTables).map(row => String(row.name))
-  const { startedAt } = competitionState(db, now)
-  if (legacy.length && startedAt !== null) endLegacyRound(db, startedAt, legacy.includes('grid_scores'), now)
-  // Between rounds, the diamond prototype's tables and any snapshot of its scores are obsolete.
-  else if (legacy.length) { dropLegacyTables(db); db.prepare("DELETE FROM config WHERE key = 'standings_snapshot'").run() }
   db.exec(`
     CREATE TABLE IF NOT EXISTS commons_grounds (
       id INTEGER PRIMARY KEY, biomass INTEGER NOT NULL CHECK(biomass >= 0), maximum INTEGER NOT NULL,
@@ -27,7 +23,8 @@ export function initializeGame(db: DatabaseSync, now = Date.now()) {
     CREATE TABLE IF NOT EXISTS commons_teams (
       team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE,
       fish INTEGER NOT NULL DEFAULT 0, bonus INTEGER NOT NULL DEFAULT 0,
-      contract TEXT, progress INTEGER NOT NULL DEFAULT 0, visited TEXT NOT NULL DEFAULT '[]', completed TEXT NOT NULL DEFAULT '[]'
+      contract TEXT, progress INTEGER NOT NULL DEFAULT 0, visited TEXT NOT NULL DEFAULT '[]', completed TEXT NOT NULL DEFAULT '[]',
+      taken INTEGER NOT NULL DEFAULT 0
     );
     CREATE TABLE IF NOT EXISTS commons_boats (
       team_id TEXT NOT NULL REFERENCES teams(id) ON DELETE CASCADE, boat INTEGER NOT NULL,
@@ -37,19 +34,28 @@ export function initializeGame(db: DatabaseSync, now = Date.now()) {
     INSERT OR IGNORE INTO commons_teams (team_id) SELECT id FROM teams;
   `)
   for (let boat = 1; boat <= BOATS_PER_TEAM; boat++) db.prepare('INSERT OR IGNORE INTO commons_boats (team_id, boat) SELECT id, ? FROM teams').run(boat)
+  // Commons databases from before takings were numbered; their active contracts count as taking 0.
+  if (!db.prepare("SELECT 1 FROM pragma_table_info('commons_teams') WHERE name = 'taken'").get()) db.exec('ALTER TABLE commons_teams ADD COLUMN taken INTEGER NOT NULL DEFAULT 0')
+  const legacy = db.prepare(`SELECT name FROM sqlite_master WHERE type = 'table' AND name IN (${legacyTables.map(() => '?').join(', ')})`).all(...legacyTables).map(row => String(row.name))
+  const { startedAt } = competitionState(db, now)
+  if (legacy.length && startedAt !== null) endLegacyRound(db, startedAt, legacy.includes('grid_scores'), now)
+  // Between rounds, the diamond prototype's tables and any snapshot of its scores are obsolete.
+  else if (legacy.length) { dropLegacyTables(db); db.prepare("DELETE FROM config WHERE key = 'standings_snapshot'").run() }
 }
 const dropLegacyTables = (db: DatabaseSync) => { for (const table of legacyTables) db.exec(`DROP TABLE IF EXISTS ${table}`) }
 interface LegacyStandings { frozenAt: number; teams: { id: string; name: string; color: string; score?: number; diamonds?: number }[] }
 // A diamond round that started but was not reset must neither run on under the
 // longer Commons duration nor lose its results. It ends now, gets no grounds, and
 // keeps its grid_* tables and standings (diamonds as score) until the next reset.
-// Repeating this is harmless, so the reminder is logged on every start until then.
+// Admin reads scores from commons_teams, so the final diamonds are counted there as
+// fish. Repeating this is harmless, so the reminder is logged on every start until then.
 function endLegacyRound(db: DatabaseSync, startedAt: number, scores: boolean, now: number) {
   db.prepare("UPDATE config SET value = ? WHERE key = 'started_at'").run(String(Math.min(startedAt, now - DURATION_SECONDS * 1000)))
   const final = scores ? db.prepare('SELECT t.id, t.name, t.color, s.diamonds FROM teams t JOIN grid_scores s ON s.team_id = t.id ORDER BY s.diamonds DESC, t.name COLLATE NOCASE, t.id').all() as unknown as LegacyStandings['teams'] : []
   const saved = db.prepare("SELECT value FROM config WHERE key = 'standings_snapshot'").get()
   const standings: LegacyStandings | null = saved ? JSON.parse(String(saved.value)) : scores ? { frozenAt: now, teams: final } : null
   if (standings) db.prepare("INSERT OR REPLACE INTO config (key, value) VALUES ('standings_snapshot', ?)").run(JSON.stringify({ frozenAt: standings.frozenAt, teams: standings.teams.map(({ diamonds, ...team }) => ({ ...team, score: team.score ?? diamonds ?? 0 })) }))
+  if (scores) db.exec('UPDATE commons_teams SET fish = COALESCE((SELECT s.diamonds FROM grid_scores s WHERE s.team_id = commons_teams.team_id), 0), bonus = 0')
   console.warn(`The database holds a diamond-prototype round that was never reset. It has been ended instead of continuing as The Commons, and its results stay in the grid_* tables until you reset the competition in admin, which you must do before the next round.${final.length ? ` Final diamonds: ${final.map(t => `${t.name} ${t.diamonds}`).join(', ')}.` : ''}`)
 }
 const groundCount = (db: DatabaseSync) => Number(db.prepare('SELECT COUNT(*) AS n FROM commons_grounds').get()!.n)
@@ -136,14 +142,14 @@ export function setOrder(db: DatabaseSync, teamId: string, input: z.infer<typeof
   db.prepare('UPDATE commons_boats SET target = ? WHERE team_id = ? AND boat = ?').run(input.ground, teamId, input.boat)
 }
 export function setContract(db: DatabaseSync, teamId: string, input: z.infer<typeof contractSchema>) {
-  const row = db.prepare('SELECT contract, completed FROM commons_teams WHERE team_id = ?').get(teamId) as { contract: string | null; completed: string }
-  if (row.contract !== input.current) throw new ApiError(409, 'A teammate has changed your contract. Check it again.')
+  const row = db.prepare('SELECT contract, taken, completed FROM commons_teams WHERE team_id = ?').get(teamId) as { contract: string | null; taken: number; completed: string }
+  if (row.contract !== input.current || (row.contract !== null && row.taken !== input.taken)) throw new ApiError(409, 'A teammate has changed your contract. Check it again.')
   if (input.contract !== null) {
     if (!availableContracts(config, groundCount(db)).some(c => c.id === input.contract)) throw new ApiError(400, 'That contract is not available.')
     if ((JSON.parse(row.completed) as string[]).includes(input.contract)) throw new ApiError(400, 'Your team has already completed that contract.')
   }
-  // Taking a new contract or abandoning one always starts progress from zero.
-  if (input.contract !== row.contract) db.prepare("UPDATE commons_teams SET contract = ?, progress = 0, visited = '[]' WHERE team_id = ?").run(input.contract, teamId)
+  // Taking a new contract or abandoning one always starts progress from zero. Each taking gets the next number.
+  if (input.contract !== row.contract) db.prepare("UPDATE commons_teams SET contract = ?, progress = 0, visited = '[]', taken = taken + ? WHERE team_id = ?").run(input.contract, input.contract === null ? 0 : 1, teamId)
 }
 
 export function gameState(db: DatabaseSync, teamId: string, startedAt: number | null): GameState {
@@ -160,7 +166,7 @@ export function gameState(db: DatabaseSync, teamId: string, startedAt: number | 
     grounds: grounds.map(g => ({ ...g, name: groundName(g.id), growth: growth(g.biomass, g.maximum, config.growthCap) })),
     teams: teams.map(t => ({ ...t, boats: boats.filter(b => b.team_id === t.id).map(b => ({ ground: b.ground, order: b.target })) })),
     contracts: availableContracts(config, grounds.length).map(c => ({ ...c, bonus: contractBonus(c, config) })),
-    own: { fish: own.fish, bonus: own.bonus, contract: own.contract === null ? null : { id: own.contract, progress: own.progress }, completed: JSON.parse(own.completed) },
+    own: { fish: own.fish, bonus: own.bonus, contract: own.contract === null ? null : { id: own.contract, progress: own.progress, taken: own.taken }, completed: JSON.parse(own.completed) },
     // Only this team's boat results and payments. Per-ground catches are not private:
     // they mostly follow from the public stock, and with public boat positions they let
     // a determined team estimate others' catches and scores even during the freeze.

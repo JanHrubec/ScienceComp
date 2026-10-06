@@ -22,7 +22,8 @@ export interface GameState {
   // though stock and boats let a determined team estimate them.
   teams: { id: string; name: string; color: string; contract: string | null; boats: BoatOrder[] }[]
   contracts: (ContractDefinition & { bonus: number })[]
-  own: { fish: number; bonus: number; contract: { id: string; progress: number } | null; completed: string[] }
+  // `taken` numbers the team's takings of contracts, so the same contract taken again is told apart.
+  own: { fish: number; bonus: number; contract: { id: string; progress: number; taken: number } | null; completed: string[] }
   last: {
     number: number
     grounds: { id: number; before: number; caught: number; growth: number; after: number }[]

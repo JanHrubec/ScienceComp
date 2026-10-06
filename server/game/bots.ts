@@ -82,10 +82,15 @@ function fixed(v: View, strategy: Exclude<Strategy, 'planner'>, boat: number): n
     return own.order !== null && ordered(v, boat, own.order) <= ordered(v, boat, target) + 1 ? own.order : target
   }
   if (strategy === 'follow') {
-    // Fish where the current leader is fishing.
-    const leader = v.state.teams.filter(t => t.id !== v.me.id).sort((a, b) => v.scores.get(b.id)! - v.scores.get(a.id)!)[0]
-    const spots = leader && v.scores.get(leader.id)! > 0 ? leader.boats.filter(b => b.order !== null && b.order === b.ground).map(b => b.order!) : []
-    if (spots.length) return spots[Math.min(boat, spots.length - 1)]!
+    // Fish where the current leader is fishing. Of rivals tied for the lead, keep to one this
+    // boat already follows, else pick one at random: the first would pile every follower onto the
+    // lowest index, and a fresh pick at every look would keep paying for travel.
+    const spot = (t: TeamPlay) => { const spots = t.boats.filter(b => b.order !== null && b.order === b.ground).map(b => b.order!); return spots[Math.min(boat, spots.length - 1)] }
+    const rivals = v.state.teams.filter(t => t.id !== v.me.id), top = Math.max(0, ...rivals.map(t => v.scores.get(t.id)!))
+    const leaders = top > 0 ? rivals.filter(t => v.scores.get(t.id) === top) : []
+    const leader = leaders.find(t => own.order !== null && spot(t) === own.order) ?? (leaders.length > 1 ? leaders[Math.floor(v.random() * leaders.length)] : leaders[0])
+    const target = leader && spot(leader)
+    if (target !== undefined) return target
   }
   // Greedy: the most fish per boat right now, ignoring travel time and regrowth.
   const { scores, best } = rank(v, g => v.state.grounds[g]!.biomass / (ordered(v, boat, g) + 1) + v.random() * 0.01)
