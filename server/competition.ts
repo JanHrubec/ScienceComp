@@ -2,7 +2,7 @@ import type { DatabaseSync } from 'node:sqlite'
 import { type CompetitionState } from '../shared/domain.js'
 import { ApiError } from './db.js'
 import { subjectBooklets } from './booklets.js'
-export const DURATION_SECONDS = 45 * 60
+export const DURATION_SECONDS = 60 * 60
 
 export function competitionState(db: DatabaseSync, now = Date.now()): CompetitionState {
   const settings = Object.fromEntries(db.prepare('SELECT key, value FROM config').all().map(row => [String(row.key), String(row.value)]))

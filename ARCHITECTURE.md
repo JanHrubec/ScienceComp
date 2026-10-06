@@ -1,6 +1,6 @@
 # Architecture
 
-One Vue client and one Express process share TypeScript domain types. SQLite is the authority for every score, attempt, progress counter, session and grid position. The frontend uses a small Vue reactive store rather than Pinia because only one team snapshot is shared. It does not perform grading or persist authoritative game data locally.
+One Vue client and one Express process share TypeScript domain types. SQLite is the authority for every score, attempt, progress counter, session and game order. The frontend uses a small Vue reactive store rather than Pinia because only one team snapshot is shared. It does not perform grading or persist authoritative game data locally.
 
 ## Main files
 
@@ -9,21 +9,24 @@ One Vue client and one Express process share TypeScript domain types. SQLite is 
 | `shared/domain.ts` | Public Team, QuestionProgress, GameState and TeamState types |
 | `server/index.ts` | Environment configuration, question loading, server startup |
 | `server/db.ts` | SQLite tables, transaction helper, API error |
-| `server/competition.ts` | Shared start time, 45-minute duration and server-side play gate |
+| `server/competition.ts` | Shared start time, 60-minute duration and server-side play gate |
 | `server/booklets.ts` | Subject booklet URLs; empty URL hides the link |
 | `shared/scoring.ts` | Retry tiers used for UI previews and server-side awards |
 | `src/competition.ts` | Shared server-synchronised countdown, independent of the device clock |
 | `server/questions.ts` | Strict question schema, loading, private grading, public projection |
 | `server/app.ts` | Authentication, team/admin API, atomic question actions, static hosting |
-| `server/game/grid.ts` | Replaceable grid state, stock setup, movement and mining rules |
+| `server/game/rules.ts` | The Commons: pure, deterministic resolution rules (no database or UI) |
+| `server/game/config.ts` | Every balancing value and the contract list |
+| `server/game/commons.ts` | Game tables, lazy resolution scheduling, orders, contracts, history and public projection |
+| `server/game/simulate.ts` | `npm run simulate`: bot matches that check the balance risks |
 | `src/i18n.ts` | English/Czech UI strings and browser-local language preference |
 | `src/components/LanguageSwitcher.vue` | Compact shared language selector |
 | `src/state.ts` | Shared snapshot and stale-poll protection |
 | `src/views/ParticipantView.vue` | Persistent header, Questions/Game/Standings tabs, polling |
 | `src/views/QuestionsView.vue` | Subject switching, answers, feedback, skips |
-| `src/components/GridGame.vue` | Replaceable grid and mining UI |
+| `src/components/CommonsGame.vue` | The Commons screen: grounds, boats, contracts, leaderboard, last resolution |
 | `src/views/StandingsView.vue` | Third tab with all team scores and freeze indicator |
-| `src/components/DiamondScores.vue` | Diamond standings table |
+| `src/components/TeamScores.vue` | Score table for Standings and the in-game leaderboard |
 | `server/game/standings.ts` | Live rankings and the persisted five-minute snapshot |
 | `src/views/AdminView.vue` | Team management, progress table, reset confirmation |
 | `questions/*.json` | Editable content; see `questions/README.md` |
@@ -35,12 +38,13 @@ Tables are created on startup with foreign keys and WAL enabled.
 - **teams**: UUID, display name, age category, unique case-insensitive code, Research balance (may be negative), net question score including penalties, global skips used, identifying colour.
 - **progress**: one row per team/subject, completed count and current-question failed-attempt count. Completed includes skipped questions. The count indexes the team's age-specific track.
 - **sessions**: SHA-256 hash of a cryptographically random token, team ID (null for admin), role, seven-day expiry. Expired rows are cleaned during login.
-- **grid_positions**: one row per team, x and y.
-- **grid_cells**: x/y primary key and remaining diamond stock, initially 3 per square.
-- **grid_scores**: one row per team with its mined diamond total, separate from Research.
+- **commons_grounds**: one row per ground (index ID, current and maximum stock, JSON list of teams that fished it in the previous resolution). Created when the match starts.
+- **commons_boats**: two rows per team: current ground (null = harbour) and standing order (null = idle).
+- **commons_teams**: one row per team: fish caught, contract bonus, active contract with progress and visited grounds, JSON list of completed contracts. Score is fish + bonus, separate from Research.
+- **commons_resolutions**: one row per resolution with its scheduled time and a JSON record of the state before and the full outcome, for replay.
 - **config**: persistent start timestamp (`started_at`), last reset timestamp and optional JSON `standings_snapshot`. The end time is start + `DURATION_SECONDS`. Operational secrets remain in the environment.
 
-Deleting teams cascades to progress, sessions, positions and diamond scores. Shared stock is not restored on deletion. Game initialization inserts only missing cells/scores, preserving an existing round. Competition reset refills stock and zeroes diamond scores. Admin reset preserves the roster and sessions and removes the start timestamp, returning teams to waiting. A targeted migration removes the old non-negative Research constraint while preserving all related rows. The SQLite file, question files and environment configuration together define a deployment. No external database service or seed step is necessary.
+Deleting teams cascades to progress, sessions, boats and game scores. Grounds are not restored on deletion. Game initialization inserts only missing team/boat rows, preserving an existing match; it drops the diamond prototype's `grid_*` tables and any snapshot of their scores. Start creates the grounds from the roster at that moment. Competition reset removes grounds and history and clears boats, contracts and scores. Admin reset preserves the roster and sessions and removes the start timestamp, returning teams to waiting. A targeted migration removes the old non-negative Research constraint while preserving all related rows. The SQLite file, question files and environment configuration together define a deployment. No external database service or seed step is necessary.
 
 ## Sessions and boundaries
 
@@ -62,11 +66,12 @@ All endpoints below are prefixed by `/api`. POST/PUT/DELETE requests send JSON a
 | `GET /team/state` | Team, all subject progress/current public questions, shared game and live/frozen standings |
 | `POST /team/answer` | `{subject, questionId, answer}` → correctness, reward, fresh snapshot |
 | `POST /team/skip` | `{subject, questionId}` → skip result and fresh snapshot |
-| `POST /team/game/move` | `{x, y, fromX, fromY}` → fresh snapshot |
-| `POST /team/game/mine` | `{x, y}` (expected current square) → remove one shared diamond and credit the team; fresh snapshot |
+| `POST /team/game/order` | `{boat, ground}` (boat 1 or 2; ground index or null) → set that boat's standing order (null = idle); fresh snapshot |
+| `POST /team/game/contract` | `{contract, current}` (contract IDs or null) → take or abandon a contract; `current` must match the team's active contract; fresh snapshot |
 | `POST /admin/login` | `{password}` → admin cookie |
 | `POST /admin/logout` | Revoke admin session |
-| `GET /admin/teams` | Roster, codes, balances, net question scores, diamonds, progress |
+| `GET /admin/teams` | Roster, codes, balances, net question scores, game score (fish + bonus), progress |
+| `GET /admin/history` | Game configuration and every resolution record (JSON download) |
 | `POST /admin/teams` | `{name, age, code?}` → generated team ID |
 | `PUT /admin/teams/:id` | Update name/age/code; missing code generates a new one |
 | `DELETE /admin/teams/:id` | Remove a team and related data |
@@ -84,24 +89,26 @@ The browser chooses which public prompt/choices to display; it never grades answ
 
 The server uses short synchronous `BEGIN IMMEDIATE` SQLite transactions, with no asynchronous work inside them. Every play transaction first checks that the competition is running. An answer action reads current progress, verifies the supplied question ID, grades privately, applies the retry-dependent reward/penalty and increments the subject only if correct. Incorrect third-and-later multiple-choice submissions also deduct 5. Research and net score may become negative; game spending still requires sufficient Research. Attempts and awards commit together. Two different-subject submissions preserve both increments. Two correct submissions for the same displayed question produce one success and one 409; the browser reloads its snapshot. Attempts and the five-skip allowance are shared across devices. `TEAM_SKIP_LIMIT` in `shared/domain.ts` is used by the server, fresh database schema and UI. There is no new migration for older three-skip databases.
 
-All question, skip and game actions are rejected before start and at/after the 45-minute deadline. Team snapshots withhold question content outside play. Movement validates the team's expected starting coordinates and orthogonal destination, then debits Research with `UPDATE … WHERE research >= 1` and updates position in the same transaction. Failed actions roll back. Mining checks the expected current square, decrements its stock with `UPDATE … WHERE stock > 0`, and increments the team’s diamond score in the same transaction. It costs no Research. Empty squares reject the action without awarding points; simultaneous requests cannot duplicate the last diamond. No client-supplied price, stock or score is trusted. Snapshot reads run synchronously on the same connection.
+All question, skip and game actions are rejected before start and at/after the 60-minute deadline. Team snapshots withhold question content outside play. Clients submit only boat orders and contract choices; orders are idempotent (last write wins), and a contract change must name the contract the device last saw, so a teammate's choice is never replaced unseen. No client-supplied price, stock or score is trusted.
 
-Participant state and public competition state poll every 1.5 seconds; admin teams every 2 seconds. Standings are included in the team snapshot and therefore use the existing poll. The countdown advances locally using monotonic elapsed time since the last server timestamp, so device wall-clock differences do not affect it. Newer server timestamps replace older ones. Start/expiry/reset automatically switch participants between waiting, play and finished screens; hidden play views are unmounted. The finished screen only says “Competition over.”; diamond totals remain visible in admin for the organizer to announce winners. A client polls again only after the prior poll finishes. Successful actions replace the snapshot immediately. A generation counter prevents an older pending poll from overwriting a newer action response or logout. Errors leave the screen usable, show connection feedback, and retry automatically. Requests time out after eight seconds. A timed-out mutation may have committed; clients refresh before retrying, and question IDs/expected coordinates guard against ordinary duplicate submissions. Requests are not queued offline.
+Game resolutions are scheduled at start + n × interval and run lazily: every competition transaction, team snapshot and admin read first runs each resolution that has fallen due, in order, inside its `BEGIN IMMEDIATE` transaction. A resolution therefore sees exactly the orders and Research committed before it ran, and an order or answer arriving after a scheduled time applies to the next one. Each resolution number is inserted once, so repeated or concurrent catch-up is harmless; outcomes are identical whether or not anyone was connected at the scheduled moment. The resolution itself is the pure `resolve()` in `rules.ts`; Research is debited with the payments it reports. Snapshot reads run synchronously on the same connection.
+
+Participant state and public competition state poll every 1.5 seconds; admin teams every 2 seconds. Standings are included in the team snapshot and therefore use the existing poll. The countdown advances locally using monotonic elapsed time since the last server timestamp, so device wall-clock differences do not affect it. Newer server timestamps replace older ones. Start/expiry/reset automatically switch participants between waiting, play and finished screens; hidden play views are unmounted. The finished screen only says “Competition over.”; scores remain visible in admin for the organizer to announce winners. A client polls again only after the prior poll finishes. Successful actions replace the snapshot immediately. A generation counter prevents an older pending poll from overwriting a newer action response or logout. Errors leave the screen usable, show connection feedback, and retry automatically. Requests time out after eight seconds. A timed-out mutation may have committed; clients refresh before retrying, and question IDs guard against ordinary duplicate submissions; game orders are idempotent. Requests are not queued offline.
 
 The participant router keeps play views mounted in KeepAlive. Subject selection and draft inputs survive Game switching; question advancement clears obsolete inputs. Sessions are cookies, not localStorage secrets. Polling is intentionally sufficient for a classroom event; it can later be replaced with SSE/WebSockets around the same state/action boundary.
 
 ## Standings freeze
 
-With five minutes left, public standings are saved in `config.standings_snapshot`. Every competition mutation checks the cutoff within its transaction **before** changing scores or the roster. Reads also capture a due snapshot. This preserves the cutoff scores even if the first request after the cutoff is a mining action; no background scheduler or score history is needed. The snapshot includes names, colours and scores, and remains stable across reconnects, restarts and later admin roster edits. Reset deletes it.
+With five minutes left, public standings are saved in `config.standings_snapshot`. Every competition mutation checks the cutoff within its transaction **before** changing scores or the roster. Reads also capture a due snapshot. Catch-up runs resolutions scheduled up to the cutoff, takes the snapshot, then runs later ones, so the snapshot holds exactly the scores at the cutoff even if the first request comes minutes later; no background scheduler is needed. The snapshot includes names, colours and scores, and remains stable across reconnects, restarts and later admin roster edits. Reset deletes it.
 
-Participant game data includes positions and only the authenticated team's live diamond total. Opponents' totals are available exclusively through live/frozen standings, so Game cannot expose an alternative live leaderboard after the freeze. Position ordering is alphabetical rather than score-based. Stock and movement remain shared as before. Admin always reads actual diamond totals, and the end screen still only says “Competition over.”
+Participant game data includes every team's boats, orders and active contract, but only the authenticated team's live score, contract progress and boat results. The last-resolution summary shows other teams only as per-ground totals. Opponents' scores are available exclusively through live/frozen standings, which also feed the in-game leaderboard, so Game cannot expose an alternative live leaderboard after the freeze (visible orders let a determined player estimate catches). Team ordering is alphabetical rather than score-based. Admin always reads actual scores, and the end screen still only says “Competition over.”
 
-## Replacing the grid with fishing
+## The Commons
 
-Replace `server/game/grid.ts` and `src/components/GridGame.vue`, then change the game route/component import in `src/main.ts`, the `GameState` type and the game endpoints in `server/app.ts`. Add new game tables and update team creation/reset/deletion handling. The three grid-specific tables can be migrated away; update `server/game/standings.ts` for the new scoring model and replace the diamond-specific Standings/admin UI along with the grid. The few explicit hooks are intentionally visible rather than hidden in a plugin framework.
+The game is split so the rules can be tested and simulated without a server. `rules.ts` holds pure functions over a plain `MatchState` (grounds, and per team its Research, two boats, score and contract): `resolve()` applies one resolution (move or pay, catch with equal splitting, contract progress, regrowth) and returns the new state and a report. `config.ts` holds every balancing value. `commons.ts` maps the state to SQLite, schedules resolutions, validates orders and contracts, records history and projects the public `GameState`. `simulate.ts` drives `resolve()` with bots. Rules never change with team count; only `groundCount` does. To change the game, adjust `config.ts` first and check it with `npm run simulate`; change `rules.ts` (and its tests) only for new rules.
 
-Keep team sessions, age tracks, question grading and Research earning intact. Future game actions should receive an authenticated team ID, validate against authoritative game state, and spend Research/update shared state in one transaction. The Game view already receives team state, Research balance and shared game state. Nothing in the question system grants ownership of grounds or quests, so public contracts and renewable shared populations can be modelled without changing quiz progression. The actual fishing rules are deliberately not implemented.
+Keep team sessions, age tracks, question grading and Research earning intact. Game actions receive an authenticated team ID and are validated against authoritative state in one transaction.
 
 ## Operational limits
 
-Designed for one small event and one server process. There is no question editor UI, detailed answer history, student identity or fishing simulation. The only leaderboard is the temporary diamond game. Question order is file-based, so freeze the bank while an event runs. Reset/age-change actions should be performed between rounds while students are not submitting answers. Larger deployments may need migrations, durable action IDs, push synchronisation, stronger admin identity and more formal audit logging.
+Designed for one small event and one server process. There is no question editor UI, detailed answer history or student identity. The only leaderboard is The Commons score. Question order is file-based, so freeze the bank while an event runs. Reset/age-change actions should be performed between rounds while students are not submitting answers. Larger deployments may need migrations, durable action IDs, push synchronisation, stronger admin identity and more formal audit logging.

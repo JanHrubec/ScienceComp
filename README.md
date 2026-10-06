@@ -1,6 +1,6 @@
 # Science competition
 
-Vue 3 + TypeScript + Vite, with an Express server and SQLite. Includes 300 questions in English and Czech, team access codes, admin controls, independent subject progress, Research, five team-wide skips and a shared 12×12 diamond-mining prototype. No individual student accounts or external services.
+Vue 3 + TypeScript + Vite, with an Express server and SQLite. Includes 300 questions in English and Czech, team access codes, admin controls, independent subject progress, Research, five team-wide skips and **The Commons**, a shared fishing game played with Research. No individual student accounts or external services.
 
 ## Run locally
 
@@ -43,24 +43,22 @@ For an internet deployment, terminate HTTPS at a reverse proxy and set secure co
 ## Competition rules
 
 - All five subject tracks are independent, ordered and selected by the team's age category.
-- The admin starts one shared **45-minute** competition. Until then, questions are withheld and all play actions are blocked. At zero, both questions and grid movement stop on the server. The timer appears on login, admin, Questions, Game and Standings screens and survives refreshes/restarts.
+- The admin starts one shared **60-minute** competition. Until then, questions are withheld and all play actions are blocked. At zero, both questions and game orders stop on the server. The timer appears on login, admin, Questions, Game and Standings screens and survives refreshes/restarts.
 - Multiple choice: correct on the first attempt earns **+10 Research**; the second attempt earns **0**. **Every valid submission from the third onward costs 5 Research**, whether correct or incorrect. Incorrect answers on the first two attempts cost nothing. Only a correct answer advances.
 - Text and numerical: correct on the first attempt earns the configured reward (default 10), the second earns half, and later attempts earn zero. Incorrect answers earn zero and never advance or reveal the answer. Malformed numerical input is rejected without counting an attempt.
 - Attempts are shared by the whole team. Penalties can take Research below zero; teams must earn their way back to at least 1 Research to move. Multiple-choice scoring is fixed; per-question `reward` configures only open answers.
 - Five skips per team across all subjects (`TEAM_SKIP_LIMIT` in `shared/domain.ts`). A skip advances without reward and cannot be reversed.
-- The admin sees Research (spendable balance) and Diamonds (game score). Net question score, subject progress and skip usage expand within each row.
-- Grid moves cost 1 Research, are orthogonal and allow overlapping teams. Each square starts with **3 diamonds**, shown as a number. **Mine 1 diamond** takes one from your current square and adds one to your team, for free. Stock is shared and does not regenerate during a round.
-- Most diamonds wins when the timer expires. The third tab, **Standings**, lists every team by diamonds. It freezes with **5 minutes remaining** (40 minutes into the 45-minute round), and stays frozen across refreshes, new logins and server restarts. Mining continues; your own Game counter and the admin diamond totals stay live. The end screen only says “Competition over.”; organizers announce winners using diamond totals in admin. Diamonds are points, not spendable Research. Both stock and scores survive server restarts.
-- Mining uses a transaction: competing teams cannot both collect the last diamond. It is blocked before start, after expiry, on an empty square, or if a teammate has moved the team since the request was prepared. No upgrades, cooldowns or other game mechanics are included.
+- The admin sees Research (spendable balance) and Score (game score). Net question score, subject progress and skip usage expand within each row.
+- The Game tab is **The Commons** (rules below). Highest score (fish caught plus contract bonuses) wins when the timer expires. The third tab, **Standings**, lists every team by score. It freezes with **5 minutes remaining** (55 minutes into the 60-minute round), and stays frozen across refreshes, new logins and server restarts. The game continues; your own score in Game and the admin totals stay live. The end screen only says “Competition over.”; organizers announce winners using the scores in admin. Score is points, not spendable Research. Grounds, boats, contracts and scores survive server restarts.
 - Other devices refresh shared state every 1.5 seconds. Switching tabs is immediate; form state is retained until the question advances. The browser never receives accepted answers.
 
-Admin can rename/delete teams and change codes. Existing sessions remain valid after code changes. Changing a team's age category clears that team's progress, Research, skips, position and diamond score after a UI confirmation (shared stock is not restored for a single-team edit). Deleting a team removes its sessions. **Reset competition** clears progress, attempts, Research, skips, positions and diamond scores, refills all squares, and returns the timer and all teams to waiting. It keeps the roster, codes and sessions. Start game cannot restart or extend a running/finished round; reset first. To remove the roster, delete teams explicitly.
+Admin can rename/delete teams and change codes. Existing sessions remain valid after code changes. Changing a team's age category clears that team's progress, Research, skips, score, boats and contract after a UI confirmation (shared grounds are not restored for a single-team edit). Deleting a team removes its sessions and boats. **Reset competition** clears progress, attempts, Research, skips, scores, boats, contracts, grounds and game history, and returns the timer and all teams to waiting. It keeps the roster, codes and sessions. Start game cannot restart or extend a running/finished round; reset first. To remove the roster, delete teams explicitly.
 
 ## Subject booklets
 
 Edit URLs in **`server/booklets.ts`**, then restart the server (rebuild for production). Physics, Biology, Chemistry and Computer Science use the supplied PDF links. ESS has an empty URL, so it has no Booklet button. Booklets open in a new tab. There are no booklet settings in admin.
 
-The 45-minute duration is `DURATION_SECONDS` in `server/competition.ts`. Set it between events; it is deliberately not an admin setting.
+The 60-minute duration is `DURATION_SECONDS` in `server/competition.ts`. Set it between events; it is deliberately not an admin setting.
 
 ## Edit questions
 
@@ -92,7 +90,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-API tests use temporary SQLite files and verify bilingual schema validation, private answer projection, English/Czech answer normalisation, decimal comma input, all retry tiers and penalties, negative balances, legacy database migration, global skips, concurrent same/different-subject answers, resource spending, concurrent mining/depletion, diamond persistence/reset, the standings freeze and live admin totals, age tracks, waiting/start/expiry enforcement, admin actions, session/timer persistence and a real server/database restart. Browser tests use an isolated in-memory server on port 3101, exercise separate browser contexts, language switching without draft/attempt loss, Czech text and numerical submissions, independent device preferences, and save desktop/mobile screenshots in `test-results/`. Run `npm run build` before browser tests so the production UI exists.
+API tests use temporary SQLite files and verify bilingual schema validation, private answer projection, English/Czech answer normalisation, decimal comma input, all retry tiers and penalties, negative balances, legacy database migration, global skips, concurrent same/different-subject answers, game orders, contracts, travel, Research payment, lazily caught-up and idempotent resolutions, game persistence/reset/history, the standings freeze interleaved with resolutions and live admin totals, the diamond-prototype upgrade, age tracks, waiting/start/expiry enforcement, admin actions, session/timer persistence and a real server/database restart. `tests/commons.test.ts` covers the pure game rules (regrowth, travel, payment order, splitting, contracts, determinism). Browser tests use an isolated in-memory server on port 3101 (with a test-only clock control to make resolutions fall due), exercise separate browser contexts, language switching without draft/attempt loss, Czech text and numerical submissions, independent device preferences, and save desktop/mobile screenshots in `test-results/`. Run `npm run build` before browser tests so the production UI exists.
 
 For a manual event rehearsal:
 
@@ -101,8 +99,8 @@ For a manual event rehearsal:
 3. Answer Physics on one device. Check Physics advances, other subjects do not, and Research appears on the second device.
 4. Switch subjects and return; check the next unanswered question is retained.
 5. Submit correct answers in different subjects on two devices at once; check both rewards/progress remain.
-6. Compare age-category questions. Move and mine in Game; observe the position, stock and diamond score from the other team's device.
-7. Stop and restart the server; reload both sessions and check balances, progress, positions, diamond scores and remaining stock.
+6. Compare age-category questions. In Game, send both boats to grounds and take a contract; check the other team's device shows the orders. After two resolutions (6 minutes), check catch, Research payment, ground stock and the last-resolution summary.
+7. Stop and restart the server; reload both sessions and check balances, progress, boats, orders, contracts, scores and ground stock.
 8. Switch English/Čeština while an answer is selected or typed. Check the draft remains, the question translates, a teammate’s language stays independent, and the preference survives reload.
 9. Check the Booklet link opens a separate tab and ESS has none. Check reset returns everyone to waiting, and test invalid-code/offline feedback before admitting students.
 
@@ -114,4 +112,28 @@ Existing SQLite databases migrate automatically to allow negative Research balan
 
 Reset also clears the frozen standings for the next round. The five-minute freeze interval is `STANDINGS_FREEZE_SECONDS` in `server/game/standings.ts`.
 
-The temporary mining constants and rules are in `server/game/grid.ts`. `DIAMONDS_PER_CELL` sets starting stock for new games and resets. Changing it does not refill an existing round.
+## The Commons
+
+Teams are rival fishing organisations sharing a set of fishing grounds. The game needs occasional attention, is deterministic, and rewards decisions rather than clicking speed or question volume.
+
+- **Grounds.** Teams + 2 grounds (A, B, C…), created when the admin starts the match. Each starts with 8 of a maximum 12 fish. No ownership or map.
+- **Boats.** Each team has two boats, starting in harbour. A boat's standing order is a ground or Idle, kept until changed. Any teammate's device can change it; every team's orders, boat positions and active contract are visible to everyone.
+- **Travel.** A boat ordered to a different ground from where it is (including leaving harbour) spends the next resolution travelling, then fishes from the following one. Travel and idling are free.
+- **Resolution** every 3 minutes, 20 per match, the last at the final whistle. Orders are locked at that moment. Each fishing boat pays **5 Research** (boat 1 first; a boat its team cannot pay for does not fish) and takes up to **2 fish**; a ground that cannot supply every boat is split equally, rounded down, with the remainder left in the water. Then contract progress updates and every ground regrows by `min(max(fish, 1), 12 − fish, 3)`: 1 when nearly empty, 3 in the middle, 0 when full. Each grounds card shows this expected growth.
+- **Contracts.** Six optional public contracts, each completable once per team for **+8**. A team has at most one active contract; abandoning it loses its progress. Contracts are either a catch counter (catch N fish, optionally only at a named ground, only where the ground started the resolution with at least X fish, and/or only where no other team fished in the previous resolution) or a variety counter (fish at N different grounds).
+- **Score** is fish caught plus contract bonuses. Unused Research is worth nothing.
+
+The Game screen shows the grounds with stock, expected growth and every boat present or heading there; your two boats (select one, then a ground or Idle); the countdown to the next resolution; contracts with who pursues them and your progress; a compact leaderboard (frozen with the Standings); and what happened to your boats and every ground at the last resolution.
+
+**Configuration.** Every balancing value is in `server/game/config.ts`: resolution interval, fishing cost, catch amount, maximum and starting stock, growth cap, ground-count formula, starting Research, contract bonus and the contract list. Edit between events and restart the server (rebuild for production). Ground count, stock and starting Research apply when the next match starts.
+
+**Simulation.** `npm run simulate` plays hundreds of matches with 3, 8 and 20 bot teams using the same rules and configuration, and reports the four balance risks: share of fishing teams at different Research incomes can afford, mean score and win share of fixed strategies (greedy, spread, conserve, follow the leader, never travel) with and without contracts, what contracts are worth, when the top three last changes, and whether uniform fields exhaust the grounds. Run it after changing `config.ts`. The bots are deliberately simple, so treat the numbers as a sanity check, not a prediction. With the defaults:
+
+- An average team (about one correct answer every two minutes) can pay for all its fishing; a weak team (one every five minutes) for about two thirds.
+- No fixed strategy wins at every size: conserving (fishing only healthy grounds, idling otherwise) leads at 3 and 8 teams, spreading out at 20. Greedy fishing is level at 3 teams but loses clearly at 8 and 20, where uniform greedy fields drive the grounds to collapse. Never-travel and follow-the-leader are weak.
+- Contracts add roughly 2–12 points for teams that pursue them (about one completion), more in large fields where the variety contract is easier.
+- The top three keep changing until late in the match (on average after resolution 12 of 20 with 3 teams, 18–19 with 8 or 20).
+
+**History.** Every resolution stores the full state before it (grounds, boats, orders, Research, contracts) and its outcome (catch, payments, regrowth, contract progress, scores), enough to replay the match. Admin can download it as JSON once a match has started (**Match history (JSON)**, or `GET /api/admin/history`).
+
+Updating from the diamond prototype removes its tables automatically; reset before the next event.
