@@ -153,10 +153,10 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal((await request('/team/skip', b.cookie, { subject: 'ess', questionId: afterSkips.progress.ess.question!.id })).status, 400)
     current = (await request<TeamState>('/team/state', a.cookie)).body
     assert.equal(current.team.research, 35)
-    // Two teams: four grounds at 8 of 12. Boats start in harbour, idle.
-    assert.deepEqual(current.game.grounds.map(g => [g.name, g.biomass, g.maximum, g.growth]), [['A', 8, 12, 3], ['B', 8, 12, 3], ['C', 8, 12, 3], ['D', 8, 12, 3]])
+    // Two teams: two grounds at 6 of 12. Boats start in harbour, idle.
+    assert.deepEqual(current.game.grounds.map(g => [g.name, g.biomass, g.maximum, g.growth]), [['A', 6, 12, 3], ['B', 6, 12, 3]])
     assert.deepEqual(current.game.teams.find(t => t.id === create.body.id)!.boats, [{ ground: null, order: null }, { ground: null, order: null }])
-    for (const bad of [{ boat: 3, ground: 0 }, { boat: 1, ground: 4 }, { boat: 1, ground: -1 }, { boat: 1, ground: 0, research: 99 }]) assert.equal((await request('/team/game/order', a.cookie, bad)).status, 400)
+    for (const bad of [{ boat: 3, ground: 0 }, { boat: 1, ground: 2 }, { boat: 1, ground: -1 }, { boat: 1, ground: 0, research: 99 }]) assert.equal((await request('/team/game/order', a.cookie, bad)).status, 400)
     assert.equal((await request('/team/game/order', a.cookie, { boat: 1, ground: 0 })).status, 200)
     assert.equal((await request('/team/game/order', b.cookie, { boat: 2, ground: 0 })).status, 200)
     assert.equal((await request('/team/game/order', c.cookie, { boat: 1, ground: 0 })).status, 200)
@@ -176,7 +176,7 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     const reads = await Promise.all([a, b, c, a, c].map(device => request<TeamState>('/team/state', device.cookie)))
     assert(reads.every(r => r.body.game.resolution.done === 1))
     assert.deepEqual(reads[0]!.body.game.last!.boats.map(r => r.action), ['travel', 'travel'])
-    assert.deepEqual(reads[0]!.body.game.grounds.map(g => g.biomass), [11, 11, 11, 11])
+    assert.deepEqual(reads[0]!.body.game.grounds.map(g => g.biomass), [9, 9])
     assert.equal(reads[0]!.body.team.research, 35)
     // Resolution 2: both boats fish at A and pay; the other team's boat cannot pay with negative Research.
     rewind(180_000)
@@ -185,7 +185,7 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal(fished.game.resolution.nextAt, startedAt - 360_000 + 3 * 180_000)
     assert.equal(fished.team.research, 25)
     assert.deepEqual(fished.game.last!.boats, [{ boat: 1, from: 0, order: 0, action: 'fish', paid: 5, caught: 2 }, { boat: 2, from: 0, order: 0, action: 'fish', paid: 5, caught: 2 }])
-    assert.deepEqual(fished.game.last!.grounds[0], { id: 0, before: 11, caught: 4, growth: 3, after: 10, boats: 2 })
+    assert.deepEqual(fished.game.last!.grounds[0], { id: 0, before: 9, caught: 4, growth: 3, after: 8, boats: 2 })
     assert.deepEqual(fished.game.own, { fish: 4, bonus: 0, contract: { id: 'ground-a', progress: 4 }, completed: [] })
     assert.deepEqual(fished.standings.teams.map(t => t.score), [4, 0])
     const rival = (await request<TeamState>('/team/state', c.cookie)).body
@@ -220,7 +220,7 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal(atEnd.game.resolution.done, 20)
     const history = (await request<{ resolutions: { number: number; before: { grounds: unknown[] }; report: { teams: { id: string; fish: number }[] } }[] }>('/admin/history', admin)).body
     assert.deepEqual(history.resolutions.map(r => r.number), Array.from({ length: 20 }, (_, i) => i + 1))
-    assert.equal(history.resolutions[1]!.before.grounds.length, 4)
+    assert.equal(history.resolutions[1]!.before.grounds.length, 2)
     assert.equal(history.resolutions.at(-1)!.report.teams.find(t => t.id === create.body.id)!.fish, atEnd.game.own.fish)
     assert.equal((await request('/admin/history', a.cookie)).status, 401)
     assert.equal((await request<TeamState>('/team/state', a.cookie)).body.team.research, atEnd.team.research)
@@ -433,7 +433,7 @@ test('standings freeze before the first post-cutoff action, persist across resta
     // frozen standings, resolution 19 only towards the live scores.
     const start = Date.now() - 57 * 60 * 1000 - 1000
     setStart(start)
-    const after = (await call('/team/game/order', a, { boat: 2, ground: 2 })).data as TeamState
+    const after = (await call('/team/game/order', a, { boat: 2, ground: 1 })).data as TeamState
     assert.equal(after.standings.frozenAt, start + 55 * 60 * 1000)
     assert.equal(after.game.resolution.done, 19)
     const history = (await call('/admin/history', admin)).data as { resolutions: { number: number; report: { teams: { id: string; fish: number; bonus: number }[] } }[] }
@@ -468,9 +468,9 @@ test('standings freeze before the first post-cutoff action, persist across resta
     assert.equal(reset.standings.teams.length, 1)
     assert.equal(reset.standings.teams[0].score, 0)
     await call('/admin/start', admin, {})
-    // One team now: three grounds.
-    assert.equal(((await call('/team/state', a)).data as TeamState).game.grounds.length, 3)
-    await call('/team/game/order', a, { boat: 1, ground: 2 })
+    // One team now: two grounds.
+    assert.equal(((await call('/team/state', a)).data as TeamState).game.grounds.length, 2)
+    await call('/team/game/order', a, { boat: 1, ground: 1 })
     // Without Research the boat arrives but cannot fish.
     setStart(Date.now() - 2 * 180_000 - 1000)
     assert.deepEqual(((await call('/team/state', a)).data as TeamState).game.last!.boats.map(r => r.action), ['unpaid', 'idle'])
@@ -499,8 +499,8 @@ test('a diamond-prototype database upgrades to The Commons without losing teams'
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM config WHERE key = 'standings_snapshot'").get()!.n, 0)
     assert.equal(db.prepare('SELECT COUNT(*) AS n FROM commons_boats WHERE team_id = ?').get('t')!.n, 2)
     // A match already running when the update was installed gets its grounds.
-    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM commons_grounds').get()!.n, 3)
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM commons_grounds').get()!.n, 2)
     db.close(); db = openDatabase(path); createApp(db, bank, 'test-password')
-    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM commons_grounds').get()!.n, 3)
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM commons_grounds').get()!.n, 2)
   } finally { db.close(); rmSync(dir, { recursive: true, force: true }) }
 })

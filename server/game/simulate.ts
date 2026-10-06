@@ -1,150 +1,158 @@
-// Balance check for The Commons: `npm run simulate`. Bots use only what players
-// see (grounds, every boat and order, active contracts, the leaderboard) and the
-// same pure rules and configuration as the server.
+// Balance check for The Commons: `npm run simulate -- [runs] [key=value…]`, for
+// example `npm run simulate -- 200 contractBonus=6 growthCap=2` to try numeric
+// overrides of config.ts. Bots use the same pure rules as the server.
+import { pathToFileURL } from 'node:url'
 import { commonsConfig } from './config.js'
-import { availableContracts, contractBonus, growth, groundIndex, newBoats, newGrounds, resolve, type CommonsConfig, type MatchState, type TeamPlay } from './rules.js'
+import { availableContracts, newBoats, newGrounds, resolve, type CommonsConfig, type MatchState } from './rules.js'
+import { contractModes, decide, strategies, type Bot, type ContractMode, type Strategy } from './bots.js'
 import { DURATION_SECONDS } from '../competition.js'
 
-type Strategy = 'greedy' | 'spread' | 'conserve' | 'follow' | 'stay'
-interface Bot { strategy: Strategy; contracts: boolean; income: number; attention: number }
-const strategies: Strategy[] = ['greedy', 'spread', 'conserve', 'follow', 'stay']
-// Research per minute from questions: roughly 2, 5 and 9 first-try correct answers per 10 minutes.
-const incomes = { weak: 2, average: 5, strong: 9 }
+// Research per minute from questions: about 2, 5 and 9 first-try correct answers per 10 minutes.
+export const incomes = { weak: 2, average: 5, strong: 9 }
+export const sizes = [3, 6, 8, 12, 20]
+const fixedStrategies = strategies.filter(s => s !== 'planner')
 
-function rng(seed: number) {
+export function rng(seed: number) {
   return () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296 }
 }
 
-function decide(state: MatchState, me: TeamPlay, bot: Bot, config: CommonsConfig, scores: Map<string, number>, left: number, random: () => number) {
-  const grounds = state.grounds, all = state.teams.flatMap(t => t.boats.map((b, i) => ({ team: t.id, i, ...b })))
-  const others = (boat: number) => all.filter(b => !(b.team === me.id && b.i === boat))
-  const heading = (g: number, boat: number) => others(boat).filter(b => b.order === g).length
-  const fishingNext = (g: number, boat: number) => others(boat).filter(b => b.order === g && b.ground === g).length
-  const contract = me.contract && config.contracts.find(c => c.id === me.contract!.id)
-  function value(g: number, boat: number) {
-    const here = me.boats[boat]!.ground === g, b = grounds[g]!.biomass
-    let v: number
-    if (here) v = Math.min(config.catchAmount, Math.floor(b / (fishingNext(g, boat) + 1)))
-    else {
-      const taken = Math.min(b, fishingNext(g, boat) * config.catchAmount), later = b - taken + growth(b - taken, grounds[g]!.maximum, config.growthCap)
-      v = Math.min(config.catchAmount, Math.floor(later / (heading(g, boat) + 1))) * 0.5
-    }
-    if (bot.strategy === 'conserve' && b < 5) v = 0
-    if (contract?.kind === 'catch' && (contract.ground === undefined || groundIndex(contract.ground) === g) && (contract.minBiomass === undefined || b >= contract.minBiomass) && (!contract.quiet || !grounds[g]!.fishedBy.some(id => id !== me.id))) v *= 1.6
-    if (contract?.kind === 'variety' && !me.contract!.visited.includes(g)) v *= here ? 1 : 2.2
-    return v + random() * 0.01
-  }
-  const best = (boat: number) => grounds.map((_, g) => g).reduce((a, g) => value(g, boat) > value(a, boat) ? g : a, 0)
-  me.boats.forEach((boat, i) => {
-    if (bot.strategy === 'stay') { if (boat.order === null) boat.order = grounds.map((_, g) => g).reduce((a, g) => heading(g, i) + random() * 0.5 < heading(a, i) ? g : a, 0); return }
-    if (bot.strategy === 'spread') {
-      const load = (g: number) => heading(g, i) - grounds[g]!.biomass / 100 + random() * 0.01
-      const target = grounds.map((_, g) => g).reduce((a, g) => load(g) < load(a) ? g : a, 0)
-      if (boat.order === null || heading(boat.order, i) > heading(target, i) + 1) boat.order = target
-      return
-    }
-    if (bot.strategy === 'follow') {
-      // Go where the current leader is actually fishing.
-      const leader = state.teams.filter(t => t.id !== me.id).sort((a, b) => scores.get(b.id)! - scores.get(a.id)!)[0]
-      const spot = leader && scores.get(leader.id)! > 0 ? leader.boats.find((b, j) => b.order !== null && b.order === b.ground && (j === i || !leader.boats[i]!.order))?.order : null
-      if (spot !== null && spot !== undefined && left > 1) { boat.order = spot; return }
-    }
-    const target = best(i)
-    if (bot.strategy === 'conserve' && value(target, i) < 0.5) { boat.order = null; return }
-    // Moving costs a resolution, so only move for a clearly better ground.
-    if (boat.ground !== null && boat.order === boat.ground && value(boat.ground, i) >= value(target, i) - 0.6) return
-    if (left <= 1 && boat.ground !== null) { boat.order = boat.ground; return }
-    boat.order = target
-  })
-  if (bot.contracts && !me.contract) {
-    const options = availableContracts(config, grounds.length).filter(c => !me.completed.includes(c.id))
-    const pace = (c: typeof options[number]) => {
-      if (c.kind === 'variety') return c.target <= left ? contractBonus(c, config) / Math.max(1, c.target - 1) : 0
-      const ok = (g: number) => (c.ground === undefined || groundIndex(c.ground) === g) && (c.minBiomass === undefined || grounds[g]!.biomass >= c.minBiomass) && (!c.quiet || !grounds[g]!.fishedBy.some(id => id !== me.id))
-      const rate = me.boats.filter(b => b.order !== null && ok(b.order)).length * config.catchAmount
-      return rate && c.target / rate <= left ? contractBonus(c, config) / (c.target / rate) : 0
-    }
-    const choice = options.reduce<typeof options[number] | null>((a, c) => pace(c) > (a ? pace(a) : 0) ? c : a, null)
-    if (choice) me.contract = { id: choice.id, progress: 0, visited: [] }
-  }
-}
-
-function play(bots: Bot[], config: CommonsConfig, seed: number) {
+export function play(bots: Bot[], config: CommonsConfig, seed: number) {
   const random = rng(seed), rounds = Math.floor(DURATION_SECONDS / config.resolutionSeconds), minutes = config.resolutionSeconds / 60
   let state: MatchState = { grounds: newGrounds(bots.length, config), teams: bots.map((_, i) => ({ id: String(i), research: config.startingResearch, boats: newBoats(), fish: 0, bonus: 0, contract: null, completed: [] })) }
-  const fishingRounds = bots.map(() => ({ wanted: 0, paid: 0 })), ranks: string[][] = [], biomass: number[] = []
+  const paid = bots.map(() => 0), wanted = bots.map(() => 0), taken: string[][] = bots.map(() => []), leaders: number[][] = [], biomass: number[] = []
   for (let round = 1; round <= rounds; round++) {
     state.teams.forEach((team, i) => { team.research += bots[i]!.income * minutes * (0.5 + random()) })
     const scores = new Map(state.teams.map(t => [t.id, t.fish + t.bonus]))
+    // Teams look in occasionally, in no fixed order, and see orders given before theirs.
     for (const i of state.teams.map((_, i) => i).sort(() => random() - 0.5)) {
-      if (round === 1 || random() < bots[i]!.attention) decide(state, state.teams[i]!, bots[i]!, config, scores, rounds - round + 1, random)
+      const me = state.teams[i]!, before = me.contract?.id
+      if (round === 1 || random() < bots[i]!.attention) decide({ state, me, config, scores, left: rounds - round + 1, random }, bots[i]!)
+      if (me.contract && me.contract.id !== before) taken[i]!.push(me.contract.id)
     }
     const result = resolve(state, config)
-    for (const boat of result.report.boats) if (boat.action === 'fish' || boat.action === 'unpaid') { fishingRounds[Number(boat.team)]!.wanted++; if (boat.action === 'fish') fishingRounds[Number(boat.team)]!.paid++ }
+    for (const boat of result.report.boats) if (boat.action === 'fish' || boat.action === 'unpaid') { wanted[Number(boat.team)]!++; if (boat.action === 'fish') paid[Number(boat.team)]!++ }
     state = result.state
-    ranks.push([...state.teams].sort((a, b) => b.fish + b.bonus - (a.fish + a.bonus) || Number(a.id) - Number(b.id)).map(t => t.id))
+    leaders.push(state.teams.map((_, i) => i).sort((a, b) => score(b) - score(a) || a - b))
     biomass.push(state.grounds.reduce((sum, g) => sum + g.biomass, 0) / state.grounds.length)
   }
-  // Last resolution at which the leader or the top three changed.
-  const lastChange = ranks.reduce((last, r, i) => i && (r.slice(0, 3).join() !== ranks[i - 1]!.slice(0, 3).join()) ? i + 1 : last, 0)
-  return { teams: state.teams, fishingRounds, lastChange, biomass, rounds }
+  function score(i: number) { const t = state.teams[i]!; return t.fish + t.bonus }
+  return { scores: state.teams.map((_, i) => score(i)), fish: state.teams.map(t => t.fish), completed: state.teams.map(t => t.completed), taken, paid, wanted, leaders, biomass, rounds }
 }
 
-const pct = (n: number) => `${Math.round(n * 100)}%`
-const pad = (s: string | number, n: number) => String(s).padStart(n)
-function report(config: CommonsConfig, runs = 300) {
-  const rounds = Math.floor(DURATION_SECONDS / config.resolutionSeconds)
-  console.log(`The Commons: ${rounds} resolutions, fishing cost ${config.fishingCost}, catch ${config.catchAmount}, max ${config.maximumBiomass}, start ${config.startingBiomass}, growth cap ${config.growthCap}, bonus ${config.contractBonus}, ${runs} runs each\n`)
-  for (const size of [3, 8, 20]) {
-    const grounds = config.groundCount(size)
-    console.log(`== ${size} teams, ${grounds} grounds (sustainable yield ${grounds * config.growthCap}/resolution vs ${size * 2 * config.catchAmount} demanded at full fishing)`)
-    // 1. Mixed populations: every strategy, with and without contracts, at every income level.
-    const totals = new Map<string, { score: number; fish: number; n: number; wins: number }>()
-    const afford = new Map<string, { wanted: number; paid: number }>()
-    const contractsDone = new Map<string, number>(), perContract = new Map<string, number>()
-    let contractTeams = 0
-    let lastChange = 0, homogeneous = ''
+class Stat {
+  n = 0; sum = 0; squares = 0
+  add(x: number) { this.n++; this.sum += x; this.squares += x * x; return this }
+  get mean() { return this.n ? this.sum / this.n : 0 }
+  // Half-width of a 95% confidence interval for the mean.
+  get error() { return this.n > 1 ? 1.96 * Math.sqrt(Math.max(0, this.squares / this.n - this.mean ** 2) / (this.n - 1)) : 0 }
+  toString() { return `${this.mean >= 0 ? ' ' : ''}${this.mean.toFixed(1)} ±${this.error.toFixed(1)}` }
+}
+const statMap = () => new Map<string, Stat>()
+const stat = (map: Map<string, Stat>, key: string) => map.get(key) ?? map.set(key, new Stat()).get(key)!
+
+function team(random: () => number, strategy: Strategy, contracts: ContractMode, income = incomes.average): Bot {
+  return { strategy, contracts, income, attention: 0.5 + random() * 0.4 }
+}
+
+export function evaluate(config: CommonsConfig, runs: number, fieldSizes = sizes) {
+  return fieldSizes.map(size => {
+    const research = statMap(), invasion = statMap(), mixed = statMap(), wins = statMap(), contracts = statMap(), bonus = statMap(), completion = statMap()
+    const convergence = { leaderHolds: new Stat(), lastChange: new Stat() }, pressure = statMap()
     for (let run = 0; run < runs; run++) {
-      const random = rng(run * 7919 + size)
-      const bots: Bot[] = Array.from({ length: size }, (_, i) => ({ strategy: strategies[Math.floor(random() * strategies.length)]!, contracts: random() < 0.5, income: Object.values(incomes)[i % 3]!, attention: 0.5 + random() * 0.4 }))
-      const result = play(bots, config, run)
-      lastChange += result.lastChange
-      const best = Math.max(...result.teams.map(t => t.fish + t.bonus))
-      result.teams.forEach((team, i) => {
-        const bot = bots[i]!, key = `${bot.strategy}${bot.contracts ? '+contracts' : ''}`
-        const entry = totals.get(key) ?? { score: 0, fish: 0, n: 0, wins: 0 }
-        entry.score += team.fish + team.bonus; entry.fish += team.fish; entry.n++; if (team.fish + team.bonus === best) entry.wins++
-        totals.set(key, entry)
-        const level = Object.entries(incomes).find(([, v]) => v === bot.income)![0]
-        const a = afford.get(level) ?? { wanted: 0, paid: 0 }
-        a.wanted += result.fishingRounds[i]!.wanted; a.paid += result.fishingRounds[i]!.paid; afford.set(level, a)
-        if (bot.contracts) contractsDone.set(key, (contractsDone.get(key) ?? 0) + team.completed.length)
-        if (bot.contracts) for (const id of team.completed) perContract.set(id, (perContract.get(id) ?? 0) + 1)
-        if (bot.contracts) contractTeams++
+      const random = rng(run * 7919 + size * 104729), seed = run * 31 + size
+      // 1. Research: thoughtful teams at three income levels.
+      const levels = Object.entries(incomes)
+      let bots = Array.from({ length: size }, (_, i) => team(random, 'planner', 'opportunistic', levels[i % 3]![1]))
+      let result = play(bots, config, seed)
+      bots.forEach((_, i) => stat(research, levels[i % 3]![0]).add(result.paid[i]! / Math.max(1, result.wanted[i]!)))
+      // 2. Invasion: one fixed-strategy team among thoughtful ones (score minus the field's mean).
+      for (const strategy of fixedStrategies) {
+        bots = Array.from({ length: size }, (_, i) => team(random, i ? 'planner' : strategy, 'opportunistic'))
+        result = play(bots, config, seed)
+        stat(invasion, strategy).add(result.scores[0]! - result.scores.slice(1).reduce((a, b) => a + b, 0) / (size - 1))
+      }
+      // 3. Mixed field: strategies drawn at random.
+      bots = Array.from({ length: size }, () => team(random, strategies[Math.floor(random() * strategies.length)]!, 'opportunistic'))
+      result = play(bots, config, seed)
+      const best = Math.max(...result.scores)
+      bots.forEach((bot, i) => { stat(mixed, bot.strategy).add(result.scores[i]!); stat(wins, bot.strategy).add(result.scores[i] === best ? 1 : 0) })
+      const half = result.leaders[Math.floor(result.rounds / 2) - 1]!, final = result.leaders.at(-1)!
+      convergence.leaderHolds.add(half[0] === final[0] ? 1 : 0)
+      convergence.lastChange.add(result.leaders.reduce((last, r, k) => k && r.slice(0, 3).join() !== result.leaders[k - 1]!.slice(0, 3).join() ? k + 1 : last, 0))
+      // 4. Contracts: thoughtful teams with every contract attitude, relative to the field.
+      bots = Array.from({ length: size }, (_, i) => team(random, 'planner', contractModes[(i + run) % contractModes.length]!))
+      result = play(bots, config, seed)
+      const mean = result.scores.reduce((a, b) => a + b, 0) / size
+      bots.forEach((bot, i) => {
+        stat(contracts, bot.contracts).add(result.scores[i]! - mean); stat(bonus, bot.contracts).add(result.scores[i]! - result.fish[i]!)
+        // Per attempt: was it completed? Abandoned or unfinished attempts count as failures.
+        if (bot.contracts === 'rational' || bot.contracts === 'opportunistic') for (const id of result.taken[i]!) stat(completion, `${bot.contracts} ${id}`).add(0)
+        if (bot.contracts === 'rational' || bot.contracts === 'opportunistic') for (const id of result.completed[i]!) { const s = stat(completion, `${bot.contracts} ${id}`); s.sum++; s.squares++ }
       })
+      // 5. Pressure: uniform fields, without contracts.
+      for (const strategy of ['greedy', 'planner'] as const) {
+        result = play(Array.from({ length: size }, () => team(random, strategy, 'none')), config, seed)
+        stat(pressure, `${strategy} catch`).add(result.fish.reduce((a, b) => a + b, 0) / size)
+        stat(pressure, `${strategy} biomass`).add(result.biomass.at(-1)!)
+        stat(pressure, `${strategy} middle`).add(result.biomass[Math.floor(result.rounds / 2) - 1]!)
+      }
     }
-    console.log('  Strategy (mixed fields)      mean score   win share   contracts/team')
-    for (const [key, v] of [...totals].sort((a, b) => b[1].score / b[1].n - a[1].score / a[1].n)) {
-      console.log(`  ${key.padEnd(28)} ${pad((v.score / v.n).toFixed(1), 10)} ${pad(pct(v.wins / v.n), 11)} ${pad(contractsDone.has(key) ? (contractsDone.get(key)! / v.n).toFixed(2) : '-', 16)}`)
-    }
-    console.log('  Contracts (with minus without, same strategy): ' + strategies.map(st => {
-      const a = totals.get(`${st}+contracts`), b = totals.get(st)
-      if (!a || !b) return ''
-      const sign = (n: number) => `${n >= 0 ? '+' : ''}${n.toFixed(1)}`
-      return `${st} ${sign(a.score / a.n - b.score / b.n)} (bonus ${((a.score - a.fish) / a.n).toFixed(1)}, fish ${sign(a.fish / a.n - b.fish / b.n)})`
-    }).join(', '))
-    console.log('  Completion rate per contract-taking team: ' + availableContracts(config, grounds).map(c => `${c.id} ${pct((perContract.get(c.id) ?? 0) / Math.max(1, contractTeams))}`).join(', '))
-    console.log('  Research: share of attempted fishing a team could pay for')
-    for (const [level, a] of afford) console.log(`    ${level.padEnd(8)} (${(incomes as Record<string, number>)[level]} Research/min) ${pct(a.paid / Math.max(1, a.wanted))}`)
-    console.log(`  Leaderboard: top three last changed at resolution ${(lastChange / runs).toFixed(1)} of ${rounds} on average`)
-    // 2. Homogeneous fields show whether any single strategy exhausts the grounds.
-    for (const strategy of strategies) {
-      const bots: Bot[] = Array.from({ length: size }, (_, i) => ({ strategy, contracts: false, income: incomes.average, attention: 0.7 + (i % 3) * 0.1 }))
-      const result = play(bots, config, 11)
-      homogeneous += `    all ${strategy.padEnd(9)} mean catch ${pad((result.teams.reduce((s, t) => s + t.fish, 0) / size).toFixed(1), 5)}, mean biomass at end ${result.biomass.at(-1)!.toFixed(1)}\n`
-    }
-    console.log('  Homogeneous fields:\n' + homogeneous)
-  }
+    return { size, grounds: config.groundCount(size), research, invasion, mixed, wins, contracts, bonus, completion, convergence, pressure }
+  })
 }
 
-report(commonsConfig, Number(process.argv[2]) || 300)
+export function report(config: CommonsConfig, runs: number) {
+  const rounds = Math.floor(DURATION_SECONDS / config.resolutionSeconds), results = evaluate(config, runs), checks: [boolean, string][] = []
+  const line = (label: string, values: string[]) => console.log(`  ${label.padEnd(30)}${values.map(v => v.padStart(20)).join('')}`)
+  console.log(`The Commons: ${rounds} resolutions; cost ${config.fishingCost}, catch ${config.catchAmount}, max ${config.maximumBiomass}, start ${config.startingBiomass}, growth cap ${config.growthCap}, bonus ${config.contractBonus}; ${runs} runs per size; ±95% intervals\n`)
+  line('Teams', results.map(r => String(r.size)))
+  line('Grounds (sustainable : demand)', results.map(r => `${r.grounds} (${r.grounds * config.growthCap}:${r.size * 2 * config.catchAmount})`))
+  console.log('\n1. Research: share of wanted fishing paid for (thoughtful teams)')
+  for (const level of Object.keys(incomes)) line(`${level} (${incomes[level as keyof typeof incomes]}/min)`, results.map(r => `${Math.round(stat(r.research, level).mean * 100)}%`))
+  console.log('\n2. Strategies')
+  console.log('  One fixed-strategy team among thoughtful teams: its score minus theirs (the commons rewards one free rider)')
+  for (const s of fixedStrategies) line(s, results.map(r => String(stat(r.invasion, s))))
+  console.log('  Mixed fields: mean score (win share)')
+  for (const s of strategies) line(s, results.map(r => `${stat(r.mixed, s).mean.toFixed(1)} (${Math.round(stat(r.wins, s).mean * 100)}%)`))
+  console.log('\n3. Contracts (thoughtful teams): score relative to the field (bonus earned)')
+  for (const m of contractModes) line(m, results.map(r => `${stat(r.contracts, m)}  (${stat(r.bonus, m).mean.toFixed(1)})`))
+  console.log('  Attempts per team, and share of attempts completed (timing / steering teams)')
+  for (const c of config.contracts) line(c.id, results.map(r => ['opportunistic', 'rational'].map(m => { const s = r.completion.get(`${m} ${c.id}`); return s ? `${(s.n / (runs * r.size / 4)).toFixed(1)}:${Math.round(s.mean * 100)}%` : '-' }).join(' ')))
+  console.log('\n4. Convergence (mixed fields)')
+  line('Halfway leader wins', results.map(r => `${Math.round(r.convergence.leaderHolds.mean * 100)}%`))
+  line('Top three last changed at', results.map(r => `${r.convergence.lastChange.mean.toFixed(1)} of ${rounds}`))
+  console.log('\n5. Pressure on the grounds: mean catch per team / mean stock halfway / at the end')
+  for (const s of ['greedy', 'planner']) line(`all ${s}`, results.map(r => `${stat(r.pressure, `${s} catch`).mean.toFixed(1)} / ${stat(r.pressure, `${s} middle`).mean.toFixed(1)} / ${stat(r.pressure, `${s} biomass`).mean.toFixed(1)}`))
+
+  for (const r of results) {
+    const field = stat(r.mixed, 'planner').mean
+    checks.push([stat(r.research, 'average').mean >= 0.8, `${r.size} teams: an average team can pay for at least 80% of its fishing`])
+    checks.push([fixedStrategies.every(s => stat(r.mixed, s).mean <= field + stat(r.mixed, s).error), `${r.size} teams: in mixed fields no fixed strategy outscores thoughtful play`])
+    const gain = stat(r.contracts, 'rational').mean - stat(r.contracts, 'none').mean
+    const timed = stat(r.contracts, 'opportunistic').mean - stat(r.contracts, 'none').mean
+    checks.push([[gain, timed].every(x => x > 0.03 * field && x < 0.15 * field), `${r.size} teams: well-timed contracts gain 3–15% of a score (${timed.toFixed(1)} taking aligned ones, ${gain.toFixed(1)} steering, of ${field.toFixed(0)})`])
+    checks.push([stat(r.contracts, 'zealot').mean < Math.min(stat(r.contracts, 'rational').mean, stat(r.contracts, 'opportunistic').mean), `${r.size} teams: chasing contracts regardless of timing does worse than timing them`])
+    // Any contract-taking team: pooled attempts per available contract.
+    const pooled = availableContracts(config, r.grounds).map(c => ['opportunistic', 'rational'].map(m => r.completion.get(`${m} ${c.id}`)).reduce((a, s) => ({ n: a.n + (s?.n ?? 0), done: a.done + (s?.sum ?? 0) }), { n: 0, done: 0 }))
+    checks.push([pooled.every(p => p.n > 0 && p.done / p.n >= 0.1 && p.done / p.n <= 0.9), `${r.size} teams: every contract is attempted, and completed in 10–90% of attempts`])
+    checks.push([r.convergence.leaderHolds.mean < 0.7, `${r.size} teams: the halfway leader does not usually hold on`])
+    const greedy = stat(r.pressure, 'greedy catch').mean, planned = stat(r.pressure, 'planner catch').mean
+    checks.push([greedy < 0.9 * planned && stat(r.pressure, 'planner middle').mean >= 4, `${r.size} teams: the commons bites (all-greedy fields catch ${greedy.toFixed(0)}, thoughtful fields ${planned.toFixed(0)}) without collapsing under thoughtful play`])
+  }
+  const topFixed = results.map(r => fixedStrategies.reduce((a, s) => stat(r.mixed, s).mean > stat(r.mixed, a).mean ? s : a))
+  checks.push([new Set(topFixed).size > 1, `no single fixed strategy is best in every field size (${topFixed.join(', ')})`])
+  console.log('\nScorecard')
+  for (const [ok, text] of checks) console.log(`  ${ok ? 'PASS ' : 'CHECK'} ${text}`)
+  return { results, checks }
+}
+
+if (import.meta.url === pathToFileURL(process.argv[1]!).href) {
+  const [runs, ...overrides] = process.argv.slice(2)
+  const config: CommonsConfig = { ...commonsConfig }
+  for (const pair of [...(Number(runs) ? [] : [runs!]), ...overrides].filter(Boolean)) {
+    const [key, value] = pair.split('=')
+    if (!(key! in config) || typeof config[key as keyof CommonsConfig] !== 'number' || !Number.isFinite(Number(value))) throw new Error(`Unknown numeric setting: ${pair}`)
+    Object.assign(config, { [key!]: Number(value) })
+  }
+  report(config, Number(runs) || 200)
+}

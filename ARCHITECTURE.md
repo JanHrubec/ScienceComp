@@ -18,7 +18,8 @@ One Vue client and one Express process share TypeScript domain types. SQLite is 
 | `server/game/rules.ts` | The Commons: pure, deterministic resolution rules (no database or UI) |
 | `server/game/config.ts` | Every balancing value and the contract list |
 | `server/game/commons.ts` | Game tables, lazy resolution scheduling, orders, contracts, history and public projection |
-| `server/game/simulate.ts` | `npm run simulate`: bot matches that check the balance risks |
+| `server/game/bots.ts` | Bot teams (thoughtful planner, fixed strategies, contract attitudes) for the simulation |
+| `server/game/simulate.ts` | `npm run simulate`: bot experiments for the balance risks, with a PASS/CHECK scorecard |
 | `src/i18n.ts` | English/Czech UI strings and browser-local language preference |
 | `src/components/LanguageSwitcher.vue` | Compact shared language selector |
 | `src/state.ts` | Shared snapshot and stale-poll protection |
@@ -105,7 +106,7 @@ Participant game data includes every team's boats, orders and active contract, b
 
 ## The Commons
 
-The game is split so the rules can be tested and simulated without a server. `rules.ts` holds pure functions over a plain `MatchState` (grounds, and per team its Research, two boats, score and contract): `resolve()` applies one resolution (move or pay, catch with equal splitting, contract progress, regrowth) and returns the new state and a report. `config.ts` holds every balancing value. `commons.ts` maps the state to SQLite, schedules resolutions, validates orders and contracts, records history and projects the public `GameState`. `simulate.ts` drives `resolve()` with bots. Rules never change with team count; only `groundCount` does. To change the game, adjust `config.ts` first and check it with `npm run simulate`; change `rules.ts` (and its tests) only for new rules.
+The game is split so the rules can be tested and simulated without a server. `rules.ts` holds pure functions over a plain `MatchState` (grounds, and per team its Research, two boats, score and contract): `resolve()` applies one resolution (move or pay, catch with equal splitting, contract progress, regrowth) and returns the new state and a report. `config.ts` holds every balancing value. `commons.ts` maps the state to SQLite, schedules resolutions, validates orders and contracts, records history and projects the public `GameState`. `bots.ts` and `simulate.ts` drive `resolve()` with bot teams that see only public information. Rules never change with team count; only `groundCount` does. To change the game, adjust `config.ts` first and check it with `npm run simulate`; change `rules.ts` (and its tests) only for new rules.
 
 Keep team sessions, age tracks, question grading and Research earning intact. Game actions receive an authenticated team ID and are validated against authoritative state in one transaction.
 

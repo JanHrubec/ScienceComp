@@ -15,9 +15,11 @@ test('regrowth is hump-shaped: slow when nearly empty, fastest in the middle, ze
 })
 
 test('grounds scale only with team count and start equal', () => {
+  // One per team up to 4 teams, one spare from 5, two from 15.
+  assert.deepEqual([1, 2, 3, 4, 5, 6, 8, 12, 14, 15, 20].map(n => commonsConfig.groundCount(n)), [2, 2, 3, 4, 6, 7, 9, 13, 15, 17, 22])
   for (const teams of [3, 8, 20]) {
     const grounds = newGrounds(teams, commonsConfig)
-    assert.equal(grounds.length, teams + 2)
+    assert.equal(grounds.length, commonsConfig.groundCount(teams))
     assert(grounds.every(g => g.biomass === commonsConfig.startingBiomass && g.maximum === commonsConfig.maximumBiomass))
   }
 })
@@ -84,6 +86,8 @@ test('contract counters use start-of-resolution conditions and pay the bonus onc
   ]
   const rules = { ...config, contracts }
   assert.deepEqual(availableContracts(rules, 4).map(c => c.id), ['rich', 'quiet', 'at-b', 'survey'])
+  // A variety contract needs at least as many grounds as its target.
+  assert.deepEqual(availableContracts(rules, 1).map(c => c.id), ['rich', 'quiet'])
   // Ground 0 starts with 9 (counts), ground 1 with 7 (does not, until it has regrown to 8).
   let state = match([team('a', 100, { boats: [at(0), at(1)], contract: { id: 'rich', progress: 0, visited: [] } })], [9, 7])
   let step = resolve(state, rules)

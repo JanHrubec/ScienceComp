@@ -7,19 +7,19 @@ export const commonsConfig: CommonsConfig = {
   fishingCost: 5, // Research per fishing boat per resolution
   catchAmount: 2, // fish per boat per resolution
   maximumBiomass: 12,
-  startingBiomass: 8,
+  startingBiomass: 6, // grounds regrow to 9 during the first resolution, when every boat is still travelling
   growthCap: 3,
-  groundCount: teams => teams + 2,
+  groundCount: teams => Math.max(2, Math.round(1.1 * teams)), // 1 per team up to 4 teams, +1 from 5, +2 from 15
   startingResearch: 0, // granted to every team when the match starts
   contractBonus: 8, // points; a contract may set its own `bonus`
   // Building blocks only: a catch counter (optionally limited to a named ground,
   // a minimum biomass at the start of the resolution, and/or grounds no other
   // team fished in the previous resolution) or a variety counter.
   contracts: [
-    { id: 'full-nets', kind: 'catch', target: 14, minBiomass: 10 },
-    { id: 'quiet-waters', kind: 'catch', target: 20, quiet: true },
-    { id: 'quiet-and-full', kind: 'catch', target: 12, minBiomass: 9, quiet: true },
-    { id: 'survey', kind: 'variety', target: 5 },
+    { id: 'full-nets', kind: 'catch', target: 12, minBiomass: 10 },
+    { id: 'quiet-waters', kind: 'catch', target: 16, quiet: true },
+    { id: 'untouched', kind: 'catch', target: 8, minBiomass: 10, quiet: true },
+    { id: 'survey', kind: 'variety', target: 4, bonus: 6 }, // reliable but costs travel, so worth less
     { id: 'ground-a', kind: 'catch', target: 14, ground: 'A' },
     { id: 'ground-b', kind: 'catch', target: 14, ground: 'B' },
   ],

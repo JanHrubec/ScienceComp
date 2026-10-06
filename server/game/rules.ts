@@ -39,9 +39,10 @@ export function newGrounds(teams: number, config: CommonsConfig): Ground[] {
 }
 export const newBoats = (): Boat[] => Array.from({ length: BOATS_PER_TEAM }, () => ({ ground: null, order: null }))
 export const contractBonus = (contract: ContractDefinition, config: CommonsConfig) => contract.bonus ?? config.contractBonus
-// A contract naming a ground that this match does not have is not offered.
+// A contract naming a ground this match does not have, or needing more grounds
+// than it has, is not offered.
 export const availableContracts = (config: CommonsConfig, grounds: number) =>
-  config.contracts.filter(c => c.kind !== 'catch' || c.ground === undefined || groundIndex(c.ground) < grounds)
+  config.contracts.filter(c => c.kind === 'variety' ? c.target <= grounds : c.ground === undefined || groundIndex(c.ground) < grounds)
 
 function counts(contract: ContractDefinition, ground: number, start: Ground, team: string) {
   if (contract.kind !== 'catch') return false
