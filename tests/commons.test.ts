@@ -2,6 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { commonsConfig } from '../server/game/config.js'
 import { availableContracts, groundIndex, groundName, growth, newBoats, newGrounds, resolve, type CommonsConfig, type MatchState, type TeamPlay } from '../server/game/rules.js'
+import { calibrate, play, type MatchHistory } from '../server/game/simulate.js'
 const config: CommonsConfig = { ...commonsConfig, fishingCost: 5, catchAmount: 2, maximumBiomass: 12, startingBiomass: 8, growthCap: 3, contractBonus: 8, groundCount: teams => teams + 2 }
 const team = (id: string, research = 100, extra: Partial<TeamPlay> = {}): TeamPlay => ({ id, research, boats: newBoats(), fish: 0, bonus: 0, contract: null, completed: [], ...extra })
 const match = (teams: TeamPlay[], biomass?: number[]): MatchState => ({ grounds: biomass ? biomass.map(b => ({ biomass: b, maximum: 12, fishedBy: [] })) : newGrounds(teams.length, config), teams })
@@ -124,4 +125,29 @@ test('every configured contract uses a known building block and a unique ID', ()
     assert(c.kind === 'variety' || c.kind === 'catch')
     if (c.kind === 'catch' && c.ground !== undefined) assert.match(c.ground, /^[A-Z]+$/)
   }
+})
+
+test('simulated matches are reproducible from their seed', () => {
+  const bots = (['planner', 'greedy', 'spread', 'stay'] as const).map(strategy => ({ strategy, contracts: 'rational' as const, income: 5, attention: 0.7 }))
+  assert.deepEqual(play(bots, commonsConfig, 7), play(bots, commonsConfig, 7))
+})
+
+test('a rehearsal history calibrates Research income and attention', () => {
+  // Team A earns 15 Research per 3-minute interval, pays 5 a resolution and changes orders
+  // before every resolution; team B earns nothing and never changes its orders.
+  const history: MatchHistory = { config: { resolutionSeconds: 180, startingResearch: 0 }, resolutions: [] }
+  let a = 0
+  for (let n = 0; n < 4; n++) {
+    a += 15
+    history.resolutions.push({
+      before: { teams: [{ id: 'a', name: 'A', research: a, boats: [{ order: n % 2 }, { order: null }], contract: null }, { id: 'b', name: 'B', research: 0, boats: [{ order: 0 }, { order: 0 }], contract: null }] },
+      report: { teams: [{ id: 'a', research: a - 5 }, { id: 'b', research: 0 }] },
+    })
+    a -= 5
+  }
+  const { teams, assumptions } = calibrate(history, commonsConfig)
+  assert.deepEqual(teams.map(t => [t.name, t.perMinute, t.changeRate]), [['A', 5, 1], ['B', 0, 0]])
+  assert.deepEqual(assumptions.incomes, { weak: 1.25, average: 2.5, strong: 3.75 })
+  assert(assumptions.attention[0] < assumptions.attention[1] && assumptions.attention[1] <= 1)
+  assert.throws(() => calibrate({ ...history, resolutions: history.resolutions.slice(0, 2) }, commonsConfig), /at least three/)
 })

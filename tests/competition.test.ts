@@ -153,8 +153,8 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal((await request('/team/skip', b.cookie, { subject: 'ess', questionId: afterSkips.progress.ess.question!.id })).status, 400)
     current = (await request<TeamState>('/team/state', a.cookie)).body
     assert.equal(current.team.research, 35)
-    // Two teams: two grounds at 6 of 12. Boats start in harbour, idle.
-    assert.deepEqual(current.game.grounds.map(g => [g.name, g.biomass, g.maximum, g.growth]), [['A', 6, 12, 3], ['B', 6, 12, 3]])
+    // Two teams: two grounds at 6 of 10. Boats start in harbour, idle.
+    assert.deepEqual(current.game.grounds.map(g => [g.name, g.biomass, g.maximum, g.growth]), [['A', 6, 10, 3], ['B', 6, 10, 3]])
     assert.deepEqual(current.game.teams.find(t => t.id === create.body.id)!.boats, [{ ground: null, order: null }, { ground: null, order: null }])
     for (const bad of [{ boat: 3, ground: 0 }, { boat: 1, ground: 2 }, { boat: 1, ground: -1 }, { boat: 1, ground: 0, research: 99 }]) assert.equal((await request('/team/game/order', a.cookie, bad)).status, 400)
     assert.equal((await request('/team/game/order', a.cookie, { boat: 1, ground: 0 })).status, 200)

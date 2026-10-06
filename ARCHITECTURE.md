@@ -19,7 +19,7 @@ One Vue client and one Express process share TypeScript domain types. SQLite is 
 | `server/game/config.ts` | Every balancing value and the contract list |
 | `server/game/commons.ts` | Game tables, lazy resolution scheduling, orders, contracts, history and public projection |
 | `server/game/bots.ts` | Bot teams (thoughtful planner, fixed strategies, contract attitudes) for the simulation |
-| `server/game/simulate.ts` | `npm run simulate`: bot experiments for the balance risks, with a PASS/CHECK scorecard |
+| `server/game/simulate.ts` | `npm run simulate`: bot experiments for the balance risks, a PASS/CHECK scorecard, and calibration from a rehearsal's match history |
 | `src/i18n.ts` | English/Czech UI strings and browser-local language preference |
 | `src/components/LanguageSwitcher.vue` | Compact shared language selector |
 | `src/state.ts` | Shared snapshot and stale-poll protection |
