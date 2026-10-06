@@ -181,12 +181,15 @@ thead small { font-weight: 400; }
 .boat-choice.selected { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: #f0f5f2; }
 .boat-name { font-weight: 600; font-size: 14px; }
 .boat-status { color: var(--muted); font-size: 13px; }
+.boat-sending { color: var(--accent); font-style: italic; white-space: nowrap; }
 .idle-button { align-self: center; padding: 6px 12px; font-size: 13px; }
 .fleet-hint { margin: 10px 0 0; }
 .grounds { display: grid; grid-template-columns: repeat(auto-fill, minmax(136px, 1fr)); gap: 8px; margin-top: 18px; }
 .ground { display: flex; flex-direction: column; align-items: stretch; gap: 6px; min-width: 0; padding: 10px 11px 11px; border-color: var(--line); background: #fff; color: #242725; font-weight: 400; text-align: left; }
 .ground:hover:not(:disabled) { background: #f6f7f6; }
 .ground.target { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+/* Dashed until the server has the order. */
+.ground.target.sending { border-style: dashed; box-shadow: none; }
 .ground-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .ground-name { font-size: 18px; font-weight: 600; line-height: 1.2; }
 .ground-stock { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }

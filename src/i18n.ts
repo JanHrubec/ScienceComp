@@ -72,7 +72,7 @@ const czech: Record<string, string> = {
   "Ground {ground}": "Loviště {ground}",
   "{count} of {maximum} fish": "{count} z {maximum} ryb",
   "growth +{growth}": "přírůstek +{growth}",
-  "{count} boats fishing next": "příště loví lodí: {count}",
+  "{boats} fishing next": "příště loví {boats}",
   "Fish at {count} different grounds": "Lovte na {count} různých lovištích",
   "Catch {fish}": "Ulovte {fish}",
   "Only at ground {ground}.": "Pouze na lovišti {ground}.",
@@ -90,6 +90,7 @@ const czech: Record<string, string> = {
   "Your boats": "Vaše lodě",
   "Boat {boat}": "Loď {boat}",
   "Leave boat {boat} idle": "Nechat loď {boat} kotvit",
+  "Sending…": "Odesílání…",
   "Choose a ground for boat {boat}. Each fishing boat costs {cost} Research per resolution.": "Vyberte loviště pro loď {boat}. Každá lovící loď stojí {cost} bodů výzkumu za vyhodnocení.",
   "Not enough Research for every fishing boat: boat 1 is paid first.": "Výzkum nestačí na všechny lovící lodě: jako první se platí loď 1.",
   "Fishing grounds": "Loviště",
@@ -191,4 +192,9 @@ export const subjectLabel = (subject: Subject) => language.value === 'cs' ? czec
 export function fish(count: number, accusative = false): string {
   if (language.value === 'en') return `${count} fish`
   return `${count} ${count === 1 ? (accusative ? 'rybu' : 'ryba') : count >= 2 && count <= 4 ? 'ryby' : 'ryb'}`
+}
+// English has one plural; Czech has two (1 loď, 2 lodě, 5 lodí).
+export function boats(count: number): string {
+  if (language.value === 'en') return `${count} ${count === 1 ? 'boat' : 'boats'}`
+  return `${count} ${count === 1 ? 'loď' : count >= 2 && count <= 4 ? 'lodě' : 'lodí'}`
 }

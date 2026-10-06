@@ -1,18 +1,25 @@
 <script setup lang="ts">
-import { t, fish } from '../i18n'
-import { computed, ref } from 'vue'
+import { t, fish, boats } from '../i18n'
+import { computed, reactive, ref, watch } from 'vue'
 import { teamState, acceptState, refreshState } from '../state'
 import { api, errorMessage } from '../api'
 import { competition, secondsLeft } from '../competition'
 import type { BoatOrder, BoatReport, GameState, TeamState } from '../../shared/domain'
 import TeamScores from './TeamScores.vue'
 type Contract = GameState['contracts'][number]
-const busy = ref(false), error = ref(''), selected = ref(0), abandoning = ref(false)
+const busy = ref(false), error = ref(''), selected = ref(0)
+// The contract the player asked to abandon, until they confirm. It never carries over to a later contract.
+const abandoning = ref<string | null>(null)
+// Orders given while a request is in flight wait here, the latest per boat, and follow in turn rather than being dropped.
+const queued = reactive(new Map<number, number | null>()), sending = ref<{ boat: number; ground: number | null } | null>(null)
 const game = computed(() => teamState.value!.game)
 const myId = computed(() => teamState.value!.team.id)
 const myBoats = computed(() => game.value.teams.find(team => team.id === myId.value)?.boats ?? [])
 const boat = computed<BoatOrder | undefined>(() => myBoats.value[selected.value])
 const own = computed(() => game.value.own)
+// What a boat will be ordered to once this device's pending orders arrive, and whether any are still pending.
+const wanted = (i: number) => queued.has(i) ? queued.get(i)! : sending.value?.boat === i ? sending.value.ground : myBoats.value[i]?.order ?? null
+const pending = (i: number) => queued.has(i) || sending.value?.boat === i
 const name = (ground: number | null) => ground === null ? '' : game.value.grounds[ground]?.name ?? '?'
 const initials = (text: string) => text.split(/\s+/).slice(0, 2).map(v => v[0]).join('').toUpperCase()
 const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`
@@ -38,12 +45,12 @@ function status(b: BoatOrder) {
   if (b.order !== b.ground) return t('Travels to {ground} at the next resolution', { ground: name(b.order) })
   return t('Fishing at {ground}', { ground: name(b.ground) })
 }
-const fishingBoats = computed(() => myBoats.value.filter(b => b.order !== null && b.order === b.ground).length)
+const fishingBoats = computed(() => myBoats.value.filter((b, i) => b.ground !== null && wanted(i) === b.ground).length)
 const shortOfResearch = computed(() => teamState.value!.team.research < fishingBoats.value * game.value.rules.fishingCost)
 function groundLabel(g: GameState['grounds'][number]) {
-  const n = selected.value + 1, b = boat.value
-  const action = b?.order === g.id ? (b.ground === g.id ? t('Boat {boat} is fishing here', { boat: n }) : t('Boat {boat} is heading here', { boat: n })) : t('Send boat {boat} here', { boat: n })
-  return `${t('Ground {ground}', { ground: g.name })}: ${t('{count} of {maximum} fish', { count: g.biomass, maximum: g.maximum })}, ${t('growth +{growth}', { growth: g.growth })}; ${t('{count} boats fishing next', { count: fishingNext(g.id) })}. ${action}`
+  const n = selected.value + 1, here = wanted(selected.value) === g.id
+  const action = here ? (boat.value?.ground === g.id ? t('Boat {boat} is fishing here', { boat: n }) : t('Boat {boat} is heading here', { boat: n })) : t('Send boat {boat} here', { boat: n })
+  return `${t('Ground {ground}', { ground: g.name })}: ${t('{count} of {maximum} fish', { count: g.biomass, maximum: g.maximum })}, ${t('growth +{growth}', { growth: g.growth })}; ${t('{boats} fishing next', { boats: boats(fishingNext(g.id)) })}. ${action}${here && pending(selected.value) ? `. ${t('Sending…')}` : ''}`
 }
 function contractTitle(c: Contract) { return c.kind === 'variety' ? t('Fish at {count} different grounds', { count: c.target }) : t('Catch {fish}', { fish: fish(c.target, true) }) }
 function contractConditions(c: Contract) {
@@ -64,15 +71,39 @@ function boatResult(b: BoatReport) {
   return t('Boat {boat} was idle.', values)
 }
 const completedBonus = computed(() => game.value.contracts.find(c => c.id === game.value.last?.completed)?.bonus ?? 0)
-async function send(path: 'order' | 'contract', input: object) {
-  if (busy.value) return
-  busy.value = true; error.value = ''
+async function request(path: 'order' | 'contract', input: object) {
   try { acceptState(await api<TeamState>(`/team/game/${path}`, input)) }
-  catch (e) { error.value = errorMessage(e); await refreshState() } finally { busy.value = false }
+  catch (e) { error.value = errorMessage(e); await refreshState() }
 }
-function order(ground: number | null) { if (boat.value && boat.value.order !== ground) return send('order', { boat: selected.value + 1, ground }) }
-function choose(contract: string | null) { abandoning.value = false; return send('contract', { contract, current: own.value.contract?.id ?? null }) }
-function abandon() { if (own.value.contract?.progress) abandoning.value = true; else return choose(null) }
+// One request at a time: an optional contract action, then every waiting order. Stops if the device signs out meanwhile.
+async function run(first?: () => Promise<void>) {
+  busy.value = true
+  try {
+    await first?.()
+    for (let next = [...queued][0]; next && teamState.value; next = [...queued][0]) {
+      const [i, ground] = next; queued.delete(i)
+      if (myBoats.value[i]?.order === ground) continue // already so: a teammate gave the same order meanwhile
+      sending.value = { boat: i, ground }; await request('order', { boat: i + 1, ground })
+    }
+  } finally { busy.value = false; sending.value = null }
+}
+function order(ground: number | null) {
+  const i = selected.value, b = boat.value
+  if (!b || wanted(i) === ground) return
+  error.value = ''
+  // Going back to the order already given (or being sent) just withdraws the waiting one.
+  if (ground === (sending.value?.boat === i ? sending.value.ground : b.order)) queued.delete(i); else queued.set(i, ground)
+  if (!busy.value) return run()
+}
+// Contract buttons are disabled while busy. `current` is the contract the player acted on, so the server refuses the change if it has moved on.
+function choose(contract: string | null, current = own.value.contract?.id ?? null) {
+  if (busy.value) return
+  abandoning.value = null; error.value = ''
+  return run(() => request('contract', { contract, current }))
+}
+function abandon() { const c = own.value.contract; if (c?.progress) abandoning.value = c.id; else return choose(null) }
+// Any change of active contract cancels a pending abandon, including the same contract taken again (its progress restarts).
+watch(() => teamState.value?.game.own.contract, (now, before) => { if (now?.id !== before?.id || (now?.progress ?? 0) < (before?.progress ?? 0)) abandoning.value = null })
 </script>
 <template>
   <main class="commons">
@@ -90,14 +121,14 @@ function abandon() { if (own.value.contract?.progress) abandoning.value = true; 
         <section class="fleet" :aria-label="t('Your boats')">
           <div class="boat-picker">
             <button v-for="(b, i) in myBoats" :key="i" class="boat-choice" :class="{ selected: selected === i }" :aria-pressed="selected === i" @click="selected = i">
-              <span class="boat-name">{{ t('Boat {boat}', { boat: i + 1 }) }}</span><span class="boat-status">{{ status(b) }}</span>
+              <span class="boat-name">{{ t('Boat {boat}', { boat: i + 1 }) }}</span><span class="boat-status">{{ status({ ...b, order: wanted(i) }) }}<template v-if="pending(i)">{{ ' ' }}<span class="boat-sending">· {{ t('Sending…') }}</span></template></span>
             </button>
-            <button class="secondary idle-button" :disabled="busy || !boat || boat.order === null" @click="order(null)">{{ t('Leave boat {boat} idle', { boat: selected + 1 }) }}</button>
+            <button class="secondary idle-button" :disabled="!boat || wanted(selected) === null" @click="order(null)">{{ t('Leave boat {boat} idle', { boat: selected + 1 }) }}</button>
           </div>
           <p class="hint fleet-hint">{{ t('Choose a ground for boat {boat}. Each fishing boat costs {cost} Research per resolution.', { boat: selected + 1, cost: game.rules.fishingCost }) }}<span v-if="shortOfResearch" class="error"> {{ t('Not enough Research for every fishing boat: boat 1 is paid first.') }}</span></p>
         </section>
         <section class="grounds" :aria-label="t('Fishing grounds')">
-          <button v-for="g in game.grounds" :key="g.id" class="ground" :class="{ target: boat?.order === g.id }" :aria-label="groundLabel(g)" @click="order(g.id)">
+          <button v-for="g in game.grounds" :key="g.id" class="ground" :class="{ target: wanted(selected) === g.id, sending: wanted(selected) === g.id && pending(selected) }" :aria-label="groundLabel(g)" @click="order(g.id)">
             <span class="ground-head"><span class="ground-name">{{ g.name }}</span><span class="ground-stock"><strong>{{ g.biomass }}</strong> / {{ g.maximum }}</span></span>
             <span class="stock-bar" aria-hidden="true"><span :style="{ width: `${100 * g.biomass / g.maximum}%` }" /></span>
             <span class="ground-growth">{{ t('growth +{growth}', { growth: g.growth }) }}</span>
@@ -120,9 +151,9 @@ function abandon() { if (own.value.contract?.progress) abandoning.value = true; 
               </span>
             </li>
           </ul>
-          <div v-if="abandoning && activeContract && own.contract" class="abandon-confirm" role="alertdialog" :aria-label="t('Abandon contract')">
+          <div v-if="abandoning && abandoning === own.contract?.id && activeContract" class="abandon-confirm" role="alertdialog" :aria-label="t('Abandon contract')">
             <p>{{ t('Abandon “{contract}”? Its progress ({progress}/{target}) will be lost.', { contract: contractTitle(activeContract), progress: own.contract.progress, target: activeContract.target }) }}</p>
-            <div><button class="danger-button" :disabled="busy" @click="choose(null)">{{ t('Abandon') }}</button><button class="text-button" @click="abandoning = false">{{ t('Keep it') }}</button></div>
+            <div><button class="danger-button" :disabled="busy" @click="choose(null, abandoning)">{{ t('Abandon') }}</button><button class="text-button" @click="abandoning = null">{{ t('Keep it') }}</button></div>
           </div>
         </section>
       </div>
