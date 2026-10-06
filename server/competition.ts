@@ -14,8 +14,8 @@ export function competitionState(db: DatabaseSync, now = Date.now()): Competitio
     booklets: subjectBooklets,
   }
 }
-export function requireRunning(db: DatabaseSync) {
-  const state = competitionState(db)
+export function requireRunning(db: DatabaseSync, now = Date.now()) {
+  const state = competitionState(db, now)
   if (state.status !== 'running') throw new ApiError(409, state.status === 'waiting' ? 'Waiting for the admin to start.' : 'Time is up.')
 }
 export function startCompetition(db: DatabaseSync): CompetitionState {

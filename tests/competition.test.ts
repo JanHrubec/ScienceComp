@@ -6,11 +6,28 @@ import { join } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
 import { answerReward } from '../shared/scoring.js'
 import { createApp } from '../server/app.js'
+import { competitionState } from '../server/competition.js'
 import { openDatabase } from '../server/db.js'
 import { loadQuestions, isCorrect, parseNumber, publicQuestion, type Question } from '../server/questions.js'
 import { TEAM_SKIP_LIMIT, subjects, ages, type TeamState, type AdminTeam, type CompetitionState } from '../shared/domain.js'
 const bank = loadQuestions('./questions')
 const answerFor = (q: Question) => q.type === 'multiple-choice' ? String(q.correctIndex) : q.type === 'text' ? q.acceptedAnswers[0] : String(q.numericAnswer)
+async function serve(db: DatabaseSync) {
+  const server = createApp(db, bank, 'test-password').listen(0, '127.0.0.1')
+  await new Promise<void>(resolve => server.once('listening', resolve))
+  const base = `http://127.0.0.1:${(server.address() as { port: number }).port}/api`
+  async function call<T = Record<string, unknown>>(url: string, cookie = '', body?: unknown, method = 'POST') {
+    const response = await fetch(base + url, { method: body === undefined ? 'GET' : method, headers: { 'Content-Type': 'application/json', 'X-Competition-Client': '1', Cookie: cookie }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) })
+    return { status: response.status, body: await response.json() as T, cookie: response.headers.get('set-cookie')?.split(';')[0] || '' }
+  }
+  return { call, close: () => new Promise<void>(resolve => server.close(() => resolve())) }
+}
+// Records every transaction started on this connection.
+function transactions(db: DatabaseSync) {
+  const begins: string[] = [], exec = db.exec.bind(db)
+  db.exec = (sql: string) => { if (sql.startsWith('BEGIN')) begins.push(sql); exec(sql) }
+  return begins
+}
 test('bank has 300 unique bilingual questions with all three answer types in every track', () => {
   const ids = new Set<string>()
   const answerTypes = new Set<string>()
@@ -185,7 +202,8 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal(fished.game.resolution.nextAt, startedAt - 360_000 + 3 * 180_000)
     assert.equal(fished.team.research, 25)
     assert.deepEqual(fished.game.last!.boats, [{ boat: 1, from: 0, order: 0, action: 'fish', paid: 5, caught: 2 }, { boat: 2, from: 0, order: 0, action: 'fish', paid: 5, caught: 2 }])
-    assert.deepEqual(fished.game.last!.grounds[0], { id: 0, before: 9, caught: 4, growth: 3, after: 8, boats: 2 })
+    // How many boats paid at a ground is kept for the history, not published.
+    assert.deepEqual(fished.game.last!.grounds[0], { id: 0, before: 9, caught: 4, growth: 3, after: 8 })
     assert.deepEqual(fished.game.own, { fish: 4, bonus: 0, contract: { id: 'ground-a', progress: 4 }, completed: [] })
     assert.deepEqual(fished.standings.teams.map(t => t.score), [4, 0])
     const rival = (await request<TeamState>('/team/state', c.cookie)).body
@@ -218,9 +236,10 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal((await request('/admin/start', admin, {})).status, 409)
     // The final resolution runs at the deadline; the history replays all of them.
     assert.equal(atEnd.game.resolution.done, 20)
-    const history = (await request<{ resolutions: { number: number; before: { grounds: unknown[] }; report: { teams: { id: string; fish: number }[] } }[] }>('/admin/history', admin)).body
+    const history = (await request<{ resolutions: { number: number; before: { grounds: unknown[] }; report: { grounds: { boats: number }[]; teams: { id: string; fish: number }[] } }[] }>('/admin/history', admin)).body
     assert.deepEqual(history.resolutions.map(r => r.number), Array.from({ length: 20 }, (_, i) => i + 1))
     assert.equal(history.resolutions[1]!.before.grounds.length, 2)
+    assert.equal(history.resolutions[1]!.report.grounds[0]!.boats, 2)
     assert.equal(history.resolutions.at(-1)!.report.teams.find(t => t.id === create.body.id)!.fish, atEnd.game.own.fish)
     assert.equal((await request('/admin/history', a.cookie)).status, 401)
     assert.equal((await request<TeamState>('/team/state', a.cookie)).body.team.research, atEnd.team.research)
@@ -431,9 +450,11 @@ test('standings freeze before the first post-cutoff action, persist across resta
     // Jump past the cutoff (55:00) and resolution 19 (57:00) with no request in between.
     // The first request is an order change: resolutions 3–18 count towards the
     // frozen standings, resolution 19 only towards the live scores.
-    const start = Date.now() - 57 * 60 * 1000 - 1000
+    // All of that, and the order itself, happen in one transaction.
+    const start = Date.now() - 57 * 60 * 1000 - 1000, begins = transactions(db)
     setStart(start)
     const after = (await call('/team/game/order', a, { boat: 2, ground: 1 })).data as TeamState
+    assert.equal(begins.length, 1)
     assert.equal(after.standings.frozenAt, start + 55 * 60 * 1000)
     assert.equal(after.game.resolution.done, 19)
     const history = (await call('/admin/history', admin)).data as { resolutions: { number: number; report: { teams: { id: string; fish: number; bonus: number }[] } }[] }
@@ -480,27 +501,139 @@ test('standings freeze before the first post-cutoff action, persist across resta
   } finally { await close(); db.close(); rmSync(dir, { recursive: true, force: true }) }
 })
 
-test('a diamond-prototype database upgrades to The Commons without losing teams', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'commons-upgrade-')), path = join(dir, 'old.sqlite')
-  let db = openDatabase(path)
-  db.exec(`
-    CREATE TABLE grid_positions (team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE, x INTEGER NOT NULL, y INTEGER NOT NULL);
-    CREATE TABLE grid_cells (x INTEGER, y INTEGER, stock INTEGER, PRIMARY KEY(x, y));
-    CREATE TABLE grid_scores (team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE, diamonds INTEGER);
-    INSERT INTO teams (id, name, age, code, color) VALUES ('t', 'Existing team', '14–16', 'ABCD', '#176b58');
-    INSERT INTO grid_positions VALUES ('t', 4, 5);
-    INSERT INTO config VALUES ('standings_snapshot', '{"frozenAt":1,"teams":[{"id":"t","diamonds":3}]}');
-  `)
-  db.prepare("INSERT INTO config VALUES ('started_at', ?)").run(String(Date.now()))
+test('a diamond-prototype database upgrades to The Commons; an unreset diamond round ends and keeps its results', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'commons-upgrade-')), warnings: string[] = [], warn = console.warn
+  console.warn = (message: string) => { warnings.push(message) }
+  // The prototype's tables and a team with 7 diamonds; optionally its frozen standings and start time.
+  function legacy(name: string, startedMinutesAgo: number | null, snapshot = false) {
+    const db = openDatabase(join(dir, `${name}.sqlite`))
+    db.exec(`
+      CREATE TABLE grid_positions (team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE, x INTEGER NOT NULL, y INTEGER NOT NULL);
+      CREATE TABLE grid_cells (x INTEGER, y INTEGER, stock INTEGER, PRIMARY KEY(x, y));
+      CREATE TABLE grid_scores (team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE, diamonds INTEGER);
+      INSERT INTO teams (id, name, age, code, color) VALUES ('t', 'Existing team', '14–16', 'ABCD', '#176b58');
+      INSERT INTO grid_positions VALUES ('t', 4, 5);
+      INSERT INTO grid_scores VALUES ('t', 7);
+    `)
+    for (const subject of subjects) db.prepare("INSERT INTO progress (team_id, subject) VALUES ('t', ?)").run(subject)
+    if (snapshot) db.exec(`INSERT INTO config VALUES ('standings_snapshot', '{"frozenAt":1,"teams":[{"id":"t","name":"Existing team","color":"#176b58","diamonds":3}]}')`)
+    if (startedMinutesAgo !== null) db.prepare("INSERT INTO config VALUES ('started_at', ?)").run(String(Date.now() - startedMinutesAgo * 60_000))
+    return db
+  }
+  const count = (db: DatabaseSync, from: string) => Number(db.prepare(`SELECT COUNT(*) AS n FROM ${from}`).get()!.n)
+  const gridTables = "sqlite_master WHERE type = 'table' AND name IN ('grid_cells', 'grid_scores', 'grid_positions')"
+  const standings = (db: DatabaseSync) => JSON.parse(String(db.prepare("SELECT value FROM config WHERE key = 'standings_snapshot'").get()?.value ?? null))
+  let db = legacy('waiting', null, true), server: Awaited<ReturnType<typeof serve>> | undefined
   try {
+    // Between rounds, the prototype's tables and any snapshot of its scores are removed.
     createApp(db, bank, 'test-password')
-    const tables = db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all().map(row => String(row.name))
-    assert(!tables.some(name => name.startsWith('grid_')))
-    assert.equal(db.prepare("SELECT COUNT(*) AS n FROM config WHERE key = 'standings_snapshot'").get()!.n, 0)
-    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM commons_boats WHERE team_id = ?').get('t')!.n, 2)
-    // A match already running when the update was installed gets its grounds.
-    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM commons_grounds').get()!.n, 2)
-    db.close(); db = openDatabase(path); createApp(db, bank, 'test-password')
-    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM commons_grounds').get()!.n, 2)
-  } finally { db.close(); rmSync(dir, { recursive: true, force: true }) }
+    assert.equal(count(db, gridTables), 0)
+    assert.equal(standings(db), null)
+    assert.equal(count(db, "commons_boats WHERE team_id = 't'"), 2)
+    assert.deepEqual(warnings, [])
+    db.close()
+    // A round mid-run at the upgrade ends instead of running on as The Commons. Its
+    // results stay in the prototype's tables and become the standings, and are logged.
+    db = legacy('running', 10)
+    createApp(db, bank, 'test-password')
+    assert.equal(competitionState(db).status, 'finished')
+    assert.equal(count(db, gridTables), 3)
+    assert.deepEqual(standings(db).teams, [{ id: 't', name: 'Existing team', color: '#176b58', score: 7 }])
+    assert.equal(count(db, 'commons_grounds'), 0)
+    assert.match(warnings[0]!, /never reset.*Final diamonds: Existing team 7\.$/)
+    db.close()
+    // A round that ended at the prototype's 45 minutes would run again under 60.
+    // It stays finished, keeps its frozen standings, and nothing resolves.
+    const path = join(dir, 'finished.sqlite')
+    db = legacy('finished', 50, true); server = await serve(db)
+    const admin = (await server.call('/admin/login', '', { password: 'test-password' })).cookie
+    const team = await server.call<TeamState>('/team/login', '', { code: 'ABCD' })
+    assert.equal(team.body.competition.status, 'finished')
+    assert.deepEqual(team.body.standings, { frozenAt: 1, teams: [{ id: 't', name: 'Existing team', color: '#176b58', score: 3 }] })
+    assert.deepEqual([team.body.game.resolution.done, team.body.game.grounds.length], [0, 0])
+    assert.equal(count(db, gridTables), 3)
+    // A restart changes nothing but repeats the reminder.
+    await server.close(); db.close(); db = openDatabase(path); server = await serve(db)
+    const restarted = (await server.call<TeamState>('/team/state', team.cookie)).body
+    assert.deepEqual([restarted.competition.status, restarted.competition.startedAt, restarted.standings], ['finished', team.body.competition.startedAt, team.body.standings])
+    assert.equal(warnings.length, 3)
+    // Reset discards the round and its tables, so a later round is never taken for it.
+    assert.equal((await server.call('/admin/reset', admin, { confirmation: 'RESET' })).status, 200)
+    assert.equal(count(db, gridTables), 0)
+    await server.call('/admin/start', admin, {})
+    await server.close(); db.close(); db = openDatabase(path); server = await serve(db)
+    const next = (await server.call<TeamState>('/team/state', team.cookie)).body
+    assert.deepEqual([next.competition.status, next.game.grounds.length, next.standings.frozenAt], ['running', 2, null])
+    assert.equal(warnings.length, 3)
+  } finally { console.warn = warn; await server?.close(); db.close(); rmSync(dir, { recursive: true, force: true }) }
+})
+
+test('reset needs no catch-up, so it also recovers a match whose resolutions cannot run', async () => {
+  const db = openDatabase(':memory:'), { call, close } = await serve(db)
+  try {
+    const admin = (await call('/admin/login', '', { password: 'test-password' })).cookie
+    await call('/admin/teams', admin, { name: 'Alpha', age: '11–13', code: 'AAAA' })
+    const team = (await call('/team/login', '', { code: 'AAAA' })).cookie
+    await call('/admin/start', admin, {})
+    // Data only a resolution reads is corrupt, and the match is over with all 20 due.
+    db.exec("UPDATE commons_grounds SET fished_by = '{'")
+    db.prepare("UPDATE config SET value = ? WHERE key = 'started_at'").run(String(Date.now() - 3_600_001))
+    const log = console.error
+    console.error = () => {}
+    try {
+      for (const [url, cookie] of [['/team/state', team], ['/admin/history', admin]]) assert.equal((await call(url, cookie)).status, 500)
+      // A roster edit cannot take a correct snapshot first, so it fails too.
+      assert.equal((await call('/admin/teams', admin, { name: 'Beta', age: '11–13' })).status, 500)
+    } finally { console.error = log }
+    assert.equal((await call('/admin/reset', admin, { confirmation: 'RESET' })).status, 200)
+    const reset = (await call<TeamState>('/team/state', team)).body
+    assert.deepEqual([reset.competition.status, reset.game.resolution.done], ['waiting', 0])
+    assert.equal((await call<{ resolutions: unknown[] }>('/admin/history', admin)).body.resolutions.length, 0)
+    await call('/admin/start', admin, {})
+    assert.deepEqual((await call<TeamState>('/team/state', team)).body.game.grounds.map(g => g.biomass), [6, 6])
+  } finally { await close(); db.close() }
+})
+
+test('a poll takes no write lock unless the game is due, and each request catches up at most once', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'catch-up-')), path = join(dir, 'test.sqlite')
+  const db = openDatabase(path), other = new DatabaseSync(path), { call, close } = await serve(db)
+  // Fail fast rather than wait five seconds if a read ever asks for the write lock.
+  db.exec('PRAGMA busy_timeout = 100')
+  const begins = transactions(db), setStart = (msAgo: number) => db.prepare("UPDATE config SET value = ? WHERE key = 'started_at'").run(String(Date.now() - msAgo))
+  try {
+    const admin = (await call('/admin/login', '', { password: 'test-password' })).cookie
+    await call('/admin/teams', admin, { name: 'Alpha', age: '11–13', code: 'AAAA' })
+    const team = (await call('/team/login', '', { code: 'AAAA' })).cookie
+    await call('/admin/start', admin, {})
+    db.exec('UPDATE teams SET research = 1000')
+    for (const boat of [1, 2]) await call('/team/game/order', team, { boat, ground: boat - 1 })
+    const reads = [['/team/state', team], ['/admin/teams', admin], ['/admin/history', admin]]
+    // While another connection holds the write lock, polls with nothing due still answer.
+    let taken = begins.length
+    other.exec('BEGIN IMMEDIATE')
+    try { for (const [url, cookie] of reads) assert.equal((await call(url, cookie)).status, 200) } finally { other.exec('ROLLBACK') }
+    assert.equal(begins.length, taken)
+    // Once a resolution is due, the first read runs it in one transaction; later reads need none.
+    setStart(180_000 + 1000)
+    assert.equal((await call<TeamState>('/team/state', team)).body.game.resolution.done, 1)
+    for (const [url, cookie] of reads) await call(url, cookie)
+    assert.equal(begins.length, taken + 1)
+    // A change catches up and applies in that same single transaction.
+    setStart(2 * 180_000 + 1000)
+    taken = begins.length
+    assert.equal((await call<TeamState>('/team/game/contract', team, { contract: 'quiet-waters', current: null })).body.game.resolution.done, 2)
+    assert.equal(begins.length, taken + 1)
+    // Past the cutoff (55:00) and resolution 19 (57:00), one read runs 3–18, freezes
+    // the standings, then runs 19.
+    setStart(57 * 60_000 + 1000)
+    taken = begins.length
+    const late = (await call<TeamState>('/team/state', team)).body
+    assert.equal(begins.length, taken + 1)
+    const history = (await call<{ resolutions: { report: { teams: { fish: number; bonus: number }[] } }[] }>('/admin/history', admin)).body
+    const score = (n: number) => history.resolutions[n - 1]!.report.teams[0]!.fish + history.resolutions[n - 1]!.report.teams[0]!.bonus
+    assert.equal(late.game.resolution.done, 19)
+    assert.notEqual(score(18), score(19))
+    assert.deepEqual(late.standings.teams.map(t => t.score), [score(18)])
+    assert.equal(late.game.own.fish + late.game.own.bonus, score(19))
+  } finally { await close(); other.close(); db.close(); rmSync(dir, { recursive: true, force: true }) }
 })

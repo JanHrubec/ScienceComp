@@ -18,13 +18,14 @@ export interface GameState {
   rules: { resolutionSeconds: number; fishingCost: number; catchAmount: number; growthCap: number }
   resolution: { done: number; total: number; nextAt: number | null }
   grounds: { id: number; name: string; biomass: number; maximum: number; growth: number }[]
-  // Every team's boats, orders and active contract are public. Scores are not.
+  // Every team's boats, orders and active contract are public. Scores are not sent,
+  // though stock and boats let a determined team estimate them.
   teams: { id: string; name: string; color: string; contract: string | null; boats: BoatOrder[] }[]
   contracts: (ContractDefinition & { bonus: number })[]
   own: { fish: number; bonus: number; contract: { id: string; progress: number } | null; completed: string[] }
   last: {
     number: number
-    grounds: { id: number; before: number; caught: number; growth: number; after: number; boats: number }[]
+    grounds: { id: number; before: number; caught: number; growth: number; after: number }[]
     boats: BoatReport[]
     completed: string | null
   } | null

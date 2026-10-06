@@ -11,13 +11,14 @@ export const orderSchema = z.object({ boat: z.number().int().min(1).max(BOATS_PE
 export const contractSchema = z.object({ contract: z.string().min(1).max(60).nullable(), current: z.string().min(1).max(60).nullable() }).strict()
 export const totalResolutions = () => Math.floor(DURATION_SECONDS / config.resolutionSeconds)
 interface TeamRow { id: string; research: number; fish: number; bonus: number; contract: string | null; progress: number; visited: string; completed: string }
+const legacyTables = ['grid_cells', 'grid_scores', 'grid_positions']
 
-export function initializeGame(db: DatabaseSync) {
-  // The diamond prototype's tables and any snapshot of its scores are obsolete.
-  if (db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name IN ('grid_cells', 'grid_scores', 'grid_positions')").all().length) {
-    db.exec('DROP TABLE IF EXISTS grid_cells; DROP TABLE IF EXISTS grid_scores; DROP TABLE IF EXISTS grid_positions;')
-    db.prepare("DELETE FROM config WHERE key = 'standings_snapshot'").run()
-  }
+export function initializeGame(db: DatabaseSync, now = Date.now()) {
+  const legacy = db.prepare(`SELECT name FROM sqlite_master WHERE type = 'table' AND name IN (${legacyTables.map(() => '?').join(', ')})`).all(...legacyTables).map(row => String(row.name))
+  const { startedAt } = competitionState(db, now)
+  if (legacy.length && startedAt !== null) endLegacyRound(db, startedAt, legacy.includes('grid_scores'), now)
+  // Between rounds, the diamond prototype's tables and any snapshot of its scores are obsolete.
+  else if (legacy.length) { dropLegacyTables(db); db.prepare("DELETE FROM config WHERE key = 'standings_snapshot'").run() }
   db.exec(`
     CREATE TABLE IF NOT EXISTS commons_grounds (
       id INTEGER PRIMARY KEY, biomass INTEGER NOT NULL CHECK(biomass >= 0), maximum INTEGER NOT NULL,
@@ -36,7 +37,20 @@ export function initializeGame(db: DatabaseSync) {
     INSERT OR IGNORE INTO commons_teams (team_id) SELECT id FROM teams;
   `)
   for (let boat = 1; boat <= BOATS_PER_TEAM; boat++) db.prepare('INSERT OR IGNORE INTO commons_boats (team_id, boat) SELECT id, ? FROM teams').run(boat)
-  if (competitionState(db).startedAt !== null && !groundCount(db)) createGrounds(db)
+}
+const dropLegacyTables = (db: DatabaseSync) => { for (const table of legacyTables) db.exec(`DROP TABLE IF EXISTS ${table}`) }
+interface LegacyStandings { frozenAt: number; teams: { id: string; name: string; color: string; score?: number; diamonds?: number }[] }
+// A diamond round that started but was not reset must neither run on under the
+// longer Commons duration nor lose its results. It ends now, gets no grounds, and
+// keeps its grid_* tables and standings (diamonds as score) until the next reset.
+// Repeating this is harmless, so the reminder is logged on every start until then.
+function endLegacyRound(db: DatabaseSync, startedAt: number, scores: boolean, now: number) {
+  db.prepare("UPDATE config SET value = ? WHERE key = 'started_at'").run(String(Math.min(startedAt, now - DURATION_SECONDS * 1000)))
+  const final = scores ? db.prepare('SELECT t.id, t.name, t.color, s.diamonds FROM teams t JOIN grid_scores s ON s.team_id = t.id ORDER BY s.diamonds DESC, t.name COLLATE NOCASE, t.id').all() as unknown as LegacyStandings['teams'] : []
+  const saved = db.prepare("SELECT value FROM config WHERE key = 'standings_snapshot'").get()
+  const standings: LegacyStandings | null = saved ? JSON.parse(String(saved.value)) : scores ? { frozenAt: now, teams: final } : null
+  if (standings) db.prepare("INSERT OR REPLACE INTO config (key, value) VALUES ('standings_snapshot', ?)").run(JSON.stringify({ frozenAt: standings.frozenAt, teams: standings.teams.map(({ diamonds, ...team }) => ({ ...team, score: team.score ?? diamonds ?? 0 })) }))
+  console.warn(`The database holds a diamond-prototype round that was never reset. It has been ended instead of continuing as The Commons, and its results stay in the grid_* tables until you reset the competition in admin, which you must do before the next round.${final.length ? ` Final diamonds: ${final.map(t => `${t.name} ${t.diamonds}`).join(', ')}.` : ''}`)
 }
 const groundCount = (db: DatabaseSync) => Number(db.prepare('SELECT COUNT(*) AS n FROM commons_grounds').get()!.n)
 function createGrounds(db: DatabaseSync) {
@@ -63,47 +77,57 @@ export function resetTeamGame(db: DatabaseSync, teamId: string) { clearTeam(db, 
 export function resetGame(db: DatabaseSync) {
   db.exec('DELETE FROM commons_grounds; DELETE FROM commons_resolutions;')
   clearTeam(db)
+  // Including the results of a diamond round the upgrade ended.
+  dropLegacyTables(db)
 }
 // Called in the same transaction that records the start time.
 export function startGame(db: DatabaseSync) { resetGame(db); createGrounds(db); grantStartingResearch(db) }
 
-function loadMatch(db: DatabaseSync): MatchState {
-  const boats = db.prepare('SELECT team_id, ground, target FROM commons_boats ORDER BY team_id, boat').all() as unknown as { team_id: string; ground: number | null; target: number | null }[]
-  const teams = db.prepare('SELECT t.id, t.research, c.* FROM teams t JOIN commons_teams c ON c.team_id = t.id ORDER BY t.name COLLATE NOCASE, t.id').all() as unknown as TeamRow[]
-  return {
-    grounds: (db.prepare('SELECT biomass, maximum, fished_by FROM commons_grounds ORDER BY id').all() as unknown as { biomass: number; maximum: number; fished_by: string }[])
-      .map(g => ({ biomass: g.biomass, maximum: g.maximum, fishedBy: JSON.parse(g.fished_by) })),
-    teams: teams.map(t => ({
-      id: t.id, research: t.research, fish: t.fish, bonus: t.bonus, completed: JSON.parse(t.completed),
-      contract: t.contract === null ? null : { id: t.contract, progress: t.progress, visited: JSON.parse(t.visited) },
-      boats: boats.filter(b => b.team_id === t.id).map(b => ({ ground: b.ground, order: b.target })),
-    })),
+// Prepares once, then reads the whole match from the database on every call.
+function matchLoader(db: DatabaseSync): () => MatchState {
+  const boatRows = db.prepare('SELECT team_id, ground, target FROM commons_boats ORDER BY team_id, boat')
+  const teamRows = db.prepare('SELECT t.id, t.research, c.* FROM teams t JOIN commons_teams c ON c.team_id = t.id ORDER BY t.name COLLATE NOCASE, t.id')
+  const groundRows = db.prepare('SELECT biomass, maximum, fished_by FROM commons_grounds ORDER BY id')
+  return () => {
+    const boats = boatRows.all() as unknown as { team_id: string; ground: number | null; target: number | null }[]
+    return {
+      grounds: (groundRows.all() as unknown as { biomass: number; maximum: number; fished_by: string }[]).map(g => ({ biomass: g.biomass, maximum: g.maximum, fishedBy: JSON.parse(g.fished_by) })),
+      teams: (teamRows.all() as unknown as TeamRow[]).map(t => ({
+        id: t.id, research: t.research, fish: t.fish, bonus: t.bonus, completed: JSON.parse(t.completed),
+        contract: t.contract === null ? null : { id: t.contract, progress: t.progress, visited: JSON.parse(t.visited) },
+        boats: boats.filter(b => b.team_id === t.id).map(b => ({ ground: b.ground, order: b.target })),
+      })),
+    }
   }
 }
 export const resolutionsDone = (db: DatabaseSync) => Number(db.prepare('SELECT COUNT(*) AS n FROM commons_resolutions').get()!.n)
+// How many resolutions of a match started at `startedAt` are scheduled at or before `at`.
+export const resolutionsDue = (startedAt: number, at: number) => Math.max(0, Math.min(totalResolutions(), Math.floor((at - startedAt) / (config.resolutionSeconds * 1000))))
 
-// Lazily runs every resolution scheduled at or before `upTo`, inside the caller's
-// transaction. Each number runs once, so repeated or concurrent calls are harmless,
-// and a resolution only ever sees orders and Research committed before it ran.
-export function resolveDue(db: DatabaseSync, upTo: number) {
-  const { startedAt } = competitionState(db, upTo)
-  if (startedAt === null || !groundCount(db)) return
-  const interval = config.resolutionSeconds * 1000
-  const due = Math.min(totalResolutions(), Math.floor((upTo - startedAt) / interval))
-  for (let number = resolutionsDone(db) + 1; number <= due; number++) {
-    const before = loadMatch(db), { state, report } = resolve(before, config)
-    state.grounds.forEach((g, id) => db.prepare('UPDATE commons_grounds SET biomass = ?, fished_by = ? WHERE id = ?').run(g.biomass, JSON.stringify(g.fishedBy), id))
+// Runs resolutions `done` + 1 to `due` inside the transaction that counted `done`.
+// Each number runs once, so repeated or concurrent calls are harmless, and a
+// resolution only ever sees orders and Research committed before it ran. A long
+// catch-up holds the write lock, so statements are prepared once per call.
+export function resolveDue(db: DatabaseSync, startedAt: number, done: number, due: number) {
+  if (due <= done) return
+  const load = matchLoader(db), names = new Map(db.prepare('SELECT id, name FROM teams').all().map(r => [String(r.id), String(r.name)]))
+  const setGround = db.prepare('UPDATE commons_grounds SET biomass = ?, fished_by = ? WHERE id = ?')
+  const pay = db.prepare('UPDATE teams SET research = research - ? WHERE id = ?')
+  const setTeam = db.prepare('UPDATE commons_teams SET fish = ?, bonus = ?, contract = ?, progress = ?, visited = ?, completed = ? WHERE team_id = ?')
+  const setBoat = db.prepare('UPDATE commons_boats SET ground = ? WHERE team_id = ? AND boat = ?')
+  const insert = db.prepare('INSERT INTO commons_resolutions (number, at, record) VALUES (?, ?, ?)')
+  for (let number = done + 1; number <= due; number++) {
+    const before = load(), { state, report } = resolve(before, config)
+    state.grounds.forEach((g, id) => setGround.run(g.biomass, JSON.stringify(g.fishedBy), id))
     for (const team of state.teams) {
       const paid = report.teams.find(r => r.id === team.id)!.paid
-      if (paid) db.prepare('UPDATE teams SET research = research - ? WHERE id = ?').run(paid, team.id)
-      db.prepare('UPDATE commons_teams SET fish = ?, bonus = ?, contract = ?, progress = ?, visited = ?, completed = ? WHERE team_id = ?')
-        .run(team.fish, team.bonus, team.contract?.id ?? null, team.contract?.progress ?? 0, JSON.stringify(team.contract?.visited ?? []), JSON.stringify(team.completed), team.id)
-      team.boats.forEach((boat, index) => db.prepare('UPDATE commons_boats SET ground = ? WHERE team_id = ? AND boat = ?').run(boat.ground, team.id, index + 1))
+      if (paid) pay.run(paid, team.id)
+      setTeam.run(team.fish, team.bonus, team.contract?.id ?? null, team.contract?.progress ?? 0, JSON.stringify(team.contract?.visited ?? []), JSON.stringify(team.completed), team.id)
+      team.boats.forEach((boat, index) => setBoat.run(boat.ground, team.id, index + 1))
     }
     // Enough to replay the match: the state before, every order, and the outcome.
-    const names = Object.fromEntries(db.prepare('SELECT id, name FROM teams').all().map(r => [String(r.id), String(r.name)]))
-    const record = { number, at: startedAt + number * interval, before: { ...before, teams: before.teams.map(t => ({ ...t, name: names[t.id] })) }, report }
-    db.prepare('INSERT INTO commons_resolutions (number, at, record) VALUES (?, ?, ?)').run(number, record.at, JSON.stringify(record))
+    const record = { number, at: startedAt + number * config.resolutionSeconds * 1000, before: { ...before, teams: before.teams.map(t => ({ ...t, name: names.get(t.id) })) }, report }
+    insert.run(number, record.at, JSON.stringify(record))
   }
 }
 
@@ -122,8 +146,8 @@ export function setContract(db: DatabaseSync, teamId: string, input: z.infer<typ
   if (input.contract !== row.contract) db.prepare("UPDATE commons_teams SET contract = ?, progress = 0, visited = '[]' WHERE team_id = ?").run(input.contract, teamId)
 }
 
-export function gameState(db: DatabaseSync, teamId: string): GameState {
-  const { startedAt } = competitionState(db), done = resolutionsDone(db), total = totalResolutions()
+export function gameState(db: DatabaseSync, teamId: string, startedAt: number | null): GameState {
+  const done = resolutionsDone(db), total = totalResolutions()
   const grounds = db.prepare('SELECT id, biomass, maximum FROM commons_grounds ORDER BY id').all() as unknown as { id: number; biomass: number; maximum: number }[]
   const boats = db.prepare('SELECT team_id, ground, target FROM commons_boats ORDER BY boat').all() as unknown as { team_id: string; ground: number | null; target: number | null }[]
   const teams = db.prepare('SELECT t.id, t.name, t.color, c.contract FROM teams t JOIN commons_teams c ON c.team_id = t.id ORDER BY t.name COLLATE NOCASE, t.id').all() as unknown as { id: string; name: string; color: string; contract: string | null }[]
@@ -137,10 +161,14 @@ export function gameState(db: DatabaseSync, teamId: string): GameState {
     teams: teams.map(t => ({ ...t, boats: boats.filter(b => b.team_id === t.id).map(b => ({ ground: b.ground, order: b.target })) })),
     contracts: availableContracts(config, grounds.length).map(c => ({ ...c, bonus: contractBonus(c, config) })),
     own: { fish: own.fish, bonus: own.bonus, contract: own.contract === null ? null : { id: own.contract, progress: own.progress }, completed: JSON.parse(own.completed) },
-    // Other teams' catches and Research payments stay private; the standings carry scores.
+    // Only this team's boat results and payments. Per-ground catches are not private:
+    // they mostly follow from the public stock, and with public boat positions they let
+    // a determined team estimate others' catches and scores even during the freeze.
+    // The number of boats that paid is left out rather than handed over, though a
+    // ground's catch often implies it.
     last: record && {
       number: record.number,
-      grounds: record.report.grounds,
+      grounds: record.report.grounds.map(({ boats: _, ...ground }) => ground),
       boats: record.report.boats.filter(b => b.team === teamId).map(({ team: _, ...boat }) => boat),
       completed: record.report.teams.find(t => t.id === teamId)?.completed ?? null,
     },
