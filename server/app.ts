@@ -182,8 +182,10 @@ export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: s
     }); res.json({ ok: true })
   })
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Endpoint not found.' }))
+  // With `root`, send checks only the path below it for dotfiles, so the app still
+  // serves its routes from a checkout inside a hidden directory.
   const client = resolve('dist/client')
-  if (existsSync(client)) { app.use(express.static(client)); app.get('/{*path}', (_req, res) => res.sendFile(resolve(client, 'index.html'))) }
+  if (existsSync(client)) { app.use(express.static(client)); app.get('/{*path}', (_req, res) => res.sendFile('index.html', { root: client })) }
   app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
     if (error instanceof z.ZodError) return res.status(400).json({ error: error.issues.map(i => i.message).join(' ') })
     if (error instanceof ApiError) return res.status(error.status).json({ error: error.message })
