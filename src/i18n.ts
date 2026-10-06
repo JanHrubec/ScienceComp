@@ -1,5 +1,6 @@
 import { ref, watch } from 'vue'
 import { subjectNames, type Subject, type Language } from '../shared/domain'
+import type { ContractDefinition } from '../shared/commons'
 const storageKey = 'science-language'
 function savedLanguage(): Language {
   try { return localStorage.getItem(storageKey) === 'cs' ? 'cs' : 'en' } catch { return 'en' }
@@ -53,16 +54,66 @@ const czech: Record<string, string> = {
   "Correct": "Správně",
   "Try again": "Zkuste to znovu",
   "Frozen for the final 5 minutes.": "Pořadí je na posledních 5 minut zmrazené.",
-  "Diamond scores": "Počty diamantů",
+  "Scores": "Skóre týmů",
   "Team": "Tým",
-  "Diamonds": "Diamanty",
+  "Score": "Skóre",
   " (you)": " (vy)",
-  "Mine 1 diamond": "Vytěžit 1 diamant",
-  "{count} left here": "Zde zbývá: {count}",
-  "Move: 1 Research. Mining is free. Most diamonds wins.": "Pohyb: 1 bod výzkumu. Těžba je zdarma. Vyhrává nejvíc diamantů.",
-  "Shared game board": "Společná herní plocha",
-  "Column {x}, row {y}": "Sloupec {x}, řádek {y}",
-  ", move here": ", přesunout sem",
+  "Resolutions done: {n} of {total}": "Proběhlá vyhodnocení: {n} z {total}",
+  "Next in {time}": "Další za {time}",
+  "Score {score}": "Skóre {score}",
+  "{fish} fish + {bonus} bonus": "ryby {fish} + bonus {bonus}",
+  "Your boats": "Vaše lodě",
+  "Boat {n}": "Loď {n}",
+  "Idle in port": "Kotví v přístavu",
+  "Idle at {ground}": "Kotví na lovišti {ground}",
+  "Fishing at {ground}": "Loví na lovišti {ground}",
+  "Heading to {ground}: travels next resolution, fishes after": "Míří na loviště {ground}: příští vyhodnocení pluje, pak loví",
+  "Choose a ground for boat {n}, or": "Vyberte loviště pro loď {n}, nebo",
+  "Keep boat {n} idle": "Nechat loď {n} kotvit",
+  "Not enough Research for every fishing boat. Boat 1 is paid first.": "Výzkum nestačí na všechny lovící lodě. Loď 1 se platí jako první.",
+  "Fishing grounds": "Loviště",
+  "Ground {ground}": "Loviště {ground}",
+  "Stock {stock} of {max}": "Zásoba {stock} z {max}",
+  "Regrowth +{n}": "Přírůstek +{n}",
+  "last −{caught} +{growth}": "minule −{caught} +{growth}",
+  "fishing": "loví",
+  "arriving": "připlouvá",
+  "idle here": "kotví zde",
+  "Boat {n} is ordered here": "Loď {n} má rozkaz sem",
+  "Fish here with boat {n}": "Lovit zde lodí {n}",
+  "Send boat {n} here": "Poslat sem loď {n}",
+  "Removed team": "Odstraněný tým",
+  "caught {fish} at {ground}": "ulovila {fish} na lovišti {ground}",
+  "travelled to {ground}": "plula na loviště {ground}",
+  "could not pay to fish at {ground}": "na lovišti {ground} nemohla zaplatit lov",
+  "stayed idle": "kotvila",
+  "Resolution {n}": "Vyhodnocení {n}",
+  "No resolution yet": "Zatím žádné vyhodnocení",
+  "Research paid: {n}": "Zaplacený výzkum: {n}",
+  "Contract completed": "Zakázka splněna",
+  "Contract progress {progress} / {target}": "Postup zakázky {progress} / {target}",
+  "Rival catches are hidden while standings are frozen.": "Úlovky soupeřů jsou skryté, dokud je pořadí zmrazené.",
+  "Other teams caught:": "Úlovky ostatních týmů:",
+  "Orders are carried out every {minutes} minutes.": "Rozkazy se provádějí každé {minutes} minuty.",
+  "Contracts": "Zakázky",
+  "Optional, once each. One at a time; abandoning loses its progress.": "Nepovinné, každá jen jednou. Vždy jen jedna; vzdáním se ztratí její postup.",
+  "Completed": "Splněno",
+  "Abandon": "Vzdát",
+  "Take": "Přijmout",
+  "Abandon this contract? Its progress is lost.": "Vzdát tuto zakázku? Její postup se ztratí.",
+  "Yes, abandon": "Ano, vzdát",
+  "Keep it": "Ponechat",
+  "How it works": "Jak to funguje",
+  "Every {minutes} minutes all orders are carried out at once. A boat ordered to the ground where it is catches up to {catch} fish and costs {cost} Research.": "Každé {minutes} minuty se všechny rozkazy provedou najednou. Loď s rozkazem lovit na lovišti, kde právě je, uloví až {catch} ryby a stojí {cost} bod výzkumu.",
+  "A boat sent to another ground spends the next resolution travelling and fishes from the one after. Idle and travelling boats cost nothing.": "Loď poslaná na jiné loviště stráví příští vyhodnocení plavbou a loví až od dalšího. Kotvící a plující lodě nic nestojí.",
+  "If a ground cannot supply every boat, its fish are shared equally and the rest stay.": "Pokud loviště nestačí všem lodím, ryby se rozdělí rovným dílem a zbytek zůstane.",
+  "Then every ground regrows: slowly when nearly empty, by up to {cap} in the middle, not at all when full.": "Potom každé loviště doroste: téměř prázdné pomalu, uprostřed až o {cap}, plné vůbec.",
+  "Score is fish caught plus contract bonuses. Unused Research is worth nothing.": "Skóre tvoří ulovené ryby a bonusy za zakázky. Nevyužitý výzkum nemá žádnou hodnotu.",
+  "Catch {fish}.": "Ulovte {fish}.",
+  "Catch {fish} at ground {ground}.": "Ulovte {fish} na lovišti {ground}.",
+  "Catch {fish} at grounds with a stock of at least {stock} when the resolution starts.": "Ulovte {fish} na lovištích, která mají na začátku vyhodnocení zásobu aspoň {stock}.",
+  "Catch {fish} at grounds no other team fished in the previous resolution.": "Ulovte {fish} na lovištích, kde v předchozím vyhodnocení nelovil žádný jiný tým.",
+  "Fish at {count} different grounds.": "Lovte na {count} různých lovištích.",
   "Time remaining: {time}": "Zbývající čas: {time}",
   "Login": "Přihlášení",
   "Sign out": "Odhlásit se",
@@ -90,10 +141,13 @@ const czech: Record<string, string> = {
   "Edit": "Upravit",
   "No teams yet.": "Zatím žádné týmy.",
   "Reset competition…": "Resetovat soutěž…",
-  "Clear progress, scores and positions, and refill diamonds; return everyone to the waiting screen. Teams stay.": "Vymazat postup, skóre a pozice, doplnit diamanty a vrátit všechny na čekací obrazovku. Týmy zůstanou.",
+  "Clear progress, scores, boats, contracts and fishing grounds; return everyone to the waiting screen. Teams stay.": "Vymazat postup, skóre, lodě, zakázky a loviště a vrátit všechny na čekací obrazovku. Týmy zůstanou.",
+  "Download game history": "Stáhnout historii hry",
+  "Fish": "Ryby",
+  "Contract bonus": "Bonus za zakázky",
   "Type RESET to confirm.": "Pro potvrzení napište RESET.",
   "Confirm reset": "Potvrdit reset",
-  "Changing age category resets this team’s progress, Research, skips, diamonds and position. Continue?": "Změna věkové kategorie resetuje postup tohoto týmu, výzkum, přeskočení, diamanty a pozici. Pokračovat?",
+  "Changing age category resets this team’s progress, Research, skips, score, boats and contracts. Continue?": "Změna věkové kategorie resetuje postup tohoto týmu, výzkum, přeskočení, skóre, lodě a zakázky. Pokračovat?",
   "Delete {name} and all its progress? This cannot be undone.": "Smazat tým {name} a veškerý jeho postup? Toto nelze vrátit.",
   "Cannot reach the server. Check your connection and try again.": "Server není dostupný. Zkontrolujte připojení a zkuste to znovu.",
   "Something went wrong. Try again.": "Něco se nepovedlo. Zkuste to znovu.",
@@ -115,11 +169,10 @@ const czech: Record<string, string> = {
   "That code is already used by another team.": "Tento kód už používá jiný tým.",
   "Invalid JSON request.": "Neplatný požadavek JSON.",
   "The server could not complete this request. Please try again.": "Server nemohl požadavek dokončit. Zkuste to prosím znovu.",
-  "Your team has already moved. Choose a square again.": "Váš tým se už přesunul. Vyberte políčko znovu.",
-  "Choose a neighbouring square.": "Vyberte sousední políčko.",
-  "You need 1 Research to move.": "K pohybu potřebujete 1 bod výzkumu.",
-  "Your team has moved. Mine at your current square.": "Váš tým se přesunul. Těžte na aktuálním políčku.",
-  "No diamonds left here.": "Zde už žádné diamanty nejsou."
+  "Choose one of the fishing grounds.": "Vyberte jedno z lovišť.",
+  "A teammate has already changed your contract. Check it again.": "Spoluhráč už vaši zakázku změnil. Zkontrolujte ji znovu.",
+  "That contract is not available.": "Tato zakázka není k dispozici.",
+  "Your team has already completed this contract.": "Váš tým už tuto zakázku splnil."
 }
 export function t(english: string, values: Record<string, string | number> = {}): string {
   const text = language.value === 'cs' ? czech[english] ?? english : english
@@ -127,7 +180,17 @@ export function t(english: string, values: Record<string, string | number> = {})
 }
 const czechSubjects: Record<Subject, string> = { physics: 'Fyzika', 'computer-science': 'Informatika', biology: 'Biologie', chemistry: 'Chemie', ess: 'ESS' }
 export const subjectLabel = (subject: Subject) => language.value === 'cs' ? czechSubjects[subject] : subjectNames[subject]
-export function diamonds(count: number): string {
-  if (language.value === 'en') return `${count} ${count === 1 ? 'diamond' : 'diamonds'}`
-  return `${count} ${count === 1 ? 'diamant' : count >= 2 && count <= 4 ? 'diamanty' : 'diamantů'}`
+// Czech accusative forms suit every use: "Ulovte 5 ryb", "ulovila 1 rybu".
+export function fish(count: number): string {
+  if (language.value === 'en') return `${count} fish`
+  return `${count} ${count === 1 ? 'rybu' : count >= 2 && count <= 4 ? 'ryby' : 'ryb'}`
+}
+// Contracts are data built from two blocks, so their text is assembled here in either language.
+export function contractText(contract: ContractDefinition): string {
+  if (contract.counter === 'variety') return t('Fish at {count} different grounds.', { count: contract.target })
+  const amount = fish(contract.target), condition = contract.condition
+  if (!condition) return t('Catch {fish}.', { fish: amount })
+  if ('ground' in condition) return t('Catch {fish} at ground {ground}.', { fish: amount, ground: condition.ground })
+  if ('minBiomass' in condition) return t('Catch {fish} at grounds with a stock of at least {stock} when the resolution starts.', { fish: amount, stock: condition.minBiomass })
+  return t('Catch {fish} at grounds no other team fished in the previous resolution.', { fish: amount })
 }

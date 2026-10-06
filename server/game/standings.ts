@@ -5,7 +5,7 @@ import { transaction } from '../db.js'
 export const STANDINGS_FREEZE_SECONDS = 5 * 60
 const SNAPSHOT_KEY = 'standings_snapshot'
 function liveTeams(db: DatabaseSync): StandingsState['teams'] {
-  return db.prepare('SELECT t.id, t.name, t.color, s.diamonds FROM teams t JOIN grid_scores s ON s.team_id = t.id ORDER BY s.diamonds DESC, t.name COLLATE NOCASE, t.id').all() as unknown as StandingsState['teams']
+  return db.prepare('SELECT t.id, t.name, t.color, c.fish + c.bonus AS score FROM teams t JOIN commons_teams c ON c.team_id = t.id ORDER BY score DESC, t.name COLLATE NOCASE, t.id').all() as unknown as StandingsState['teams']
 }
 // Call inside every competition mutation, before changing scores or the roster.
 // Even with no connected clients, the first post-cutoff action snapshots the

@@ -86,16 +86,6 @@ p { margin-bottom: 16px; }
 .connection { margin-top: 12px; padding: 10px 12px; background: #fff3df; font-size: 14px; }
 .loading { padding: 32px 0; }
 
-.game-view { max-width: 640px; margin: 28px 0 50px; }
-.grid { display: grid; gap: 2px; width: 100%; aspect-ratio: 1; margin-top: 16px; }
-.grid button { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1px; min-width: 0; min-height: 0; overflow: hidden; padding: 1px; border: 1px solid #e0e3e0; border-radius: 0; background: #f4f5f4; color: #34493a; opacity: 1; }
-.grid button.neighbour { border-color: #83a895; background: #e5f0e8; }
-.grid button.neighbour:hover:not(:disabled) { background: #cce0d3; }
-.grid button.own { border: 2px solid var(--accent); background: #fff; }
-.grid small { font-size: 10px; }
-.marker { padding: 2px 4px; border-radius: 2px; color: #fff; font-size: 10px; font-weight: 600; line-height: 1.3; }
-.team-legend { display: flex; flex-wrap: wrap; gap: 12px 22px; margin: 18px 0; padding: 0; list-style: none; font-size: 13px; }
-.team-legend li { display: flex; align-items: center; gap: 8px; }
 .color-dot { display: inline-block; width: 8px; height: 8px; }
 
 .admin { max-width: 1500px; margin: auto; padding: 24px 32px; }
@@ -138,7 +128,6 @@ thead small { font-weight: 400; }
   .choice { padding: 13px 8px; }
   .answer-actions { gap: 12px; }
   .answer-actions .hint { font-size: 12px; }
-  .marker { padding: 1px 2px; font-size: 8px; }
   .admin { padding: 20px; }
   .team-form label, .team-form .code-input { flex: 1; max-width: none; }
   .team-form button { margin-top: 8px; }
@@ -168,27 +157,78 @@ thead small { font-weight: 400; }
 
 .admin-reset { margin-top: 32px; color: var(--muted); font-size: 14px; }
 
-.mining-controls { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.diamond-total { margin-left: auto; font-size: 14px; font-weight: 600; }
-.game-rules { margin: 12px 0 0; }
-.grid button { flex-direction: column; flex-wrap: nowrap; gap: 0; }
-.cell-stock { font-size: 14px; font-weight: 400; line-height: 1.2; font-variant-numeric: tabular-nums; }
-.grid .depleted .cell-stock { color: var(--muted); }
-.cell-occupants { display: flex; align-items: center; gap: 2px; line-height: 1; }
-.diamond-scores { margin-top: 24px; max-width: 640px; }
-.diamond-scores th { font-weight: 400; white-space: normal; }
-.diamond-scores th .color-dot { margin-right: 8px; }
-.diamond-scores td, .diamond-scores thead th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
-.diamond-scores .your-score th { font-weight: 600; }
-@media (max-width: 700px) {
-  .cell-stock { font-size: 11px; }
-  .cell-occupants .marker, .cell-occupants small { font-size: 7px; line-height: 1; padding: 0 1px; }
-  .mining-controls { gap: 8px 12px; }
-}
+.score-table { margin-top: 24px; max-width: 640px; }
+.score-table th { font-weight: 400; white-space: normal; }
+.score-table th .color-dot { margin-right: 8px; }
+.score-table td, .score-table thead th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.score-table td:first-child, .score-table thead th:first-child { width: 1%; color: var(--muted); text-align: left; }
+.score-table .your-score th { font-weight: 600; }
 
 .standings-view { max-width: 640px; margin: 28px 0 50px; }
 .standings-view h1 { font-size: 24px; margin-bottom: 12px; }
-.standings-view .diamond-scores { margin-top: 16px; }
+.standings-view .score-table { margin-top: 16px; }
+
+/* The Commons: one screen, grounds on the left, the rest beside them. */
+.commons { margin: 24px 0 50px; }
+.commons h2 { margin-bottom: 8px; font-size: 15px; }
+.commons-status { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 20px; padding-bottom: 14px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.next-resolution { font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+.commons-score { margin-left: auto; font-size: 15px; font-variant-numeric: tabular-nums; }
+.commons-score span { margin-left: 6px; color: var(--muted); font-size: 13px; font-weight: 400; }
+.commons-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 36px; margin-top: 18px; }
+.commons-side { display: grid; align-content: start; gap: 28px; min-width: 0; }
+.commons-side .score-table { margin-top: 0; }
+.commons-side th, .commons-side td { padding: 6px 8px; }
+.boats { margin-bottom: 20px; }
+.boat-picker { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.boat-option { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-color: var(--line); background: #fff; color: #242725; font-weight: 400; text-align: left; }
+.boat-option:hover:not(:disabled) { background: #f6f7f6; }
+.boat-option.selected { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: #f0f5f2; }
+.boat-option strong { display: block; font-size: 14px; }
+.boat-status { display: block; color: var(--muted); font-size: 13px; }
+.boat-orders { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin-top: 12px; }
+.boat-orders button, .ground button, .contract-meta button { padding: 5px 10px; font-size: 13px; }
+.boats .warning { margin: 10px 0 0; color: #a33227; }
+.grounds { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.ground { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px 12px; border: 1px solid var(--line); border-radius: 3px; }
+.ground.ordered { border-color: var(--accent); }
+.ground header { display: flex; align-items: baseline; justify-content: space-between; }
+.ground h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.stock { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.stock strong { color: #242725; font-size: 16px; }
+.stock-meter { height: 4px; background: #eceeec; }
+.stock-meter span { display: block; height: 100%; background: var(--accent); }
+.ground-facts { margin: 0; color: var(--muted); font-size: 12px; }
+.ground-boats { display: flex; flex-wrap: wrap; gap: 4px; min-height: 22px; margin: 0; padding: 0; list-style: none; }
+.ground button { margin-top: auto; }
+.boat-tag { display: inline-block; padding: 1px 5px; border: 1px dashed transparent; border-radius: 2px; color: #fff; font-size: 11px; font-weight: 600; line-height: 1.4; white-space: nowrap; }
+.boat-tag.arriving { background: #fff; }
+.boat-tag.idle { opacity: .45; }
+.boat-tag.own { outline: 2px solid #242725; outline-offset: 1px; }
+.tag-legend { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; }
+.tag-legend .boat-tag:not(:first-child) { margin-left: 10px; }
+.plain-list { margin: 0 0 10px; padding: 0; list-style: none; font-size: 14px; }
+.plain-list li { padding: 2px 0; }
+.last-resolution .hint { margin-bottom: 0; }
+.contracts > .hint { margin-bottom: 10px; }
+.contract-list { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
+.contract-list li { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.contract-list li.active { padding: 10px 8px; background: #f0f5f2; }
+.contract-list p { margin: 0 0 6px; font-size: 14px; }
+.contract-meta { display: flex; align-items: center; gap: 10px; min-height: 30px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.contract-meta > :last-child { margin-left: auto; }
+.contract-bonus { color: var(--accent); font-weight: 600; }
+.pursuers { display: flex; gap: 3px; }
+.history-link { margin-right: 16px; font-size: 13px; }
+@media (max-width: 860px) {
+  .commons-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+}
+@media (max-width: 700px) {
+  .grounds { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+  .boat-picker { gap: 8px; }
+  .boat-option { padding: 8px 10px; }
+  .commons-score { margin-left: 0; }
+}
 @media (max-width: 700px) {
   .main-tabs { gap: 20px; }
   .main-tabs a { font-size: 14px; }

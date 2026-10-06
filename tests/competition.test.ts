@@ -94,12 +94,15 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal((await request('/admin/start', a.cookie, {})).status, 401)
     assert.equal((await request('/team/answer', a.cookie, { subject: 'physics', questionId: bank.physics['11–13'][0].id, answer: answerFor(bank.physics['11–13'][0]) })).status, 409)
     assert.equal((await request('/team/skip', a.cookie, { subject: 'physics', questionId: bank.physics['11–13'][0].id })).status, 409)
-    assert.equal((await request('/team/game/move', a.cookie, { x: 1, y: 0, fromX: 0, fromY: 0 })).status, 409)
-    assert.equal((await request('/team/game/mine', a.cookie, { x: 0, y: 0 })).status, 409)
-    assert.equal(a.body.game.cells.length, 144)
-    assert(a.body.game.cells.every(cell => cell.stock === 3))
+    assert.equal((await request('/team/game/order', a.cookie, { boat: 0, ground: 'A' })).status, 409)
+    assert.equal((await request('/team/game/contract', a.cookie, { contract: 'survey', current: null })).status, 409)
+    assert.equal(a.body.game.grounds.length, 0)
     const starts = await Promise.all([request<CompetitionState>('/admin/start', admin, {}), request<CompetitionState>('/admin/start', admin, {})])
     assert.deepEqual(starts.map(r => r.status).sort(), [200, 409])
+    // Grounds are fixed at the start: two teams, so four grounds.
+    const opening = (await request<TeamState>('/team/state', a.cookie)).body.game
+    assert.deepEqual(opening.grounds.map(g => [g.id, g.biomass, g.max, g.growth]), [['A', 8, 12, 3], ['B', 8, 12, 3], ['C', 8, 12, 3], ['D', 8, 12, 3]])
+    assert.deepEqual([opening.resolution, opening.totalResolutions], [0, 15])
     const clock = (await request<CompetitionState>('/competition')).body
     assert.equal(clock.endsAt! - clock.startedAt!, 2700000)
     assert.equal(clock.booklets.ess, '')
@@ -151,35 +154,45 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal(afterSkips.team.skipsUsed, 5)
     assert.equal((await request('/team/skip', b.cookie, { subject: 'ess', questionId: afterSkips.progress.ess.question!.id })).status, 400)
     current = (await request<TeamState>('/team/state', a.cookie)).body
-    const beforeMove = current.team.research
-    assert.equal((await request('/team/game/move', a.cookie, { x: 1, y: 1, fromX: 0, fromY: 0 })).status, 400)
-    assert.equal((await request('/team/game/move', a.cookie, { x: 1, y: 0, fromX: 0, fromY: 0 })).status, 200)
-    assert.equal((await request('/team/game/move', b.cookie, { x: 1, y: 0, fromX: 0, fromY: 0 })).status, 409)
-    const observed = (await request<TeamState>('/team/state', c.cookie)).body.game.teams.find(t => t.id === create.body.id)!
-    assert.equal(observed.x, 1); assert.equal(observed.y, 0)
-    assert.equal((await request<TeamState>('/team/state', b.cookie)).body.team.research, beforeMove - 1)
-    assert.equal((await request('/team/game/move', c.cookie, { x: 2, y: 0, fromX: 1, fromY: 0 })).status, 400)
-    assert.equal((await request('/team/game/mine', a.cookie, { x: 0, y: 0 })).status, 409)
-    assert.equal((await request('/team/game/mine', a.cookie, { x: 1, y: 0, amount: 100 })).status, 400)
-    assert.equal((await request('/team/game/mine', a.cookie, { x: -1, y: 0 })).status, 400)
-    assert.equal((await request('/team/game/mine', a.cookie, { x: 1, y: 0 })).status, 200)
-    const mined = (await request<TeamState>('/team/state', b.cookie)).body
-    assert.equal(mined.game.diamonds, 1)
-    assert.equal(mined.game.cells.find(cell => cell.x === 1 && cell.y === 0)!.stock, 2)
-    assert.equal(mined.team.research, beforeMove - 1)
-    assert.equal((await request('/team/game/mine', b.cookie, { x: 1, y: 0 })).status, 200)
-    const lastDiamond = await Promise.all([
-      request('/team/game/mine', a.cookie, { x: 1, y: 0 }),
-      request('/team/game/mine', c.cookie, { x: 1, y: 0 }),
-    ])
-    assert.deepEqual(lastDiamond.map(r => r.status).sort(), [200, 400])
-    const contested = (await request<TeamState>('/team/state', c.cookie)).body
-    assert.equal(contested.game.cells.find(cell => cell.x === 1 && cell.y === 0)!.stock, 0)
-    assert.equal(contested.standings.teams.reduce((total, team) => total + team.diamonds, 0), 3)
-    assert.equal((await request('/team/game/mine', b.cookie, { x: 1, y: 0 })).status, 400)
-    // Free mining is allowed even with negative Research; only movement spends it.
-    assert.equal(contested.team.research, -10)
-    assert.equal((await request<AdminTeam[]>('/admin/teams', admin)).body.reduce((sum, team) => sum + team.diamonds, 0), 3)
+    const beforeFishing = current.team.research
+    assert.equal((await request('/team/game/order', a.cookie, { boat: 0, ground: 'Z' })).status, 400)
+    assert.equal((await request('/team/game/order', a.cookie, { boat: 2, ground: 'A' })).status, 400)
+    assert.equal((await request('/team/game/order', a.cookie, { boat: 0, ground: 'A', catch: 99 })).status, 400)
+    // Orders persist and either device of a team may give them.
+    assert.equal((await request('/team/game/order', a.cookie, { boat: 0, ground: 'A' })).status, 200)
+    assert.equal((await request('/team/game/order', b.cookie, { boat: 1, ground: 'A' })).status, 200)
+    assert.equal((await request('/team/game/order', c.cookie, { boat: 0, ground: 'A' })).status, 200)
+    assert.equal((await request('/team/game/contract', a.cookie, { contract: 'ground-a', current: null })).status, 200)
+    // A stale device cannot silently replace a teammate's contract.
+    assert.equal((await request('/team/game/contract', b.cookie, { contract: 'survey', current: null })).status, 409)
+    assert.equal((await request('/team/game/contract', b.cookie, { contract: 'nonsense', current: 'ground-a' })).status, 400)
+    let seen = (await request<TeamState>('/team/state', c.cookie)).body.game
+    assert.deepEqual(seen.teams.find(t => t.id === create.body.id)!.boats, [{ location: null, order: 'A' }, { location: null, order: 'A' }])
+    assert.equal(seen.teams.find(t => t.id === create.body.id)!.contract, 'ground-a')
+    assert.deepEqual([seen.own.contract, seen.resolution, seen.last], [null, 0, null])
+    // Resolutions are due by the clock; the next request applies them.
+    const rewind = (ms: number) => db.prepare("UPDATE config SET value = CAST(value AS INTEGER) - ? WHERE key = 'started_at'").run(ms)
+    rewind(3 * 60 * 1000)
+    seen = (await request<TeamState>('/team/state', a.cookie)).body.game
+    assert.equal(seen.resolution, 1)
+    assert.deepEqual(seen.last!.own!.boats.map(boat => [boat.action, boat.to]), [['travel', 'A'], ['travel', 'A']])
+    assert.deepEqual(seen.teams.find(t => t.id === create.body.id)!.boats, [{ location: 'A', order: 'A' }, { location: 'A', order: 'A' }])
+    assert.equal(seen.grounds[0].biomass, 11)
+    assert.equal((await request<TeamState>('/team/state', b.cookie)).body.team.research, beforeFishing)
+    rewind(3 * 60 * 1000)
+    const fished = (await request<TeamState>('/team/state', b.cookie)).body
+    assert.equal(fished.game.resolution, 2)
+    assert.deepEqual(fished.game.last!.own!.boats.map(boat => [boat.action, boat.caught]), [['fish', 2], ['fish', 2]])
+    assert.deepEqual(fished.game.last!.grounds[0], { id: 'A', before: 11, caught: 4, growth: 3, after: 10, fishedBy: [create.body.id, create.body.id] })
+    assert.deepEqual(fished.game.own, { fish: 4, bonus: 0, completed: [], contract: { id: 'ground-a', progress: 4, target: 12 } })
+    assert.equal(fished.team.research, beforeFishing - 2)
+    // A team in debt keeps its place but cannot pay to fish.
+    const broke = (await request<TeamState>('/team/state', c.cookie)).body
+    assert.equal(broke.game.last!.own!.boats[0].action, 'unpaid')
+    assert.equal(broke.team.research, -10)
+    assert.equal(broke.game.last!.teams.find(t => t.id === create.body.id)!.caught, 4)
+    assert.deepEqual(broke.standings.teams.map(t => t.score), [4, 0])
+    assert.equal((await request<AdminTeam[]>('/admin/teams', admin)).body.reduce((sum, team) => sum + team.score, 0), 4)
     const saved = (await request<TeamState>('/team/state', a.cookie)).body
     await close(); db.close(); db = openDatabase(path); server = createApp(db, bank, 'test-password').listen(0, '127.0.0.1'); await new Promise<void>(resolve => server.once('listening', resolve)); base = `http://127.0.0.1:${(server.address() as { port: number }).port}/api`
     const restored = (await request<TeamState>('/team/state', a.cookie)).body
@@ -194,8 +207,9 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert(subjects.every(subject => atEnd.progress[subject].question === null))
     assert.equal((await answer('physics', bank.physics['11–13'][4])).status, 409)
     assert.equal((await request('/team/skip', a.cookie, { subject: 'physics', questionId: bank.physics['11–13'][4].id })).status, 409)
-    assert.equal((await request('/team/game/move', a.cookie, { x: 2, y: 0, fromX: 1, fromY: 0 })).status, 409)
-    assert.equal((await request('/team/game/mine', a.cookie, { x: 1, y: 0 })).status, 409)
+    assert.equal(atEnd.game.resolution, 15)
+    assert.equal((await request('/team/game/order', a.cookie, { boat: 0, ground: 'B' })).status, 409)
+    assert.equal((await request('/team/game/contract', a.cookie, { contract: null, current: atEnd.game.own.contract?.id ?? null })).status, 409)
     assert.equal((await request('/admin/start', admin, {})).status, 409)
     assert.equal((await request<TeamState>('/team/state', a.cookie)).body.team.research, atEnd.team.research)
     assert.equal((await request('/admin/reset', admin, { confirmation: 'no' })).status, 400)
@@ -204,11 +218,12 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal(reset.competition.status, 'waiting'); assert.equal(reset.competition.startedAt, null)
     assert.equal(reset.team.research, 0); assert.equal(reset.team.earned, 0); assert.equal(reset.team.skipsUsed, 0)
     assert(subjects.every(s => reset.progress[s].completed === 0))
-    assert(reset.game.cells.every(cell => cell.stock === 3))
-    assert(reset.standings.teams.every(team => team.diamonds === 0))
+    assert.deepEqual([reset.game.grounds, reset.game.resolution, reset.game.last], [[], 0, null])
+    assert(reset.game.teams.every(team => team.contract === null && team.boats.every(boat => boat.location === null && boat.order === null)))
+    assert(reset.standings.teams.every(team => team.score === 0))
     await request(`/admin/teams/${create.body.id}`, admin, {}, 'DELETE')
     assert.equal((await request('/team/state', a.cookie)).status, 401)
-    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM grid_scores WHERE team_id = ?').get(create.body.id)!.n, 0)
+    for (const table of ['commons_teams', 'commons_boats']) assert.equal(db.prepare(`SELECT COUNT(*) AS n FROM ${table} WHERE team_id = ?`).get(create.body.id)!.n, 0)
   } finally { await close(); db.close(); rmSync(dir, { recursive: true, force: true }) }
 })
 
@@ -369,7 +384,7 @@ test('short science answers accept explicit bilingual variants without accepting
   }
 })
 
-test('standings freeze before the first post-cutoff action, persist across restart, and keep admin live', async () => {
+test('standings freeze between the resolutions either side of the cutoff, persist across restart, and keep admin live', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'standings-')), path = join(dir, 'test.sqlite')
   let db = openDatabase(path)
   let server = createApp(db, bank, 'test-password').listen(0, '127.0.0.1')
@@ -381,6 +396,8 @@ test('standings freeze before the first post-cutoff action, persist across resta
     return { data: await response.json(), cookie: response.headers.get('set-cookie')?.split(';')[0] || '' }
   }
   const close = () => new Promise<void>(resolve => server.close(() => resolve()))
+  const setStart = (value: number) => db.prepare("UPDATE config SET value = ? WHERE key = 'started_at'").run(String(value))
+  const earn = async (cookie: string, count: number) => { for (const q of bank.physics['11–13'].slice(0, count)) await call('/team/answer', cookie, { subject: 'physics', questionId: q.id, answer: answerFor(q) }) }
   try {
     const admin = (await call('/admin/login', '', { password: 'test-password' })).cookie
     const aId = (await call('/admin/teams', admin, { name: 'Alpha', age: '11–13', code: 'AAAA' })).data.id as string
@@ -388,27 +405,35 @@ test('standings freeze before the first post-cutoff action, persist across resta
     const a = (await call('/team/login', '', { code: 'AAAA' })).cookie
     const b = (await call('/team/login', '', { code: 'BBBB' })).cookie
     await call('/admin/start', admin, {})
-    await call('/team/game/mine', a, { x: 0, y: 0 })
-    await call('/team/game/mine', b, { x: 1, y: 0 })
-    await call('/team/game/mine', b, { x: 1, y: 0 })
+    await earn(a, 5); await earn(b, 5)
+    await call('/team/game/order', a, { boat: 0, ground: 'A' })
+    await call('/team/game/order', b, { boat: 0, ground: 'B' })
+    await call('/team/game/order', b, { boat: 1, ground: 'C' })
+    setStart(Date.now() - 6 * 60 * 1000 - 1)
     const before = (await call('/team/state', a)).data as TeamState
+    assert.equal(before.game.resolution, 2)
     assert.equal(before.standings.frozenAt, null)
-    assert.deepEqual(before.standings.teams.map(t => [t.id, t.diamonds]), [[bId, 2], [aId, 1]])
-    const start = Date.now() - 40 * 60 * 1000 - 1
-    db.prepare("UPDATE config SET value = ? WHERE key = 'started_at'").run(String(start))
-    // No standings read occurs at the cutoff: a score-changing action is first.
-    const after = (await call('/team/game/mine', b, { x: 1, y: 0 })).data as TeamState
-    assert.equal(after.game.diamonds, 3)
-    assert.equal(after.standings.frozenAt, start + 40 * 60 * 1000)
-    assert.deepEqual(after.standings.teams, before.standings.teams)
-    assert(after.game.teams.every(team => !Object.hasOwn(team, 'diamonds')))
-    await call('/team/game/mine', a, { x: 0, y: 0 })
-    const later = (await call('/team/state', a)).data as TeamState
-    assert.equal(later.game.diamonds, 2)
-    assert.deepEqual(later.standings, after.standings)
+    assert.deepEqual(before.standings.teams.map(t => [t.id, t.score]), [[bId, 4], [aId, 2]])
+    assert.deepEqual(before.game.last!.teams.map(t => t.caught), [4])
+    // Nobody connects near the cutoff: the next request runs resolutions on
+    // both sides of it, and only those before it may reach the frozen table.
+    const start = Date.now() - 42 * 60 * 1000 - 1, cutoff = start + 40 * 60 * 1000
+    setStart(start)
+    const after = (await call('/team/game/order', a, { boat: 1, ground: 'A' })).data as TeamState
+    assert.equal(after.game.resolution, 14)
+    assert.equal(after.standings.frozenAt, cutoff)
+    const history = (await call('/admin/game/history', admin)).data as { resolutions: { number: number; at: number; names: Record<string, string>; teams: { id: string; fish: number; bonus: number }[] }[] }
+    const scoreAt = (n: number, id: string) => { const t = history.resolutions[n - 1].teams.find(t => t.id === id)!; return t.fish + t.bonus }
+    assert.deepEqual(history.resolutions.map(r => r.number), Array.from({ length: 14 }, (_, i) => i + 1))
+    assert(history.resolutions[12].at < cutoff && history.resolutions[13].at > cutoff)
+    assert.deepEqual(after.standings.teams.map(t => [t.id, t.score]), [[bId, scoreAt(13, bId)], [aId, scoreAt(13, aId)]])
+    assert(scoreAt(14, aId) > scoreAt(13, aId))
+    assert.equal(after.game.own.fish + after.game.own.bonus, scoreAt(14, aId))
+    assert(after.game.teams.every(team => !Object.hasOwn(team, 'score') && !Object.hasOwn(team, 'fish')))
+    assert(after.game.last!.teams.every(t => t.caught === null && t.boats.every(boat => boat.caught === null)))
     const adminTeams = (await call('/admin/teams', admin)).data as AdminTeam[]
-    assert.equal(adminTeams.find(t => t.id === aId)!.diamonds, 2)
-    assert.equal(adminTeams.find(t => t.id === bId)!.diamonds, 3)
+    assert.equal(adminTeams.find(t => t.id === aId)!.score, scoreAt(14, aId))
+    assert.equal(adminTeams.find(t => t.id === bId)!.score, scoreAt(14, bId))
     await close(); db.close(); db = openDatabase(path)
     server = createApp(db, bank, 'test-password').listen(0, '127.0.0.1')
     await new Promise<void>(resolve => server.once('listening', resolve))
@@ -418,13 +443,17 @@ test('standings freeze before the first post-cutoff action, persist across resta
     await call(`/admin/teams/${bId}`, admin, { name: 'Renamed', age: '11–13', code: 'BBBB' }, 'PUT')
     await call(`/admin/teams/${bId}`, admin, {}, 'DELETE')
     assert.deepEqual(((await call('/team/state', a)).data as TeamState).standings, after.standings)
+    assert.equal(((await call('/admin/game/history', admin)).data as typeof history).resolutions[0].names[bId], 'Beta')
     await call('/admin/reset', admin, { confirmation: 'RESET' })
     const reset = (await call('/team/state', a)).data as TeamState
     assert.equal(reset.standings.frozenAt, null)
     assert.equal(reset.standings.teams.length, 1)
-    assert.equal(reset.standings.teams[0].diamonds, 0)
+    assert.equal(reset.standings.teams[0].score, 0)
+    assert.equal(((await call('/admin/game/history', admin)).data as typeof history).resolutions.length, 0)
     await call('/admin/start', admin, {})
-    await call('/team/game/mine', a, { x: 0, y: 0 })
-    assert.equal(((await call('/team/state', a)).data as TeamState).standings.teams[0].diamonds, 1)
+    await earn(a, 1)
+    await call('/team/game/order', a, { boat: 0, ground: 'A' })
+    setStart(Date.now() - 6 * 60 * 1000 - 1)
+    assert.equal(((await call('/team/state', a)).data as TeamState).standings.teams[0].score, 2)
   } finally { await close(); db.close(); rmSync(dir, { recursive: true, force: true }) }
 })

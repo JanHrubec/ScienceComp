@@ -1,6 +1,6 @@
 # Science competition
 
-Vue 3 + TypeScript + Vite, with an Express server and SQLite. Includes 300 questions in English and Czech, team access codes, admin controls, independent subject progress, Research, five team-wide skips and a shared 12×12 diamond-mining prototype. No individual student accounts or external services.
+Vue 3 + TypeScript + Vite, with an Express server and SQLite. Includes 300 questions in English and Czech, team access codes, admin controls, independent subject progress, Research, five team-wide skips and The Commons, a shared fishing game. No individual student accounts or external services.
 
 ## Run locally
 
@@ -43,18 +43,21 @@ For an internet deployment, terminate HTTPS at a reverse proxy and set secure co
 ## Competition rules
 
 - All five subject tracks are independent, ordered and selected by the team's age category.
-- The admin starts one shared **45-minute** competition. Until then, questions are withheld and all play actions are blocked. At zero, both questions and grid movement stop on the server. The timer appears on login, admin, Questions, Game and Standings screens and survives refreshes/restarts.
+- The admin starts one shared **45-minute** competition. Until then, questions are withheld and all play actions are blocked. At zero, both questions and game orders stop on the server. The timer appears on login, admin, Questions, Game and Standings screens and survives refreshes/restarts.
 - Multiple choice: correct on the first attempt earns **+10 Research**; the second attempt earns **0**. **Every valid submission from the third onward costs 5 Research**, whether correct or incorrect. Incorrect answers on the first two attempts cost nothing. Only a correct answer advances.
 - Text and numerical: correct on the first attempt earns the configured reward (default 10), the second earns half, and later attempts earn zero. Incorrect answers earn zero and never advance or reveal the answer. Malformed numerical input is rejected without counting an attempt.
-- Attempts are shared by the whole team. Penalties can take Research below zero; teams must earn their way back to at least 1 Research to move. Multiple-choice scoring is fixed; per-question `reward` configures only open answers.
+- Attempts are shared by the whole team. Penalties can take Research below zero; teams must earn their way back before their boats can pay to fish. Multiple-choice scoring is fixed; per-question `reward` configures only open answers.
 - Five skips per team across all subjects (`TEAM_SKIP_LIMIT` in `shared/domain.ts`). A skip advances without reward and cannot be reversed.
-- The admin sees Research (spendable balance) and Diamonds (game score). Net question score, subject progress and skip usage expand within each row.
-- Grid moves cost 1 Research, are orthogonal and allow overlapping teams. Each square starts with **3 diamonds**, shown as a number. **Mine 1 diamond** takes one from your current square and adds one to your team, for free. Stock is shared and does not regenerate during a round.
-- Most diamonds wins when the timer expires. The third tab, **Standings**, lists every team by diamonds. It freezes with **5 minutes remaining** (40 minutes into the 45-minute round), and stays frozen across refreshes, new logins and server restarts. Mining continues; your own Game counter and the admin diamond totals stay live. The end screen only says “Competition over.”; organizers announce winners using diamond totals in admin. Diamonds are points, not spendable Research. Both stock and scores survive server restarts.
-- Mining uses a transaction: competing teams cannot both collect the last diamond. It is blocked before start, after expiry, on an empty square, or if a teammate has moved the team since the request was prepared. No upgrades, cooldowns or other game mechanics are included.
+- The admin sees Research (spendable balance) and Score (game score: fish plus contract bonuses). Net question score, subject progress and skip usage expand within each row.
+- **The Commons** (Game tab): teams are rival fishing organisations on shared grounds. There are teams + 2 grounds, fixed when the admin presses Start, each starting with 8 fish (maximum 12). Each team has 2 boats. A boat's standing order is a ground or idle, and persists until changed.
+- Every **3 minutes** all orders resolve at once (15 resolutions in 45 minutes, the last at the final second). A boat ordered to the ground where it is pays **1 Research** and catches up to **2 fish**; boat 1 is paid first. A boat ordered elsewhere spends the next resolution travelling (free) and fishes from the one after. If a ground cannot supply every boat, its fish are split equally, rounded down. Then every ground regrows by min(max(stock, 1), 12 − stock, 3): slowly when nearly empty, fastest in the middle, not at all when full.
+- Every team's boats, orders and active contract are visible to everyone. Six public contracts (catch a number of fish at a named ground, at grounds with a high stock, or at grounds no other team fished last time; or fish at several different grounds) are optional, once per team, one at a time, and pay **5 bonus points**. Abandoning one loses its progress.
+- Score is fish caught plus contract bonuses; unused Research is worth nothing. The Game tab shows the last resolution's outcome, a countdown to the next one and a compact leaderboard.
+- Highest score wins when the timer expires. The third tab, **Standings**, lists every team by score. It freezes with **5 minutes remaining** (40 minutes into the 45-minute round), and stays frozen across refreshes, new logins and server restarts; rivals' catches in the Game tab are hidden too. Your own score and the admin totals stay live. The end screen only says “Competition over.”; organizers announce winners using the scores in admin.
+- Resolutions run on the server in the transaction of the first request after they fall due, so they happen exactly once, at their scheduled time's orders and Research, even if nobody was connected. Scores, boats and grounds survive server restarts. Admin can download the full per-resolution history as JSON (**Download game history**).
 - Other devices refresh shared state every 1.5 seconds. Switching tabs is immediate; form state is retained until the question advances. The browser never receives accepted answers.
 
-Admin can rename/delete teams and change codes. Existing sessions remain valid after code changes. Changing a team's age category clears that team's progress, Research, skips, position and diamond score after a UI confirmation (shared stock is not restored for a single-team edit). Deleting a team removes its sessions. **Reset competition** clears progress, attempts, Research, skips, positions and diamond scores, refills all squares, and returns the timer and all teams to waiting. It keeps the roster, codes and sessions. Start game cannot restart or extend a running/finished round; reset first. To remove the roster, delete teams explicitly.
+Admin can rename/delete teams and change codes. Existing sessions remain valid after code changes. Changing a team's age category clears that team's progress, Research, skips, score, boats and contracts after a UI confirmation (shared grounds are not refilled for a single-team edit). Deleting a team removes its sessions. **Reset competition** clears progress, attempts, Research, skips, scores, boats, contracts, grounds and game history, and returns the timer and all teams to waiting. It keeps the roster, codes and sessions. Start game cannot restart or extend a running/finished round; reset first. To remove the roster, delete teams explicitly.
 
 ## Subject booklets
 
@@ -92,7 +95,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-API tests use temporary SQLite files and verify bilingual schema validation, private answer projection, English/Czech answer normalisation, decimal comma input, all retry tiers and penalties, negative balances, legacy database migration, global skips, concurrent same/different-subject answers, resource spending, concurrent mining/depletion, diamond persistence/reset, the standings freeze and live admin totals, age tracks, waiting/start/expiry enforcement, admin actions, session/timer persistence and a real server/database restart. Browser tests use an isolated in-memory server on port 3101, exercise separate browser contexts, language switching without draft/attempt loss, Czech text and numerical submissions, independent device preferences, and save desktop/mobile screenshots in `test-results/`. Run `npm run build` before browser tests so the production UI exists.
+API tests use temporary SQLite files and verify bilingual schema validation, private answer projection, English/Czech answer normalisation, decimal comma input, all retry tiers and penalties, negative balances, legacy database migration, global skips, concurrent same/different-subject answers, game orders, contracts, timed resolutions and their Research costs, game persistence/reset, the standings freeze across resolutions and live admin totals, age tracks, waiting/start/expiry enforcement, admin actions, session/timer persistence and a real server/database restart. Browser tests use an isolated in-memory server on port 3101, exercise separate browser contexts, language switching without draft/attempt loss, Czech text and numerical submissions, independent device preferences, and save desktop/mobile screenshots in `test-results/`. `tests/commons.test.ts` covers the pure fishing rules. Run `npm run build` before browser tests so the production UI exists.
 
 For a manual event rehearsal:
 
@@ -101,8 +104,8 @@ For a manual event rehearsal:
 3. Answer Physics on one device. Check Physics advances, other subjects do not, and Research appears on the second device.
 4. Switch subjects and return; check the next unanswered question is retained.
 5. Submit correct answers in different subjects on two devices at once; check both rewards/progress remain.
-6. Compare age-category questions. Move and mine in Game; observe the position, stock and diamond score from the other team's device.
-7. Stop and restart the server; reload both sessions and check balances, progress, positions, diamond scores and remaining stock.
+6. Compare age-category questions. In Game, send a boat to a ground and take a contract; observe both from the other team's device. After the next resolution, check the travel, the catch, the Research paid and the score.
+7. Stop and restart the server; reload both sessions and check balances, progress, boats, grounds and scores.
 8. Switch English/Čeština while an answer is selected or typed. Check the draft remains, the question translates, a teammate’s language stays independent, and the preference survives reload.
 9. Check the Booklet link opens a separate tab and ESS has none. Check reset returns everyone to waiting, and test invalid-code/offline feedback before admitting students.
 
@@ -114,4 +117,4 @@ Existing SQLite databases migrate automatically to allow negative Research balan
 
 Reset also clears the frozen standings for the next round. The five-minute freeze interval is `STANDINGS_FREEZE_SECONDS` in `server/game/standings.ts`.
 
-The temporary mining constants and rules are in `server/game/grid.ts`. `DIAMONDS_PER_CELL` sets starting stock for new games and resets. Changing it does not refill an existing round.
+Every game balancing value (resolution interval, fishing cost, catch, maximum and starting stock, growth cap, ground-count formula, starting Research, contracts and bonus) is in `server/game/commons-config.ts`; the rules themselves are the pure module `shared/commons.ts`. Change values between events, then reset. `npm run simulate` plays thousands of matches with fixed strategies at 3, 8 and 20 teams and reports Research affordability, strategy balance, contract value and how late the leaderboard still changes. Contracts and bonus were tuned with it: the plan's example contracts at 8 points let a contract-taking strategy earn about 30 bonus points a match, so the targets were raised and the bonus set to about 10% of the maximum catch. With 10 Research per correct answer and fishing at 1, Research only limits teams that answer fewer than about 8 questions in 45 minutes.

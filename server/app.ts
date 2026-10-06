@@ -8,7 +8,7 @@ import type { DatabaseSync } from 'node:sqlite'
 import { TEAM_SKIP_LIMIT, ages, subjects, type Team, type TeamState, type Subject, type AgeCategory } from '../shared/domain.js'
 import { ApiError, transaction } from './db.js'
 import { isCorrect, parseNumber, publicQuestion, type QuestionBank } from './questions.js'
-import { gameState, move, moveSchema, mine, mineSchema, initializeGrid, createTeamGame, resetTeamGame, resetGame } from './game/grid.js'
+import { gameState, setOrder, orderSchema, chooseContract, contractSchema, initializeCommons, createTeamGame, resetTeamGame, resetGame, startCommons, advanceCommons, teamScore, matchHistory } from './game/commons.js'
 import { competitionState, requireRunning, startCompetition } from './competition.js'
 import { freezeStandingsIfDue, standingsState } from './game/standings.js'
 import { answerReward } from '../shared/scoring.js'
@@ -18,9 +18,10 @@ const hash = (value: string) => createHash('sha256').update(value).digest('hex')
 const teamInput = z.object({ name: z.string().trim().min(1).max(60), age: z.enum(ages), code: z.string().trim().toUpperCase().regex(/^[A-Z0-9]{4,8}$/, 'Use 4–8 letters or numbers.').optional() }).strict()
 const palette = ['#176b58', '#ad542f', '#3e62a4', '#875087', '#8a701c', '#267c8d', '#ab4263', '#5e7136']
 export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: string) {
-  transaction(db, () => initializeGrid(db))
+  transaction(db, () => initializeCommons(db))
+  // Due game resolutions run first, so every read and action sees them.
   function competitionTransaction<T>(action: () => T): T {
-    return transaction(db, () => { freezeStandingsIfDue(db); return action() })
+    return transaction(db, () => { advanceCommons(db); freezeStandingsIfDue(db); return action() })
   }
   const app = express()
   if (process.env.TRUST_PROXY === '1') app.set('trust proxy', 1)
@@ -62,6 +63,7 @@ export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: s
   function teamPublic(t: TeamRow): Team { return { id: t.id, name: t.name, age: t.age, research: t.research, earned: t.earned, skipsUsed: t.skips_used, color: t.color } }
   function progress(id: string, subject: Subject): ProgressRow { return db.prepare('SELECT completed, attempts FROM progress WHERE team_id = ? AND subject = ?').get(id, subject) as unknown as ProgressRow }
   function snapshot(id: string): TeamState {
+    competitionTransaction(() => undefined)
     const team = teamRow(id), competition = competitionState(db)
     return { competition, team: teamPublic(team), progress: Object.fromEntries(subjects.map(subject => {
       const p = progress(id, subject), track = bank[subject][team.age], question = track[p.completed]
@@ -121,32 +123,32 @@ export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: s
     })
     res.json({ ...result, state: snapshot(id) })
   })
-  app.post('/api/team/game/move', (req, res) => {
-    const input = moveSchema.parse(req.body)
-    competitionTransaction(() => { requireRunning(db); move(db, res.locals.teamId, input) })
+  app.post('/api/team/game/order', (req, res) => {
+    const input = orderSchema.parse(req.body)
+    competitionTransaction(() => { requireRunning(db); setOrder(db, res.locals.teamId, input) })
     res.json(snapshot(res.locals.teamId))
   })
-  app.post('/api/team/game/mine', (req, res) => {
-    const input = mineSchema.parse(req.body)
-    competitionTransaction(() => { requireRunning(db); mine(db, res.locals.teamId, input) })
+  app.post('/api/team/game/contract', (req, res) => {
+    const input = contractSchema.parse(req.body)
+    competitionTransaction(() => { requireRunning(db); chooseContract(db, res.locals.teamId, input) })
     res.json(snapshot(res.locals.teamId))
   })
   app.use('/api/admin', auth('admin'))
-  app.post('/api/admin/start', (_req, res) => res.json(competitionTransaction(() => startCompetition(db))))
+  app.post('/api/admin/start', (_req, res) => res.json(competitionTransaction(() => { const state = startCompetition(db); startCommons(db); return state })))
   app.get('/api/admin/teams', (_req, res) => {
+    competitionTransaction(() => undefined)
     const teams = db.prepare('SELECT * FROM teams ORDER BY name COLLATE NOCASE').all() as unknown as TeamRow[]
-    res.json(teams.map(t => ({ ...teamPublic(t), diamonds: Number(db.prepare('SELECT diamonds FROM grid_scores WHERE team_id = ?').get(t.id)!.diamonds), code: t.code, progress: Object.fromEntries(subjects.map(s => [s, { completed: progress(t.id, s).completed, total: bank[s][t.age].length }])) })))
+    res.json(teams.map(t => ({ ...teamPublic(t), ...teamScore(db, t.id), code: t.code, progress: Object.fromEntries(subjects.map(s => [s, { completed: progress(t.id, s).completed, total: bank[s][t.age].length }])) })))
   })
   app.post('/api/admin/teams', (req, res) => {
     const input = teamInput.parse(req.body)
     const id = randomUUID()
     competitionTransaction(() => {
-      const count = Number(db.prepare('SELECT COUNT(*) AS n FROM teams').get()!.n)
       const usedColors = new Set(db.prepare('SELECT color FROM teams').all().map(row => row.color))
       const color = palette.find(value => !usedColors.has(value)) || `hsl(${parseInt(hash(id).slice(0, 8), 16) % 360} 45% 35%)`
       db.prepare('INSERT INTO teams (id, name, age, code, color) VALUES (?, ?, ?, ?, ?)').run(id, input.name, input.age, input.code || generateCode(), color)
       for (const subject of subjects) db.prepare('INSERT INTO progress (team_id, subject) VALUES (?, ?)').run(id, subject)
-      createTeamGame(db, id, count)
+      createTeamGame(db, id)
     })
     res.status(201).json({ id })
   })
@@ -171,6 +173,10 @@ export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: s
       resetGame(db)
       db.prepare("INSERT OR REPLACE INTO config (key, value) VALUES ('last_reset', ?)").run(new Date().toISOString())
     }); res.json({ ok: true })
+  })
+  app.get('/api/admin/game/history', (_req, res) => {
+    const history = competitionTransaction(() => matchHistory(db))
+    res.attachment('commons-history.json').json(history)
   })
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Endpoint not found.' }))
   const client = resolve('dist/client')
