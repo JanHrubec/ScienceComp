@@ -44,13 +44,20 @@ export const contractBonus = (contract: ContractDefinition, config: CommonsConfi
 export const availableContracts = (config: CommonsConfig, grounds: number) =>
   config.contracts.filter(c => c.kind === 'variety' ? c.target <= grounds : c.ground === undefined || groundIndex(c.ground) < grounds)
 
-function counts(contract: ContractDefinition, ground: number, start: Ground, team: string) {
+// Whether fish caught at `ground` count towards a catch contract, from the ground's
+// biomass at the start of the resolution and whether another team fished it in the
+// previous one. Exported with the catch split below, so the bots plan by these rules.
+export function qualifies(contract: ContractDefinition, ground: number, biomass: number, rivalsFished: boolean) {
   if (contract.kind !== 'catch') return false
   if (contract.ground !== undefined && groundIndex(contract.ground) !== ground) return false
-  if (contract.minBiomass !== undefined && start.biomass < contract.minBiomass) return false
-  if (contract.quiet && start.fishedBy.some(id => id !== team)) return false
+  if (contract.minBiomass !== undefined && biomass < contract.minBiomass) return false
+  if (contract.quiet && rivalsFished) return false
   return true
 }
+export const fishedByRivals = (ground: Ground, team: string) => ground.fishedBy.some(id => id !== team)
+// Each fishing boat takes up to the catch amount. A ground that cannot supply
+// everyone is split equally, rounded down; the remainder stays in the water.
+export const catchEach = (biomass: number, boats: number, config: CommonsConfig) => biomass >= boats * config.catchAmount ? config.catchAmount : Math.floor(biomass / boats)
 
 // One simultaneous resolution. Orders are whatever the state holds at this moment.
 export function resolve(state: MatchState, config: CommonsConfig): { state: MatchState; report: ResolutionReport } {
@@ -73,11 +80,10 @@ export function resolve(state: MatchState, config: CommonsConfig): { state: Matc
       boats.push({ team: team.id, boat: index + 1, from, order, action, paid: cost, caught: 0 })
     })
   }
-  // Each fishing boat takes up to the catch amount. A ground that cannot supply
-  // everyone is split equally, rounded down; the remainder stays in the water.
+  // Every boat fishing a ground takes the same catch.
   const groundReports = grounds.map((ground, id) => {
     const fishing = boats.filter(b => b.action === 'fish' && b.order === id)
-    const each = ground.biomass >= fishing.length * config.catchAmount ? config.catchAmount : Math.floor(ground.biomass / fishing.length)
+    const each = catchEach(ground.biomass, fishing.length, config)
     for (const boat of fishing) { boat.caught = each; if (!ground.fishedBy.includes(boat.team)) ground.fishedBy.push(boat.team) }
     const before = ground.biomass, caught = each * fishing.length
     ground.biomass -= caught
@@ -95,7 +101,7 @@ export function resolve(state: MatchState, config: CommonsConfig): { state: Matc
     if (contract && definition) {
       for (const boat of own) {
         if (definition.kind === 'variety') { if (!contract.visited.includes(boat.order!)) contract.visited.push(boat.order!) }
-        else if (counts(definition, boat.order!, start[boat.order!]!, team.id)) contract.progress += boat.caught
+        else if (qualifies(definition, boat.order!, start[boat.order!]!.biomass, fishedByRivals(start[boat.order!]!, team.id))) contract.progress += boat.caught
       }
       if (definition.kind === 'variety') contract.progress = contract.visited.length
       if (contract.progress >= definition.target) {
