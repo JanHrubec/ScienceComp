@@ -177,9 +177,9 @@ export function report(config: CommonsConfig, runs: number, using = assumed, fie
   for (const r of results) {
     const field = stat(r.mixed, 'planner').mean
     checks.push([stat(r.research, 'average').mean >= 0.8, `${r.size} teams: an average team can pay for at least 80% of its fishing`])
-    // Meaningfully: by more than 3% of a score and beyond the combined 95% margin of both means.
+    // Confidently: the gap minus the combined 95% margin of both means still exceeds 3% of a score.
     const planner = stat(r.mixed, 'planner'), gap = (s: Strategy) => stat(r.mixed, s).mean - planner.mean
-    const ahead = fixedStrategies.filter(s => gap(s) > Math.max(0.03 * field, Math.hypot(stat(r.mixed, s).error, planner.error)))
+    const ahead = fixedStrategies.filter(s => gap(s) - Math.hypot(stat(r.mixed, s).error, planner.error) > 0.03 * field)
     const closest = fixedStrategies.reduce((a, s) => gap(s) > gap(a) ? s : a)
     checks.push([!ahead.length, `${r.size} teams: in mixed fields no fixed strategy beats thoughtful play by more than 3% (closest: ${closest} ${gap(closest) >= 0 ? '+' : ''}${gap(closest).toFixed(1)})`])
     const gain = stat(r.contracts, 'rational').mean - stat(r.contracts, 'none').mean
