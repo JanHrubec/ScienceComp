@@ -2,7 +2,7 @@ import type { DatabaseSync } from 'node:sqlite'
 import { type CompetitionState } from '../shared/domain.js'
 import { ApiError } from './db.js'
 import { subjectBooklets } from './booklets.js'
-export const DURATION_SECONDS = 45 * 60
+export const DURATION_SECONDS = 60 * 60
 
 export function competitionState(db: DatabaseSync, now = Date.now()): CompetitionState {
   const settings = Object.fromEntries(db.prepare('SELECT key, value FROM config').all().map(row => [String(row.key), String(row.value)]))
@@ -14,8 +14,8 @@ export function competitionState(db: DatabaseSync, now = Date.now()): Competitio
     booklets: subjectBooklets,
   }
 }
-export function requireRunning(db: DatabaseSync) {
-  const state = competitionState(db)
+export function requireRunning(db: DatabaseSync, now = Date.now()) {
+  const state = competitionState(db, now)
   if (state.status !== 'running') throw new ApiError(409, state.status === 'waiting' ? 'Waiting for the admin to start.' : 'Time is up.')
 }
 export function startCompetition(db: DatabaseSync): CompetitionState {

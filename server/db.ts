@@ -20,9 +20,6 @@ export function openDatabase(path: string) {
       token_hash TEXT PRIMARY KEY, team_id TEXT REFERENCES teams(id) ON DELETE CASCADE,
       role TEXT NOT NULL, expires INTEGER NOT NULL
     );
-    CREATE TABLE IF NOT EXISTS grid_positions (
-      team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE, x INTEGER NOT NULL, y INTEGER NOT NULL
-    );
     CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT NOT NULL);
   `)
   // Existing installations had a non-negative balance constraint. Rebuild only

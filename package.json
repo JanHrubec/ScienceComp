@@ -12,7 +12,8 @@
     "build": "npm run typecheck && vite build && tsc -p tsconfig.server.json",
     "start": "node --env-file=.env dist/server/index.js",
     "test": "tsx --test tests/*.test.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "simulate": "tsx server/game/simulate.ts"
   },
   "dependencies": {
     "express": "^5.1.0", "express-rate-limit": "^8.0.0", "vue": "^3.5.0", "vue-router": "^4.5.0", "zod": "^4.0.0"
