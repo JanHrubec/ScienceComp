@@ -1,121 +1,178 @@
-// The Commons: pure, deterministic rules. No database, HTTP or UI code, so the
-// server, tests and simulation all run exactly the same resolution.
-import type { BoatReport, ContractDefinition } from '../../shared/domain.js'
-
+// The Commons: pure, deterministic rules for the live map game. No database, HTTP
+// or UI code, so the server, tests and simulation all run exactly the same ticks.
 export interface CommonsConfig {
-  resolutionSeconds: number
-  fishingCost: number
-  catchAmount: number
-  maximumBiomass: number
-  startingBiomass: number
+  tickSeconds: number
+  width: number
+  height: number
+  landShare: number
+  fuelCost: number
+  catchTicks: number
+  extraSchools: number
+  schoolStart: number
+  schoolMax: number
+  growthTicks: number
   growthCap: number
-  groundCount: (teams: number) => number
+  driftTicks: number
+  respawnTicks: number
+  goldenEvery: number
+  goldenTeams: number
+  goldenFish: number
+  goldenValue: number
+  goldenTicks: number
   startingResearch: number
-  contractBonus: number
-  contracts: ContractDefinition[]
 }
-export interface Ground { biomass: number; maximum: number; fishedBy: string[] }
-export interface Boat { ground: number | null; order: number | null }
-export interface ActiveContract { id: string; progress: number; visited: number[] }
-export interface TeamPlay { id: string; research: number; boats: Boat[]; fish: number; bonus: number; contract: ActiveContract | null; completed: string[] }
-export interface MatchState { grounds: Ground[]; teams: TeamPlay[] }
-export interface TeamReport { id: string; paid: number; caught: number; contract: ActiveContract | null; completed: string | null; fish: number; bonus: number; research: number }
-export interface ResolutionReport {
-  grounds: { id: number; before: number; caught: number; growth: number; after: number; boats: number }[]
-  boats: (BoatReport & { team: string })[]
-  teams: TeamReport[]
-}
+export interface Tile { x: number; y: number }
+// `land` rows use '#' for island and '.' for sea. Boats start in the harbour, a sea tile.
+export interface GameMap { width: number; height: number; land: string[]; harbour: Tile }
+export interface School extends Tile { id: number; fish: number; golden: boolean; until: number | null }
+// A boat is sent to a tile or to a school, which it then follows.
+export type Order = Tile | { school: number }
+// `hauling` counts the ticks a boat has spent on school `fishing` towards its next
+// catch, `spent` the Research it has burnt so far. `research`, `fish` and `bonus` are the team's.
+export interface Boat extends Tile { team: string; target: Order | null; fishing: number | null; hauling: number; spent: number; research: number; fish: number; bonus: number }
+export interface MatchState { seed: number; tick: number; map: GameMap; schools: School[]; respawns: number[]; nextId: number; boats: Boat[] }
+export interface GoldenEvent extends Tile { kind: 'appeared' | 'caught' | 'gone'; team?: string }
+// `stalled`: teams whose boat had somewhere to go but not the Research to sail.
+export interface TickReport { tick: number; moved: string[]; stalled: string[]; caught: Record<string, number>; events: GoldenEvent[] }
 
-export const BOATS_PER_TEAM = 2
-export const groundName = (index: number): string => (index >= 26 ? groundName(Math.floor(index / 26) - 1) : '') + String.fromCharCode(65 + index % 26)
-export const groundIndex = (name: string): number => [...name].reduce((n, c) => n * 26 + c.charCodeAt(0) - 64, 0) - 1
+// Deterministic randomness: the same seed and tick always give the same numbers.
+export function rng(seed: number) {
+  return () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296 }
+}
+const tickRandom = (seed: number, tick: number) => rng((seed ^ Math.imul(tick + 1, 0x9e3779b1)) | 0)
 
 // Hump-shaped regrowth: slow when nearly empty, fastest in the middle, zero when full.
-export function growth(biomass: number, maximum: number, cap: number): number {
-  return Math.max(0, Math.min(Math.max(biomass, 1), maximum - biomass, cap))
+export function growth(fish: number, maximum: number, cap: number): number {
+  return Math.max(0, Math.min(Math.max(fish, 1), maximum - fish, cap))
 }
-export function newGrounds(teams: number, config: CommonsConfig): Ground[] {
-  return Array.from({ length: Math.max(1, config.groundCount(teams)) }, () => ({ biomass: config.startingBiomass, maximum: config.maximumBiomass, fishedBy: [] }))
-}
-export const newBoats = (): Boat[] => Array.from({ length: BOATS_PER_TEAM }, () => ({ ground: null, order: null }))
-export const contractBonus = (contract: ContractDefinition, config: CommonsConfig) => contract.bonus ?? config.contractBonus
-// A contract naming a ground this match does not have, or needing more grounds
-// than it has, is not offered.
-export const availableContracts = (config: CommonsConfig, grounds: number) =>
-  config.contracts.filter(c => c.kind === 'variety' ? c.target <= grounds : c.ground === undefined || groundIndex(c.ground) < grounds)
+export const isSea = (map: GameMap, x: number, y: number) => x >= 0 && y >= 0 && x < map.width && y < map.height && map.land[y]![x] === '.'
+const near = (a: Tile, b: Tile, r: number) => Math.abs(a.x - b.x) <= r && Math.abs(a.y - b.y) <= r
+const steps = [[0, -1], [1, 0], [0, 1], [-1, 0]] as const
 
-// Whether fish caught at `ground` count towards a catch contract, from the ground's
-// biomass at the start of the resolution and whether another team fished it in the
-// previous one. Exported with the catch split below, so the bots plan by these rules.
-export function qualifies(contract: ContractDefinition, ground: number, biomass: number, rivalsFished: boolean) {
-  if (contract.kind !== 'catch') return false
-  if (contract.ground !== undefined && groundIndex(contract.ground) !== ground) return false
-  if (contract.minBiomass !== undefined && biomass < contract.minBiomass) return false
-  if (contract.quiet && rivalsFished) return false
-  return true
-}
-export const fishedByRivals = (ground: Ground, team: string) => ground.fishedBy.some(id => id !== team)
-// Each fishing boat takes up to the catch amount. A ground that cannot supply
-// everyone is split equally, rounded down; the remainder stays in the water.
-export const catchEach = (biomass: number, boats: number, config: CommonsConfig) => biomass >= boats * config.catchAmount ? config.catchAmount : Math.floor(biomass / boats)
-
-// One simultaneous resolution. Orders are whatever the state holds at this moment.
-export function resolve(state: MatchState, config: CommonsConfig): { state: MatchState; report: ResolutionReport } {
-  const start = state.grounds
-  const grounds = start.map(g => ({ ...g, fishedBy: [] as string[] }))
-  const teams = state.teams.map(t => ({ ...t, boats: t.boats.map(b => ({ ...b })), contract: t.contract && { ...t.contract, visited: [...t.contract.visited] }, completed: [...t.completed] }))
-  const boats: ResolutionReport['boats'] = []
-  const paid = new Map<string, number>()
-
-  // 1–2. Move or pay. Boat 1 is paid before boat 2; travelling and idling are free.
-  for (const team of teams) {
-    paid.set(team.id, 0)
-    team.boats.forEach((boat, index) => {
-      const from = boat.ground, order = boat.order
-      let action: BoatReport['action'], cost = 0
-      if (order === null || order >= grounds.length) action = 'idle'
-      else if (order !== boat.ground) { action = 'travel'; boat.ground = order }
-      else if (team.research >= config.fishingCost) { action = 'fish'; cost = config.fishingCost; team.research -= cost; paid.set(team.id, paid.get(team.id)! + cost) }
-      else action = 'unpaid'
-      boats.push({ team: team.id, boat: index + 1, from, order, action, paid: cost, caught: 0 })
-    })
-  }
-  // Every boat fishing a ground takes the same catch.
-  const groundReports = grounds.map((ground, id) => {
-    const fishing = boats.filter(b => b.action === 'fish' && b.order === id)
-    const each = catchEach(ground.biomass, fishing.length, config)
-    for (const boat of fishing) { boat.caught = each; if (!ground.fishedBy.includes(boat.team)) ground.fishedBy.push(boat.team) }
-    const before = ground.biomass, caught = each * fishing.length
-    ground.biomass -= caught
-    return { id, before, caught, growth: 0, after: 0, boats: fishing.length }
-  })
-
-  // 3. Contract progress, then completion bonus (once per team per contract).
-  const definitions = new Map(config.contracts.map(c => [c.id, c]))
-  const reports: TeamReport[] = teams.map(team => {
-    const own = boats.filter(b => b.team === team.id && b.action === 'fish')
-    const caught = own.reduce((sum, b) => sum + b.caught, 0)
-    team.fish += caught
-    let completed: string | null = null
-    const contract = team.contract, definition = contract && definitions.get(contract.id)
-    if (contract && definition) {
-      for (const boat of own) {
-        if (definition.kind === 'variety') { if (!contract.visited.includes(boat.order!)) contract.visited.push(boat.order!) }
-        else if (qualifies(definition, boat.order!, start[boat.order!]!.biomass, fishedByRivals(start[boat.order!]!, team.id))) contract.progress += boat.caught
-      }
-      if (definition.kind === 'variety') contract.progress = contract.visited.length
-      if (contract.progress >= definition.target) {
-        completed = contract.id; team.completed.push(contract.id); team.bonus += contractBonus(definition, config); team.contract = null
-      }
+// Small islands scattered at random, never next to the harbour, and no sea cut off from it.
+export function makeMap(width: number, height: number, landShare: number, random: () => number): GameMap {
+  const harbour = { x: Math.floor(width / 2), y: Math.floor(height / 2) }
+  const land = Array.from({ length: height }, () => Array<boolean>(width).fill(false))
+  const wanted = Math.round(width * height * landShare)
+  for (let count = 0, tries = 0; count < wanted && tries < 500; tries++) {
+    let x = Math.floor(random() * width), y = Math.floor(random() * height)
+    for (let size = 1 + Math.floor(random() * 4); size > 0 && count < wanted; size--) {
+      if (!land[y]![x] && !near({ x, y }, harbour, 1)) { land[y]![x] = true; count++ }
+      const [dx, dy] = steps[Math.floor(random() * 4)]!
+      x = Math.min(width - 1, Math.max(0, x + dx)); y = Math.min(height - 1, Math.max(0, y + dy))
     }
-    return { id: team.id, paid: paid.get(team.id)!, caught, contract: team.contract && { ...team.contract, visited: [...team.contract.visited] }, completed, fish: team.fish, bonus: team.bonus, research: team.research }
-  })
+  }
+  const map = { width, height, harbour, land: land.map(row => row.map(l => l ? '#' : '.').join('')) }
+  const reached = distances(map, harbour)
+  return { ...map, land: land.map((row, y) => row.map((_, x) => reached[y * width + x]! >= 0 ? '.' : '#').join('')) }
+}
 
-  // 4. Every ground regrows from what is left.
-  grounds.forEach((ground, id) => {
-    const g = growth(ground.biomass, ground.maximum, config.growthCap)
-    ground.biomass += g
-    groundReports[id]!.growth = g; groundReports[id]!.after = ground.biomass
+// Sailing distance from `from` to every tile (-1: land or unreachable), cached per map.
+const cache = new WeakMap<GameMap, Map<number, Int16Array>>()
+export function distances(map: GameMap, from: Tile): Int16Array {
+  const key = from.y * map.width + from.x, known = cache.get(map) ?? cache.set(map, new Map()).get(map)!
+  if (known.has(key)) return known.get(key)!
+  const d = new Int16Array(map.width * map.height).fill(-1), queue = [key]
+  if (isSea(map, from.x, from.y)) d[key] = 0; else queue.pop()
+  for (let i = 0; i < queue.length; i++) {
+    const at = queue[i]!, x = at % map.width, y = Math.floor(at / map.width)
+    for (const [dx, dy] of steps) {
+      const n = (y + dy) * map.width + x + dx
+      if (isSea(map, x + dx, y + dy) && d[n] === -1) { d[n] = d[at]! + 1; queue.push(n) }
+    }
+  }
+  known.set(key, d)
+  return d
+}
+export const distance = (map: GameMap, a: Tile, b: Tile) => distances(map, b)[a.y * map.width + a.x]!
+// The next tile on a shortest route, always the first in N, E, S, W order, so every boat agrees.
+export function nextTile(map: GameMap, from: Tile, to: Tile): Tile | null {
+  const d = distances(map, to), here = d[from.y * map.width + from.x]!
+  if (here <= 0) return null
+  for (const [dx, dy] of steps) {
+    const x = from.x + dx, y = from.y + dy
+    if (isSea(map, x, y) && d[y * map.width + x] === here - 1) return { x, y }
+  }
+  return null
+}
+export function route(map: GameMap, from: Tile, to: Tile): Tile[] {
+  const path: Tile[] = []
+  for (let at = nextTile(map, from, to); at; at = nextTile(map, at, to)) path.push(at)
+  return path
+}
+
+// Where schools may be: sea away from the harbour, one school to a tile.
+const open = (state: MatchState, t: Tile) => isSea(state.map, t.x, t.y) && !near(t, state.map.harbour, 1) && !state.schools.some(s => s.x === t.x && s.y === t.y)
+function freeSea(state: MatchState, random: () => number): Tile | null {
+  const options: Tile[] = []
+  for (let y = 0; y < state.map.height; y++) for (let x = 0; x < state.map.width; x++) if (open(state, { x, y })) options.push({ x, y })
+  return options.length ? options[Math.floor(random() * options.length)]! : null
+}
+// Where a boat is heading: a tile, or wherever the school it was sent to is now.
+// A boat sent to a school that has gone stops where it is.
+export function destination(state: MatchState, boat: Boat): Tile | null {
+  if (!boat.target || !('school' in boat.target)) return boat.target
+  const id = boat.target.school
+  return state.schools.find(s => s.id === id) ?? (boat.target = null)
+}
+function spawn(state: MatchState, random: () => number, golden: boolean, config: CommonsConfig) {
+  const at = freeSea(state, random)
+  if (!at) return null
+  const school = { id: state.nextId++, ...at, fish: golden ? config.goldenFish : config.schoolStart, golden, until: golden ? state.tick + config.goldenTicks : null }
+  state.schools.push(school)
+  return school
+}
+
+export function newMatch(teams: string[], config: CommonsConfig, seed: number): MatchState {
+  const random = rng(seed), map = makeMap(config.width, config.height, config.landShare, random)
+  const state: MatchState = { seed, tick: 0, map, schools: [], respawns: [], nextId: 1, boats: [] }
+  for (let i = 0; i < teams.length + config.extraSchools; i++) spawn(state, random, false, config)
+  state.boats = teams.map(team => newBoat(state, team))
+  return state
+}
+export const newBoat = (state: MatchState, team: string): Boat => ({ team, ...state.map.harbour, target: null, fishing: null, hauling: 0, spent: 0, research: 0, fish: 0, bonus: 0 })
+
+// One tick, advancing `state` in place. Schools drift now and then; every boat
+// sails one tile towards its destination, paying fuel, so a boat sent to a school
+// follows it. A boat that spends `catchTicks` ticks in a row on one school catches a
+// fish. Emptied schools vanish and reappear elsewhere; schools regrow; every
+// `goldenEvery` ticks golden schools appear, one per `goldenTeams` teams, each
+// swimming off after `goldenTicks`.
+export function step(state: MatchState, config: CommonsConfig): TickReport {
+  const tick = ++state.tick, report: TickReport = { tick, moved: [], stalled: [], caught: {}, events: [] }, random = tickRandom(state.seed, tick)
+  if (tick % config.driftTicks === 0) for (const school of state.schools) {
+    const options = steps.map(([dx, dy]) => ({ x: school.x + dx, y: school.y + dy })).filter(t => open(state, t))
+    if (options.length) Object.assign(school, options[Math.floor(random() * options.length)])
+  }
+  for (const boat of state.boats) {
+    const goal = destination(state, boat), next = goal && nextTile(state.map, boat, goal)
+    if (!next) continue
+    if (boat.research < config.fuelCost) { report.stalled.push(boat.team); continue }
+    boat.research -= config.fuelCost; boat.spent += config.fuelCost; report.moved.push(boat.team)
+    boat.x = next.x; boat.y = next.y
+  }
+  // Boats sharing a school take turns at the last fish: the order rotates every tick.
+  const boats = state.boats, order = boats.map((_, i) => boats[(i + tick) % boats.length]!)
+  for (const boat of order) {
+    const school = state.schools.find(s => s.x === boat.x && s.y === boat.y && s.fish > 0)
+    if (school?.id !== boat.fishing) { boat.fishing = school?.id ?? null; boat.hauling = 0 }
+    if (!school || ++boat.hauling < config.catchTicks) continue
+    boat.hauling = 0; school.fish--
+    report.caught[boat.team] = (report.caught[boat.team] ?? 0) + 1
+    if (school.golden) { boat.bonus += config.goldenValue; report.events.push({ kind: 'caught', team: boat.team, x: school.x, y: school.y }) }
+    else boat.fish++
+  }
+  state.schools = state.schools.filter(school => {
+    if (school.golden && school.fish > 0 && tick >= school.until!) report.events.push({ kind: 'gone', x: school.x, y: school.y })
+    else if (school.fish > 0) return true
+    else if (!school.golden) state.respawns.push(tick + config.respawnTicks)
+    return false
   })
-  return { state: { grounds, teams }, report: { grounds: groundReports, boats, teams: reports } }
+  if (tick % config.growthTicks === 0) for (const school of state.schools) if (!school.golden) school.fish += growth(school.fish, config.schoolMax, config.growthCap)
+  state.respawns = state.respawns.filter(at => at > tick || !spawn(state, random, false, config))
+  if (tick % config.goldenEvery === 0) for (let n = state.schools.filter(s => s.golden).length; n < Math.ceil(state.boats.length / config.goldenTeams); n++) {
+    const golden = spawn(state, random, true, config)
+    if (golden) report.events.push({ kind: 'appeared', x: golden.x, y: golden.y })
+  }
+  return report
 }

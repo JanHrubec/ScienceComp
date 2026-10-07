@@ -4,257 +4,181 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { commonsConfig } from '../server/game/config.js'
-import { availableContracts, catchEach, groundIndex, groundName, growth, newBoats, newGrounds, qualifies, resolve, type CommonsConfig, type MatchState, type TeamPlay } from '../server/game/rules.js'
+import { distance, distances, growth, isSea, newMatch, route, step, type Boat, type CommonsConfig, type MatchState, type School } from '../server/game/rules.js'
 import { decide } from '../server/game/bots.js'
-import { calibrate, evaluate, lastChange, leaderHolds, play, podium, rng, setup, shuffle, sizes, winShares, type MatchHistory } from '../server/game/simulate.js'
-const config: CommonsConfig = { ...commonsConfig, fishingCost: 5, catchAmount: 2, maximumBiomass: 12, startingBiomass: 8, growthCap: 3, contractBonus: 8, groundCount: teams => teams + 2 }
-const team = (id: string, research = 100, extra: Partial<TeamPlay> = {}): TeamPlay => ({ id, research, boats: newBoats(), fish: 0, bonus: 0, contract: null, completed: [], ...extra })
-const match = (teams: TeamPlay[], biomass?: number[]): MatchState => ({ grounds: biomass ? biomass.map(b => ({ biomass: b, maximum: 12, fishedBy: [] })) : newGrounds(teams.length, config), teams })
-const at = (ground: number) => ({ ground, order: ground })
-// Team A earns 15 Research per 3-minute interval, pays 5 a resolution and changes orders
-// before every resolution; team B earns nothing and never changes its orders.
-function rehearsal(): MatchHistory {
-  const history: MatchHistory = { config: { resolutionSeconds: 180, startingResearch: 0 }, resolutions: [] }
-  let a = 0
-  for (let n = 0; n < 4; n++) {
-    a += 15
-    history.resolutions.push({
-      before: { teams: [{ id: 'a', name: 'A', research: a, boats: [{ order: n % 2 }, { order: null }], contract: null }, { id: 'b', name: 'B', research: 0, boats: [{ order: 0 }, { order: 0 }], contract: null }] },
-      report: { teams: [{ id: 'a', research: a - 5 }, { id: 'b', research: 0 }] },
-    })
-    a -= 5
+import { calibrate, evaluate, leaderHolds, play, setup, sizes, winShares, type MatchHistory } from '../server/game/simulate.js'
+// Nothing drifts, regrows or turns golden unless a test asks for it.
+const quiet: CommonsConfig = { ...commonsConfig, catchTicks: 5, growthTicks: 1e6, driftTicks: 1e6, goldenEvery: 1e6, respawnTicks: 10, schoolStart: 8, schoolMax: 12, growthCap: 2, fuelCost: 1 }
+// A hand-made match: `rows` with '#' for land, the harbour at the top left.
+function match(rows: string[], schools: Partial<School>[] = [], boats: Partial<Boat>[] = []): MatchState {
+  return {
+    seed: 1, tick: 0, map: { width: rows[0]!.length, height: rows.length, land: rows, harbour: { x: 0, y: 0 } }, respawns: [], nextId: 100,
+    schools: schools.map((s, i) => ({ id: i + 1, x: 0, y: 0, fish: 8, golden: false, until: null, ...s })),
+    boats: boats.map((b, i) => ({ team: String.fromCharCode(97 + i), x: 0, y: 0, target: null, fishing: null, hauling: 0, spent: 0, research: 0, fish: 0, bonus: 0, ...b })),
   }
-  return history
+}
+const run = (state: MatchState, config: CommonsConfig, ticks: number) => Array.from({ length: ticks }, () => step(state, config))
+// Team A earns 5 Research a minute and gives an order every minute; team B earns nothing and never orders.
+function rehearsal(): MatchHistory {
+  const samples = [1, 2, 3, 4].map(minute => ({ tick: minute * 30, teams: [{ id: 'a', name: 'A', research: 10 + minute * 5 - minute * 2, spent: minute * 2 }, { id: 'b', name: 'B', research: 10, spent: 0 }] }))
+  return { config: { tickSeconds: 2 }, samples, orders: [40, 70, 100].map(tick => ({ tick, team: 'a' })) }
 }
 
 test('regrowth is hump-shaped: slow when nearly empty, fastest in the middle, zero when full', () => {
   assert.deepEqual(Array.from({ length: 13 }, (_, b) => growth(b, 12, 3)), [1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 2, 1, 0])
   assert.equal(growth(13, 12, 3), 0)
-  assert.deepEqual(['A', 'B', 'Z', 'AA', 'AB'].map(groundIndex), [0, 1, 25, 26, 27])
-  for (let i = 0; i < 60; i++) assert.equal(groundIndex(groundName(i)), i)
 })
 
-test('grounds scale only with team count and start equal', () => {
-  // One per team up to 4 teams, one spare from 5, two from 15.
-  assert.deepEqual([1, 2, 3, 4, 5, 6, 8, 12, 14, 15, 20].map(n => commonsConfig.groundCount(n)), [2, 2, 3, 4, 6, 7, 9, 13, 15, 17, 22])
-  for (const teams of [3, 8, 20]) {
-    const grounds = newGrounds(teams, commonsConfig)
-    assert.equal(grounds.length, commonsConfig.groundCount(teams))
-    assert(grounds.every(g => g.biomass === commonsConfig.startingBiomass && g.maximum === commonsConfig.maximumBiomass))
+test('maps are reproducible, keep the harbour open and leave no sea cut off', () => {
+  for (const seed of [1, 2, 3, 99, 2024]) {
+    const state = newMatch(['x', 'y', 'z'], commonsConfig, seed), { map } = state
+    assert.deepEqual(state, newMatch(['x', 'y', 'z'], commonsConfig, seed))
+    assert.deepEqual([map.width, map.height, map.land.length], [commonsConfig.width, commonsConfig.height, commonsConfig.height])
+    const reach = distances(map, map.harbour)
+    let land = 0
+    for (let y = 0; y < map.height; y++) for (let x = 0; x < map.width; x++) {
+      if (!isSea(map, x, y)) land++
+      else assert(reach[y * map.width + x]! >= 0, `${seed}: (${x}, ${y}) cut off`)
+      if (Math.abs(x - map.harbour.x) <= 1 && Math.abs(y - map.harbour.y) <= 1) assert(isSea(map, x, y))
+    }
+    assert(land >= Math.round(commonsConfig.landShare * map.width * map.height))
+    // One school per team plus the extras, each on its own open tile with the starting stock.
+    assert.equal(state.schools.length, 3 + commonsConfig.extraSchools)
+    assert.equal(new Set(state.schools.map(s => `${s.x},${s.y}`)).size, state.schools.length)
+    assert(state.schools.every(s => isSea(map, s.x, s.y) && s.fish === commonsConfig.schoolStart && !s.golden))
+    assert(state.boats.every(b => b.x === map.harbour.x && b.y === map.harbour.y && b.target === null))
   }
 })
 
-test('leaving harbour or switching ground costs one resolution of travel; idling is free', () => {
-  let state = match([team('a')])
-  state.teams[0]!.boats[0]!.order = 1
-  let step = resolve(state, config)
-  assert.deepEqual(step.report.boats.map(b => [b.action, b.paid, b.caught]), [['travel', 0, 0], ['idle', 0, 0]])
-  assert.equal(step.state.teams[0]!.boats[0]!.ground, 1)
-  assert.equal(step.state.teams[0]!.research, 100)
-  step = resolve(step.state, config)
-  assert.deepEqual(step.report.boats[0], { team: 'a', boat: 1, from: 1, order: 1, action: 'fish', paid: 5, caught: 2 })
-  assert.equal(step.state.teams[0]!.fish, 2)
-  assert.equal(step.state.teams[0]!.research, 95)
-  step.state.teams[0]!.boats[0]!.order = 2
-  step = resolve(step.state, config)
-  assert.equal(step.report.boats[0]!.action, 'travel')
-  step.state.teams[0]!.boats[0]!.order = null
-  step = resolve(step.state, config)
-  assert.deepEqual([step.report.boats[0]!.action, step.state.teams[0]!.boats[0]!.ground], ['idle', 2])
-  // Ordering the ground an idle boat is already on needs no travel.
-  step.state.teams[0]!.boats[0]!.order = 2
-  assert.equal(resolve(step.state, config).report.boats[0]!.action, 'fish')
+test('boats sail the shortest route around islands, one tile a tick, burning fuel', () => {
+  const state = match(['.....', '.###.', '.....'], [], [{ x: 2, y: 2, research: 4, target: { x: 2, y: 0 } }]), boat = state.boats[0]!
+  // Both ways round are six tiles; every boat takes the first of N, E, S, W.
+  assert.equal(distance(state.map, boat, { x: 2, y: 0 }), 6)
+  assert.deepEqual(route(state.map, boat, { x: 2, y: 0 }), [{ x: 3, y: 2 }, { x: 4, y: 2 }, { x: 4, y: 1 }, { x: 4, y: 0 }, { x: 3, y: 0 }, { x: 2, y: 0 }])
+  assert.equal(distance(state.map, boat, { x: 2, y: 1 }), -1)
+  const reports = run(state, quiet, 5)
+  assert.deepEqual([boat.x, boat.y, boat.research, boat.spent], [4, 0, 0, 4])
+  assert.deepEqual(reports.map(r => [r.moved, r.stalled]), [[['a'], []], [['a'], []], [['a'], []], [['a'], []], [[], ['a']]])
+  // Refuelled, it arrives and then waits without stalling.
+  boat.research = 5
+  assert.deepEqual(run(state, quiet, 3).map(r => [r.moved, r.stalled]), [[['a'], []], [['a'], []], [[], []]])
+  assert.deepEqual([boat.x, boat.y, boat.research], [2, 0, 3])
 })
 
-test('Research pays boat 1 first; a boat that cannot pay does not fish', () => {
-  const short = team('a', 7, { boats: [at(0), at(1)] }), broke = team('b', -5, { boats: [at(2), at(2)] })
-  const { state, report } = resolve(match([short, broke]), config)
-  assert.deepEqual(report.boats.map(b => b.action), ['fish', 'unpaid', 'unpaid', 'unpaid'])
-  assert.deepEqual(report.teams.map(t => [t.paid, t.caught, t.research]), [[5, 2, 2], [0, 0, -5]])
-  assert.equal(state.grounds[1]!.biomass, 11)
+test('a boat on a school catches a fish every few ticks; schools regrow, and an emptied one appears elsewhere', () => {
+  const state = match(['....', '....', '....'], [{ x: 3, y: 2, fish: 2 }, { x: 3, y: 0, fish: 5 }], [{ x: 3, y: 2, target: { school: 1 } }])
+  const config = { ...quiet, growthTicks: 15 }, boat = state.boats[0]!
+  run(state, config, 4)
+  assert.deepEqual([boat.fish, boat.hauling, state.schools[0]!.fish], [0, 4, 2])
+  run(state, config, 1)
+  assert.deepEqual([boat.fish, boat.hauling, state.schools[0]!.fish], [1, 0, 1])
+  run(state, config, 5)
+  // Emptied at tick 10: it vanishes, the boat has nowhere to go, and a new school is due at tick 20.
+  assert.deepEqual([boat.fish, state.schools.map(s => s.id), state.respawns], [2, [2], [20]])
+  run(state, config, 1)
+  assert.equal(boat.target, null)
+  run(state, config, 4)
+  assert.equal(state.schools[0]!.fish, 7) // regrew by 2 at tick 15
+  run(state, config, 5)
+  const fresh = state.schools.find(s => s.id === 100)!
+  assert.deepEqual([fresh.fish, state.respawns], [8, []])
+  // Away from the harbour and from the other school.
+  assert(Math.max(Math.abs(fresh.x), Math.abs(fresh.y)) > 1 && !(fresh.x === 3 && fresh.y === 0))
 })
 
-test('a short ground is split equally, rounded down, and the remainder stays', () => {
-  const teams = ['a', 'b', 'c'].map(id => team(id, 100, { boats: [at(0), { ground: null, order: null }] }))
-  let { state, report } = resolve(match(teams, [5, 8]), config)
-  assert.deepEqual(report.boats.filter(b => b.action === 'fish').map(b => b.caught), [1, 1, 1])
-  assert.deepEqual(report.grounds[0], { id: 0, before: 5, caught: 3, growth: 2, after: 4, boats: 3 })
-  assert.deepEqual(state.grounds[0]!.fishedBy, ['a', 'b', 'c'])
-  // Enough for everyone: each boat takes the full catch amount.
-  ;({ state, report } = resolve(match(teams.map(t => ({ ...t, boats: [at(1), at(1)] })), [5, 12]), config))
-  // An emptied ground still recovers by one.
-  assert.deepEqual(report.grounds[1], { id: 1, before: 12, caught: 12, growth: 1, after: 1, boats: 6 })
-  assert.equal(state.grounds[1]!.biomass, 1)
-  assert.deepEqual(resolve(state, config).report.boats.filter(b => b.order === 1).map(b => b.caught), [0, 0, 0, 0, 0, 0])
+test('a boat sent to a school follows it as it swims, while it can pay', () => {
+  const state = match(['......', '......', '......', '......'], [{ x: 3, y: 2 }], [{ x: 3, y: 2, research: 3, target: { school: 1 } }])
+  const config = { ...quiet, driftTicks: 1 }, boat = state.boats[0]!, school = state.schools[0]!
+  const reports = run(state, config, 3)
+  // The school moved every tick and the boat kept up, still hauling.
+  assert(reports.every(r => r.moved[0] === 'a'))
+  assert.deepEqual([boat.x, boat.y, boat.hauling, boat.research], [school.x, school.y, 3, 0])
+  // Out of fuel, it is left behind and its haul starts over.
+  assert.deepEqual(step(state, config).stalled, ['a'])
+  assert.notDeepEqual([boat.x, boat.y], [school.x, school.y])
+  assert.equal(boat.hauling, 0)
 })
 
-test('resolution is pure and deterministic', () => {
-  const state = match([team('a', 50, { boats: [at(0), at(1)] }), team('b', 50, { boats: [at(0), { ground: 0, order: 2 }] })])
-  const copy = structuredClone(state)
-  const first = resolve(state, config), second = resolve(state, config)
-  assert.deepEqual(state, copy)
-  assert.deepEqual(first, second)
-})
-
-test('contract counters use start-of-resolution conditions and pay the bonus once', () => {
-  const contracts: CommonsConfig['contracts'] = [
-    { id: 'rich', kind: 'catch', target: 4, minBiomass: 8 },
-    { id: 'quiet', kind: 'catch', target: 4, quiet: true },
-    { id: 'at-b', kind: 'catch', target: 2, ground: 'B', bonus: 3 },
-    { id: 'survey', kind: 'variety', target: 2 },
-    { id: 'far', kind: 'catch', target: 2, ground: 'Z' },
-  ]
-  const rules = { ...config, contracts }
-  assert.deepEqual(availableContracts(rules, 4).map(c => c.id), ['rich', 'quiet', 'at-b', 'survey'])
-  // A variety contract needs at least as many grounds as its target.
-  assert.deepEqual(availableContracts(rules, 1).map(c => c.id), ['rich', 'quiet'])
-  // Ground 0 starts with 9 (counts), ground 1 with 7 (does not, until it has regrown to 8).
-  let state = match([team('a', 100, { boats: [at(0), at(1)], contract: { id: 'rich', progress: 0, visited: [] } })], [9, 7])
-  let step = resolve(state, rules)
-  assert.deepEqual(step.report.teams[0]!.contract, { id: 'rich', progress: 2, visited: [] })
-  assert.equal(step.report.teams[0]!.completed, null)
-  assert.deepEqual(step.state.grounds.map(g => g.biomass), [10, 8])
-  step = resolve(step.state, rules)
-  assert.deepEqual([step.report.teams[0]!.completed, step.state.teams[0]!.contract, step.state.teams[0]!.bonus], ['rich', null, 8])
-  assert.deepEqual(step.state.teams[0]!.completed, ['rich'])
-  // Quiet: grounds another team fished last resolution do not count; your own fishing does not spoil it.
-  state = match([
-    team('a', 100, { boats: [at(0), at(1)], contract: { id: 'quiet', progress: 0, visited: [] } }),
-    team('b', 100, { boats: [at(1), { ground: null, order: null }] }),
-  ], [12, 12])
-  // Nobody fished anywhere before the first resolution, so both catches count.
-  assert.equal(resolve(state, rules).report.teams[0]!.completed, 'quiet')
-  state = { grounds: [{ biomass: 12, maximum: 12, fishedBy: ['a'] }, { biomass: 12, maximum: 12, fishedBy: ['b'] }], teams: [team('a', 100, { boats: [at(0), at(1)], contract: { id: 'quiet', progress: 0, visited: [] } })] }
-  assert.equal(resolve(state, rules).report.teams[0]!.contract!.progress, 2)
-  // Named ground with its own bonus, and the variety counter.
-  state = match([team('a', 100, { boats: [at(1), at(0)], contract: { id: 'at-b', progress: 0, visited: [] } }), team('b', 100, { boats: [at(0), at(2)], contract: { id: 'survey', progress: 0, visited: [] } })], [12, 12, 12])
-  step = resolve(state, rules)
-  assert.deepEqual(step.report.teams.map(t => [t.completed, t.bonus]), [['at-b', 3], ['survey', 8]])
-  // A team without an active contract makes no progress, and completed contracts stay completed.
-  step = resolve(step.state, rules)
-  assert.deepEqual(step.state.teams.map(t => [t.bonus, t.completed]), [[3, ['at-b']], [8, ['survey']]])
-})
-
-test('every configured contract uses a known building block and a unique ID', () => {
-  const ids = commonsConfig.contracts.map(c => c.id)
-  assert.equal(new Set(ids).size, ids.length)
-  assert(ids.length >= 6 && ids.length <= 8)
-  for (const c of commonsConfig.contracts) {
-    assert(c.target > 0)
-    assert(c.kind === 'variety' || c.kind === 'catch')
-    if (c.kind === 'catch' && c.ground !== undefined) assert.match(c.ground, /^[A-Z]+$/)
+test('boats sharing a school take turns at the last fish', () => {
+  for (const [tick, winner] of [[0, 'b'], [1, 'a']] as const) {
+    const state = match(['...', '...', '...'], [{ x: 2, y: 2, fish: 1 }], [{ x: 2, y: 2, hauling: 4 }, { x: 2, y: 2, hauling: 4 }])
+    state.tick = tick
+    state.boats.forEach(b => { b.fishing = 1 })
+    assert.deepEqual(step(state, quiet).caught, { [winner]: 1 })
   }
+})
+
+test('golden schools: one per four teams, worth more per fish, and they swim off', () => {
+  const config: CommonsConfig = { ...quiet, goldenEvery: 3, goldenTeams: 4, goldenTicks: 4, goldenFish: 2, goldenValue: 4, catchTicks: 1 }
+  const state = match(['......', '......', '......', '......'], [], Array.from({ length: 5 }, () => ({})))
+  const reports = run(state, config, 3), golden = state.schools.filter(s => s.golden)
+  assert.deepEqual(reports[2]!.events.map(e => e.kind), ['appeared', 'appeared'])
+  assert(golden.length === 2 && golden.every(s => s.fish === 2 && s.until === 7))
+  // A boat on one catches both fish for the bonus, not the catch; the other swims off at tick 7.
+  Object.assign(state.boats[0]!, { x: golden[0]!.x, y: golden[0]!.y, target: { school: golden[0]!.id } })
+  const later = run(state, config, 4)
+  assert.deepEqual([state.boats[0]!.fish, state.boats[0]!.bonus], [0, 8])
+  assert.deepEqual(later.flatMap(r => r.events.map(e => [r.tick, e.kind, e.team ?? null])), [[4, 'caught', 'a'], [5, 'caught', 'a'], [6, 'appeared', null], [7, 'gone', null]])
+  // Only the golden school that appeared at tick 6 is left, and none respawn.
+  assert.deepEqual([state.schools.filter(s => s.golden).length, state.respawns], [1, []])
+})
+
+test('thoughtful bots avoid a crowded school and never sail beyond their Research', () => {
+  const crowded = { x: 2, y: 0, fish: 9 }, empty = { x: 0, y: 2, fish: 8 }
+  const rivals = [{ x: 2, y: 0, target: { school: 1 } }, { x: 2, y: 0, target: { school: 1 } }]
+  const state = match(['...', '...', '...'], [crowded, empty], [{ research: 10 }, ...rivals])
+  const bot = { strategy: 'planner', income: 5, every: 2 } as const
+  assert.deepEqual(decide({ state, me: state.boats[0]!, config: commonsConfig, horizon: 60 }, bot), { school: 2 })
+  state.boats[0]!.research = 1
+  assert.equal(decide({ state, me: state.boats[0]!, config: commonsConfig, horizon: 60 }, bot), null)
 })
 
 test('simulated matches are reproducible from their seed', () => {
-  const bots = (['planner', 'greedy', 'spread', 'stay'] as const).map(strategy => ({ strategy, contracts: 'rational' as const, income: 5, attention: 0.7 }))
-  assert.deepEqual(play(bots, commonsConfig, 7), play(bots, commonsConfig, 7))
+  const bots = (['planner', 'nearest', 'biggest', 'golden', 'stay'] as const).map(strategy => ({ strategy, income: 5, every: 2 }))
+  const first = play(bots, commonsConfig, 7)
+  assert.deepEqual(first, play(bots, commonsConfig, 7))
+  assert.equal(first.standings.length, 60)
 })
 
 test('a rehearsal history calibrates Research income and attention', () => {
-  const history = rehearsal()
-  const { teams, assumptions } = calibrate(history, commonsConfig)
-  assert.deepEqual(teams.map(t => [t.name, t.perMinute, t.changeRate]), [['A', 5, 1], ['B', 0, 0]])
+  const history = rehearsal(), { teams, assumptions } = calibrate(history, commonsConfig)
+  assert.deepEqual(teams.map(t => [t.name, t.perMinute, t.ordersPerMinute]), [['A', 5, 1], ['B', 0, 0]])
   assert.deepEqual(assumptions.incomes, { weak: 1.25, average: 2.5, strong: 3.75 })
-  assert(assumptions.attention[0] < assumptions.attention[1] && assumptions.attention[1] <= 1)
-  assert.throws(() => calibrate({ ...history, resolutions: history.resolutions.slice(0, 2) }, commonsConfig), /at least three/)
-  assert.throws(() => calibrate({ ...history, resolutions: history.resolutions.map(r => ({ before: { teams: [] }, report: { teams: [] } })) }, commonsConfig), /no teams/)
+  assert(assumptions.every[0] < assumptions.every[1])
+  assert.throws(() => calibrate({ ...history, samples: history.samples.slice(0, 2) }, commonsConfig), /at least three minutes/)
+  assert.throws(() => calibrate({ ...history, samples: history.samples.map(s => ({ ...s, teams: [] })) }, commonsConfig), /no teams/)
 })
 
 test('the simulation applies every override to the calibration, in any order, and a one-team rehearsal only calibrates', () => {
   const dir = mkdtempSync(join(tmpdir(), 'commons-history-')), pair = join(dir, 'pair.json'), solo = join(dir, 'solo.json'), history = rehearsal()
   writeFileSync(pair, JSON.stringify(history))
-  writeFileSync(solo, JSON.stringify({ ...history, resolutions: history.resolutions.map(r => ({ before: { teams: r.before.teams.slice(0, 1) }, report: { teams: r.report.teams.slice(0, 1) } })) }))
+  writeFileSync(solo, JSON.stringify({ ...history, samples: history.samples.map(s => ({ ...s, teams: s.teams.slice(0, 1) })) }))
   try {
-    const first = setup(['--history', pair, 'fishingCost=8', '40']), last = setup(['40', 'fishingCost=8', '--history', pair])
+    const first = setup(['--history', pair, 'catchTicks=3', '40']), last = setup(['40', 'catchTicks=3', '--history', pair])
     assert.deepEqual(first, last)
-    assert.deepEqual([first.config.fishingCost, first.runs, first.fieldSizes], [8, 40, [2, ...sizes]])
-    assert.deepEqual(first.using, calibrate(history, { ...commonsConfig, fishingCost: 8 }).assumptions)
-    // The cost changes how often bots change orders, so calibrating before the override would differ.
-    assert.notDeepEqual(first.using.attention, setup(['--history', pair]).using.attention)
-    // A lone team still measures income and attention, but adds no 1-team field.
+    assert.deepEqual([first.config.catchTicks, first.runs, first.fieldSizes], [3, 40, [2, ...sizes]])
+    assert.deepEqual(first.using, calibrate(history, { ...commonsConfig, catchTicks: 3 }).assumptions)
+    // Faster catches change how often bots give orders, so calibrating before the override would differ.
+    assert.notDeepEqual(first.using.every, setup(['--history', pair]).using.every)
     const one = setup(['--history', solo])
     assert.deepEqual([one.teams.map(t => [t.name, t.perMinute]), one.fieldSizes], [[['A', 5]], sizes])
-    assert([...Object.values(one.using.incomes), ...one.using.attention].every(Number.isFinite))
+    assert([...Object.values(one.using.incomes), ...one.using.every].every(Number.isFinite))
     assert.throws(() => setup(['--history']), /needs a match history/)
-    assert.throws(() => setup(['speed=3']), /Unknown numeric setting/)
+    assert.throws(() => setup(['speed=3']), /Unknown setting/)
     // An empty value is not 0, and a malformed one is not its first number.
-    for (const arg of ['fishingCost=', 'fishingCost= ', 'fishingCost=5=9', 'fishingCost', 'fishingCost=five']) assert.throws(() => setup([arg]), /give fishingCost a single number/, arg)
-    // A match needs a resolution: 4000 s leaves none, and 0 s would never end.
-    for (const seconds of [4000, 0, -180]) assert.throws(() => setup([`resolutionSeconds=${seconds}`]), /at least one resolution/)
-    const single = setup(['resolutionSeconds=3600']).config
-    assert(evaluate(single, 1, [3]).every(r => Number.isFinite(r.convergence.mixed.leaderHolds.mean)))
+    for (const arg of ['fuelCost=', 'fuelCost= ', 'fuelCost=5=9', 'fuelCost', 'fuelCost=five']) assert.throws(() => setup([arg]), /give fuelCost a single number/, arg)
+    for (const seconds of [4000, 0, -2]) assert.throws(() => setup([`tickSeconds=${seconds}`]), /tickSeconds must be/)
+    for (const arg of ['width=0', 'catchTicks=1.5', 'goldenEvery=0']) assert.throws(() => setup([arg]), /whole number/, arg)
   } finally { rmSync(dir, { recursive: true, force: true }) }
   // Called directly with a single team, experiments that need a field are skipped rather than NaN.
-  const [alone] = evaluate(commonsConfig, 2, [1])
+  const [alone] = evaluate(commonsConfig, 1, [1])
   assert.equal(alone!.invasion.size, 0)
-  assert.equal(alone!.convergence.mixed.leaderHolds.n + alone!.convergence.identical.leaderHolds.n, 0)
-  assert([alone!.research, alone!.mixed, alone!.wins, alone!.contracts, alone!.pressure].every(m => [...m.values()].every(s => Number.isFinite(s.mean) && Number.isFinite(s.error))))
-})
-
-test('teams decide in an unbiased random order', () => {
-  // Over many seeds every team goes first equally often (a random sort comparator
-  // put the first team first 44% of the time at 3 teams and 17% at 12).
-  for (const n of [3, 6, 12, 20]) {
-    const first = Array<number>(n).fill(0), seeds = 20000
-    for (let seed = 0; seed < seeds; seed++) first[shuffle([...Array(n).keys()], rng(seed))[0]!]!++
-    assert(first.every(count => Math.abs(count / seeds - 1 / n) < 0.015), `${n} teams: ${first.map(c => (c / seeds).toFixed(3)).join(' ')}`)
-  }
-  // Every order of three teams is equally likely, and the input is left alone.
-  const orders = new Map<string, number>(), random = rng(1), teams = ['a', 'b', 'c']
-  for (let k = 0; k < 30000; k++) { const key = shuffle(teams, random).join(''); orders.set(key, (orders.get(key) ?? 0) + 1) }
-  assert.equal(orders.size, 6)
-  assert([...orders.values()].every(count => Math.abs(count / 30000 - 1 / 6) < 0.015))
-  assert.deepEqual(teams, ['a', 'b', 'c'])
-})
-
-test('fixed-strategy bots break ties between equal grounds evenly', () => {
-  for (const strategy of ['greedy', 'spread', 'stay'] as const) {
-    const chosen = [0, 0, 0, 0], seeds = 8000
-    for (let seed = 0; seed < seeds; seed++) {
-      const state = match([team('a', 0)], [6, 6, 6, 6])
-      decide({ state, me: state.teams[0]!, config, scores: new Map([['a', 0]]), left: 20, random: rng(seed) }, { strategy, contracts: 'none', income: 5, attention: 1 })
-      chosen[state.teams[0]!.boats[0]!.order!]!++
-    }
-    assert(chosen.every(count => Math.abs(count / seeds - 0.25) < 0.03), `${strategy}: ${chosen.join(' ')}`)
-  }
-})
-
-test('follow bots pick evenly among rivals tied for the lead, then keep to the one they follow', () => {
-  // Rivals b, c and d share the lead, fishing grounds 1, 2 and 3; team a follows from harbour.
-  const scores = new Map([['a', 0], ['b', 4], ['c', 4], ['d', 4]]), bot = { strategy: 'follow', contracts: 'none', income: 5, attention: 1 } as const
-  const follow = (seed: number, own: Partial<TeamPlay['boats'][number]> = {}) => {
-    const state = match([team('a', 0, { boats: [{ ground: null, order: null, ...own }, { ground: null, order: null }] }), ...['b', 'c', 'd'].map((id, i) => team(id, 0, { boats: [at(i + 1), at(i + 1)] }))], [6, 6, 6, 6])
-    decide({ state, me: state.teams[0]!, config, scores, left: 20, random: rng(seed) }, bot)
-    return state.teams[0]!.boats[0]!.order!
-  }
-  const chosen = [0, 0, 0, 0], seeds = 6000
-  for (let seed = 0; seed < seeds; seed++) chosen[follow(seed)]!++
-  assert(chosen[0] === 0 && chosen.slice(1).every(count => Math.abs(count / seeds - 1 / 3) < 0.03), chosen.join(' '))
-  // A boat already at a tied leader's ground stays there, and a sole leader is always followed.
-  for (let seed = 0; seed < 200; seed++) assert.equal(follow(seed, at(3)), 3)
-  scores.set('c', 5)
-  for (let seed = 0; seed < 200; seed++) assert.equal(follow(seed, at(3)), 2)
-})
-
-test('bots forecast with the same catch split and contract eligibility as resolution', () => {
-  assert.deepEqual([[5, 3], [12, 6], [0, 2], [7, 1]].map(([biomass, boats]) => catchEach(biomass!, boats!, config)), [1, 2, 0, 2])
-  const named = { id: 'q', kind: 'catch', target: 4, ground: 'B', minBiomass: 8, quiet: true } as const
-  assert.deepEqual(([[1, 8, false], [0, 8, false], [1, 7, false], [1, 8, true]] as const).map(([g, biomass, rivals]) => qualifies(named, g, biomass, rivals)), [true, false, false, false])
-  assert.equal(qualifies({ id: 's', kind: 'variety', target: 2 }, 0, 12, false), false)
+  assert.equal(alone!.settling.mixed.n + alone!.settling.identical.n, 0)
+  assert([alone!.research, alone!.attention, alone!.mixed, alone!.golden, alone!.herding].every(m => [...m.values()].every(s => Number.isFinite(s.mean) && Number.isFinite(s.error))))
 })
 
 test('convergence metrics share tied places instead of favouring lower indexes', () => {
   assert.deepEqual(winShares([4, 7, 7, 1]), [0, 0.5, 0.5, 0])
-  assert.deepEqual([podium([5, 5, 5, 1]), podium([9, 5, 5, 5, 1]), podium([2, 1])], [[1, 1, 1, 0], [1, 2, 2, 2, 0], [1, 2]])
   // Two teams level at halfway and one of them wins: a fair pick among the leaders holds half the time.
   assert.deepEqual([leaderHolds([5, 5, 1], [9, 8, 7]), leaderHolds([5, 5, 1], [8, 9, 7]), leaderHolds([5, 3, 1], [9, 9, 9]), leaderHolds([5, 3, 1], [8, 9, 7])], [0.5, 0.5, 1 / 3, 0])
-  // Team 3 draws level for third after resolution 3, team 1 passes team 0 after 4, then nothing moves.
-  const standings = [[0, 0, 0, 0], [2, 1, 1, 0], [2, 1, 1, 1], [2, 3, 1, 1], [4, 5, 1, 1]]
-  assert.equal(lastChange(standings), 4)
-  assert.equal(lastChange([[0, 0, 0], [1, 1, 1], [2, 2, 2]]), 0)
-  // Renumbering the teams changes nothing.
-  const reverse = (s: number[]) => [...s].reverse()
-  assert.equal(lastChange(standings.map(reverse)), 4)
-  assert.deepEqual([leaderHolds([5, 5, 1, 0], [5, 3, 5, 1]), leaderHolds(reverse([5, 5, 1, 0]), reverse([5, 3, 5, 1]))], [0.25, 0.25])
 })
