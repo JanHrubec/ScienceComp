@@ -1,4 +1,4 @@
-# Science competition
+# Science Competition
 
 Vue 3 + TypeScript + Vite, with an Express server and SQLite. Includes 300 questions in English and Czech, team access codes, admin controls, independent subject progress, Research, five team-wide skips and **The Commons**, a shared fishing game played with Research. No individual student accounts or external services.
 
