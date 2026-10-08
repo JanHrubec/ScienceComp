@@ -8,28 +8,23 @@ export type Language = 'en' | 'cs'
 export interface PublicQuestion { cs: { prompt: string; choices?: string[] }; id: string; prompt: string; type: 'multiple-choice' | 'text' | 'numerical'; choices?: string[]; reward: number }
 export interface QuestionProgress { completed: number; total: number; attempts: number; question: PublicQuestion | null }
 export interface Team { id: string; name: string; age: AgeCategory; research: number; earned: number; skipsUsed: number; color: string }
-// The Commons: shared fishing grounds. Ground IDs are indexes; names are letters.
-export type ContractDefinition =
-  | { id: string; kind: 'catch'; target: number; ground?: string; minBiomass?: number; quiet?: boolean; bonus?: number }
-  | { id: string; kind: 'variety'; target: number; bonus?: number }
-export interface BoatOrder { ground: number | null; order: number | null }
-export interface BoatReport { boat: number; from: number | null; order: number | null; action: 'fish' | 'travel' | 'idle' | 'unpaid'; paid: number; caught: number }
+// The Commons: a live map. Tiles are { x, y }; `land` rows use '#' for island and '.' for sea.
+export interface Tile { x: number; y: number }
+// A boat is sent to a tile, or to a school by id, which it then follows.
+export type BoatOrder = Tile | { school: number }
 export interface GameState {
-  rules: { resolutionSeconds: number; fishingCost: number; catchAmount: number; growthCap: number }
-  resolution: { done: number; total: number; nextAt: number | null }
-  grounds: { id: number; name: string; biomass: number; maximum: number; growth: number }[]
-  // Every team's boats, orders and active contract are public. Scores are not sent,
-  // though stock and boats let a determined team estimate them.
-  teams: { id: string; name: string; color: string; contract: string | null; boats: BoatOrder[] }[]
-  contracts: (ContractDefinition & { bonus: number })[]
-  // `taken` numbers the team's takings of contracts, so the same contract taken again is told apart.
-  own: { fish: number; bonus: number; contract: { id: string; progress: number; taken: number } | null; completed: string[] }
-  last: {
-    number: number
-    grounds: { id: number; before: number; caught: number; growth: number; after: number }[]
-    boats: BoatReport[]
-    completed: string | null
-  } | null
+  rules: { tickSeconds: number; fuelCost: number; catchTicks: number; goldenValue: number }
+  // `nextAt`: when the next tick is due, or null once the match is over.
+  clock: { tick: number; total: number; nextAt: number | null }
+  map: { width: number; height: number; land: string[]; harbour: Tile } | null
+  // A golden school swims off at tick `until`. `sail`: tiles from this team's boat.
+  schools: { id: number; x: number; y: number; fish: number; golden: boolean; until: number | null; sail: number }[]
+  // Every boat, its order and route are public. Research and scores are not sent,
+  // though a determined team could estimate scores by watching.
+  boats: { team: string; name: string; color: string; x: number; y: number; target: BoatOrder | null; route: Tile[]; hauling: number }[]
+  own: { fish: number; bonus: number }
+  // The latest golden-school events, newest first.
+  golden: { tick: number; kind: 'appeared' | 'caught' | 'gone'; x: number; y: number; team: string | null; name: string | null }[]
 }
 export interface StandingsState {
   frozenAt: number | null

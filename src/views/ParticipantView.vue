@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import { t } from '../i18n'
-import { onMounted, onUnmounted, watch } from 'vue'
+import { computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '../api'
 import { teamState, refreshState, connectionError, clearState } from '../state'
 import CompetitionTimer from '../components/CompetitionTimer.vue'
 import { competitionStatus } from '../competition'
 const router = useRouter()
+// Flags the Game tab while a golden school is out or the boat has nothing to do, so a team busy with questions notices.
+const gameAlert = computed(() => {
+  const game = teamState.value?.game, boat = game?.boats.find(b => b.team === teamState.value!.team.id)
+  if (!game?.map || !boat) return ''
+  if (game.schools.some(s => s.golden)) return 'A golden school is out'
+  return !boat.route.length && !game.schools.some(s => s.x === boat.x && s.y === boat.y) ? 'Your boat is idle' : ''
+})
 watch(competitionStatus, () => { void refreshState() })
 let timer: ReturnType<typeof setTimeout> | undefined
 let stopped = false
@@ -21,7 +28,7 @@ async function leave() { try { await api('/team/logout', {}); clearState(); rout
     <header class="play-shell">
       <nav class="main-tabs" :aria-label="t('Main')">
         <RouterLink to="/play/questions">{{ t('Questions') }}</RouterLink>
-        <RouterLink to="/play/game">{{ t('Game') }}</RouterLink>
+        <RouterLink to="/play/game">{{ t('Game') }}<span v-if="gameAlert" class="tab-alert" :title="t(gameAlert)"><span class="sr-only">, {{ t(gameAlert) }}</span></span></RouterLink>
         <RouterLink to="/play/standings">{{ t('Standings') }}</RouterLink>
       </nav>
       <div v-if="teamState" class="team-heading">
