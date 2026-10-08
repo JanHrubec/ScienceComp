@@ -1,26 +1,25 @@
 import type { CommonsConfig } from './rules.js'
 // Every balancing value for The Commons. Edit between events, then restart the
-// server (rebuild for production). Ground count, biomass and starting Research
-// apply when the admin starts a match; check changes with `npm run simulate`.
+// server (rebuild for production). Map, schools and starting Research apply when
+// the admin starts a match; check changes with `npm run simulate`. Times are in ticks.
 export const commonsConfig: CommonsConfig = {
-  resolutionSeconds: 180,
-  fishingCost: 5, // Research per fishing boat per resolution
-  catchAmount: 2, // fish per boat per resolution
-  maximumBiomass: 10, // a smaller buffer, so a slight shortage bites within the match even at 6 teams
-  startingBiomass: 6, // regrows to 9 during the first resolution, when every boat is still travelling
-  growthCap: 3,
-  groundCount: teams => Math.max(2, Math.round(1.1 * teams)), // 1 per team up to 4 teams, +1 from 5, +2 from 15
-  startingResearch: 0, // granted to every team when the match starts
-  contractBonus: 8, // points; a contract may set its own `bonus`
-  // Building blocks only: a catch counter (optionally limited to a named ground,
-  // a minimum biomass at the start of the resolution, and/or grounds no other
-  // team fished in the previous resolution) or a variety counter.
-  contracts: [
-    { id: 'full-nets', kind: 'catch', target: 12, minBiomass: 9 },
-    { id: 'quiet-waters', kind: 'catch', target: 16, quiet: true },
-    { id: 'untouched', kind: 'catch', target: 8, minBiomass: 9, quiet: true },
-    { id: 'survey', kind: 'variety', target: 4, bonus: 6 }, // reliable but costs travel, so worth less
-    { id: 'ground-a', kind: 'catch', target: 14, ground: 'A' },
-    { id: 'ground-b', kind: 'catch', target: 14, ground: 'B' },
-  ],
+  tickSeconds: 2, // a boat sails one tile per tick
+  width: 16,
+  height: 10,
+  landShare: 0.12,
+  fuelCost: 1, // Research per tile sailed
+  catchTicks: 5, // a boat on a school catches one fish every 5 ticks (10 s)
+  extraSchools: 2, // schools: one per team plus these
+  schoolStart: 8,
+  schoolMax: 12,
+  growthTicks: 15, // every 30 s, each school regrows by up to growthCap
+  growthCap: 2,
+  driftTicks: 15, // every 30 s, each school swims one tile; boats sent to it follow, burning fuel
+  respawnTicks: 10, // an emptied school reappears elsewhere 20 s later
+  goldenEvery: 90, // every 3 minutes golden schools appear…
+  goldenTeams: 4, // …one per 4 teams…
+  goldenFish: 3,
+  goldenValue: 4, // …each fish worth 4 points…
+  goldenTicks: 75, // …and swim off after 2.5 minutes
+  startingResearch: 10, // granted to every team when the match starts, so all boats leave harbour at once
 }

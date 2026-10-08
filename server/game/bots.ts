@@ -1,141 +1,57 @@
 // Bot teams for the balance simulation. They decide only from what players see:
-// grounds, every boat and order, previous-resolution activity and the leaderboard.
-import type { ContractDefinition } from '../../shared/domain.js'
-import { availableContracts, catchEach, contractBonus, fishedByRivals, growth, qualifies, type CommonsConfig, type MatchState, type TeamPlay } from './rules.js'
+// the map, every school, every boat and its destination, and their own Research.
+import { destination, distance, type Boat, type CommonsConfig, type MatchState, type Order, type School } from './rules.js'
 
-// `planner` approximates a thoughtful team: it forecasts each ground a few
-// resolutions ahead, counting travel time and every visible order. The others
-// are the fixed strategies the plan asks to rule out as dominant.
-export const strategies = ['planner', 'greedy', 'spread', 'follow', 'stay'] as const
+// `planner` approximates a thoughtful team: it values each school by the fish it
+// expects to catch before it looks in again, counting the sail there and the boats
+// already on or heading for it, and chases golden schools it can reach in time.
+// The others are simple rules of thumb the planner must not lose to.
+export const strategies = ['planner', 'nearest', 'biggest', 'golden', 'stay'] as const
 export type Strategy = typeof strategies[number]
-// none: ignores contracts. opportunistic: takes a contract its current orders
-// already serve. rational: also steers boats by a contract's face value.
-// zealot: steers at three times face value and never abandons.
-export const contractModes = ['none', 'opportunistic', 'rational', 'zealot'] as const
-export type ContractMode = typeof contractModes[number]
-export interface Bot { strategy: Strategy; contracts: ContractMode; income: number; attention: number }
-export interface View { state: MatchState; me: TeamPlay; config: CommonsConfig; scores: Map<string, number>; left: number; random: () => number }
-const weights: Record<ContractMode, number> = { none: 0, opportunistic: 0, rational: 1, zealot: 3 }
-// Planner lookahead in resolutions, and how much better (in fish) a new order
-// must look before it replaces the current one. Longer or stickier both did worse.
-const HORIZON = 4, STICKINESS = 0.25
+// `income`: Research per minute. `every`: minutes between looks at the game, on average.
+export interface Bot { strategy: Strategy; income: number; every: number }
+export interface View { state: MatchState; me: Boat; config: CommonsConfig; horizon: number }
+// Fish a move must gain over staying before the planner gives up a school it is on.
+const STICKINESS = 1
 
-const active = (v: View) => v.me.contract && v.config.contracts.find(c => c.id === v.me.contract!.id) || null
-
-// Boats other than `boat` itself ordered to `g`: already there (fish next) or travelling (fish after).
-function census(v: View, boat: number, g: number) {
-  const c = { fishing: 0, arriving: 0, rivalsFishing: 0, rivalsArriving: 0 }
-  for (const t of v.state.teams) t.boats.forEach((b, i) => {
-    if ((t.id === v.me.id && i === boat) || b.order !== g) return
-    const rival = t.id !== v.me.id
-    if (b.ground === g) { c.fishing++; if (rival) c.rivalsFishing++ } else { c.arriving++; if (rival) c.rivalsArriving++ }
-  })
-  return c
+const rivals = (v: View, s: School) => v.state.boats.filter(b => { const to = b !== v.me && destination(v.state, b); return to && to.x === s.x && to.y === s.y })
+// Expected catch at `s` over the horizon if the boat sails there now.
+export function value(v: View, s: School): number {
+  const { config, me, horizon } = v, sail = distance(v.state.map, me, s)
+  if (sail < 0 || sail > me.research) return -Infinity
+  const others = rivals(v, s), there = others.filter(b => b.x === s.x && b.y === s.y).length
+  const growth = s.golden ? 0 : config.growthCap / config.growthTicks
+  // Fish left when the boat arrives, then shared among everyone there by then.
+  const left = s.fish - Math.max(0, there / config.catchTicks - growth) * sail
+  const sharing = 1 + others.filter(b => distance(v.state.map, b, s) <= sail).length
+  const until = Math.min(horizon, s.until === null ? Infinity : s.until - v.state.tick) - sail - (sail ? config.catchTicks : config.catchTicks - me.hauling)
+  if (until < 0 || left <= 0) return 0
+  const drain = Math.max(1e-6, sharing / config.catchTicks - growth)
+  const mine = Math.min(until, left / drain) / config.catchTicks
+  return (s.golden ? config.goldenValue : 1) * Math.min(mine, left) - 0.02 * sail
 }
+const nearest = (v: View, schools: School[]) => schools.filter(s => distance(v.state.map, v.me, s) <= v.me.research)
+  .sort((a, b) => distance(v.state.map, v.me, a) - distance(v.state.map, v.me, b))[0]
 
-// Expected value of sending `boat` to `g` over the next few resolutions, assuming
-// everyone else keeps their current orders. Contract progress counts at `weight`
-// times its face value (bonus / target per qualifying fish or new ground).
-function forecast(v: View, boat: number, g: number, idleFirst: boolean, weight: number) {
-  const { config, me } = v, ground = v.state.grounds[g]!, own = me.boats[boat]!, crowd = census(v, boat, g), contract = weight ? active(v) : null
-  let biomass = ground.biomass, value = 0, surveyed = false
-  for (let k = 0; k < Math.min(HORIZON, v.left); k++) {
-    const mine = k === 0 && (own.ground !== g || idleFirst) ? 0 : 1
-    const boats = crowd.fishing + (k ? crowd.arriving : 0) + mine, each = boats ? catchEach(biomass, boats, config) : 0
-    if (mine) {
-      value += each
-      if (contract) {
-        const rivalsBefore = k === 0 ? fishedByRivals(ground, me.id) : crowd.rivalsFishing + (k > 1 ? crowd.rivalsArriving : 0) > 0
-        const rate = weight * contractBonus(contract, config) / contract.target
-        if (contract.kind === 'variety' && !surveyed && !me.contract!.visited.includes(g)) { value += rate; surveyed = true }
-        if (qualifies(contract, g, biomass, rivalsBefore)) value += rate * each
-      }
-    }
-    biomass -= each * boats
-    biomass += growth(biomass, ground.maximum, config.growthCap)
+// Returns the boat's new order, or null to leave it as it is.
+export function decide(v: View, bot: Bot): Order | null {
+  const order = decideSchool(v, bot)
+  return order && { school: order.id }
+}
+function decideSchool(v: View, bot: Bot): School | null {
+  const { me, state } = v, schools = state.schools, goal = destination(state, me)
+  const here = schools.find(s => s.x === goal?.x && s.y === goal.y) ?? schools.find(s => s.x === me.x && s.y === me.y)
+  // A team that sends its boat out once and never looks again.
+  if (bot.strategy === 'stay') return state.tick ? null : nearest(v, schools) ?? null
+  if (bot.strategy === 'nearest') return here ? null : nearest(v, schools) ?? null
+  if (bot.strategy === 'biggest') {
+    const best = [...schools].filter(s => !s.golden && distance(state.map, me, s) <= me.research).sort((a, b) => b.fish - a.fish || distance(state.map, me, a) - distance(state.map, me, b))[0]
+    return best && best !== here ? best : null
   }
-  return value
-}
-
-function plan(v: View, boat: number, weight: number): number | null {
-  const own = v.me.boats[boat]!
-  const options: { order: number | null; value: number }[] = v.state.grounds.map((_, g) => ({ order: g, value: forecast(v, boat, g, false, weight) + v.random() * 0.01 }))
-  if (own.ground !== null) options.push({ order: null, value: forecast(v, boat, own.ground, true, weight) })
-  const best = options.reduce((a, o) => o.value > a.value ? o : a)
-  const current = options.find(o => o.order === own.order)
-  return current && current.value >= best.value - STICKINESS ? own.order : best.order
-}
-
-const ordered = (v: View, boat: number, g: number) => { const c = census(v, boat, g); return c.fishing + c.arriving }
-// Scores each ground once, so its noise breaks ties evenly (rescoring inside a
-// comparison redraws the noise and favours later grounds), then picks the best.
-function rank(v: View, score: (g: number) => number) {
-  const scores = v.state.grounds.map((_, g) => score(g))
-  return { scores, best: scores.indexOf(Math.max(...scores)) }
-}
-
-function fixed(v: View, strategy: Exclude<Strategy, 'planner'>, boat: number): number | null {
-  const own = v.me.boats[boat]!
-  if (strategy === 'stay') return own.order ?? rank(v, g => -ordered(v, boat, g) + v.random() * 0.5).best
-  if (strategy === 'spread') {
-    const target = rank(v, g => -ordered(v, boat, g) + v.state.grounds[g]!.biomass / 100 + v.random() * 0.01).best
-    return own.order !== null && ordered(v, boat, own.order) <= ordered(v, boat, target) + 1 ? own.order : target
-  }
-  if (strategy === 'follow') {
-    // Fish where the current leader is fishing. Of rivals tied for the lead, keep to one this
-    // boat already follows, else pick one at random: the first would pile every follower onto the
-    // lowest index, and a fresh pick at every look would keep paying for travel.
-    const spot = (t: TeamPlay) => { const spots = t.boats.filter(b => b.order !== null && b.order === b.ground).map(b => b.order!); return spots[Math.min(boat, spots.length - 1)] }
-    const rivals = v.state.teams.filter(t => t.id !== v.me.id), top = Math.max(0, ...rivals.map(t => v.scores.get(t.id)!))
-    const leaders = top > 0 ? rivals.filter(t => v.scores.get(t.id) === top) : []
-    const leader = leaders.find(t => own.order !== null && spot(t) === own.order) ?? (leaders.length > 1 ? leaders[Math.floor(v.random() * leaders.length)] : leaders[0])
-    const target = leader && spot(leader)
-    if (target !== undefined) return target
-  }
-  // Greedy: the most fish per boat right now, ignoring travel time and regrowth.
-  const { scores, best } = rank(v, g => v.state.grounds[g]!.biomass / (ordered(v, boat, g) + 1) + v.random() * 0.01)
-  return own.order !== null && scores[own.order]! >= scores[best]! - 1 ? own.order : best
-}
-
-// Qualifying fish (or new grounds) per resolution: from current orders, or the
-// best achievable if the team steers both boats towards the contract. Rival teams
-// pursuing the same contract are expected to crowd the same grounds.
-function contractRate(v: View, c: ContractDefinition, steer: boolean) {
-  const { state, me, config } = v
-  if (c.kind === 'variety') {
-    // Each new ground costs a resolution of travel: about one per resolution when steering.
-    const fresh = new Set(me.boats.filter(b => b.order !== null && !me.contract?.visited.includes(b.order)).map(b => b.order)).size
-    return steer ? 1 : fresh ? 0.25 : 0
-  }
-  const rivals = state.teams.filter(t => t.id !== me.id && t.contract?.id === c.id).length
-  const value = (g: number, boat: number, extra: number) => qualifies(c, g, state.grounds[g]!.biomass, fishedByRivals(state.grounds[g]!, me.id)) ? catchEach(state.grounds[g]!.biomass, census(v, boat, g).fishing + 1 + extra, config) : 0
-  if (!steer) return me.boats.reduce((sum, b, i) => sum + (b.order !== null && b.order === b.ground ? value(b.order, i, 0) : 0), 0)
-  const crowding = c.ground !== undefined ? 2 * rivals : 0
-  return me.boats.reduce((sum, _, i) => sum + Math.max(...state.grounds.map((__, g) => value(g, i, crowding))), 0) * 0.75
-}
-
-function chooseContract(v: View, mode: ContractMode) {
-  if (mode === 'none') return
-  const steer = mode !== 'opportunistic', definition = active(v)
-  if (v.me.contract && definition && mode !== 'zealot') {
-    const rate = contractRate(v, definition, steer)
-    if (!rate || (definition.target - v.me.contract.progress) / rate > v.left + 1) v.me.contract = null
-  }
-  if (v.me.contract) return
-  let best: { id: string; pace: number } | null = null
-  for (const c of availableContracts(v.config, v.state.grounds.length)) {
-    if (v.me.completed.includes(c.id)) continue
-    const rate = contractRate(v, c, steer), time = rate ? c.target / rate + (steer ? 1 : 0) : Infinity
-    const pace = time <= v.left - 1 ? contractBonus(c, v.config) / time : 0
-    if (pace > (best?.pace ?? 0)) best = { id: c.id, pace }
-  }
-  if (best) v.me.contract = { id: best.id, progress: 0, visited: [] }
-}
-
-export function decide(v: View, bot: Bot) {
-  if (bot.contracts !== 'opportunistic') chooseContract(v, bot.contracts)
-  v.me.boats.forEach((boat, i) => {
-    boat.order = bot.strategy === 'planner' ? plan(v, i, weights[bot.contracts]) : fixed(v, bot.strategy, i)
-  })
-  if (bot.contracts === 'opportunistic') chooseContract(v, bot.contracts)
+  let best = here, score = here ? value(v, here) + STICKINESS : -Infinity
+  // The golden rule of thumb only weighs golden schools, while there are any worth going for.
+  const options = bot.strategy === 'golden' && schools.some(s => s.golden && value(v, s) > 0) ? schools.filter(s => s.golden) : schools
+  if (options !== schools && !here?.golden) score = -Infinity
+  for (const s of options) { const x = value(v, s); if (x > score) { best = s; score = x } }
+  return best && best !== here ? best : null
 }

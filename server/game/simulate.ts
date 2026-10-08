@@ -1,31 +1,23 @@
 // Balance check for The Commons: `npm run simulate -- [runs] [key=value…] [--history file]`,
-// for example `npm run simulate -- 200 contractBonus=6 growthCap=2` to try numeric
-// overrides of config.ts, or `--history match-history.json` to replace the assumed
-// Research incomes and attention with those measured in a rehearsal (the admin's
-// Match history download). Bots use the same pure rules as the server.
+// for example `npm run simulate -- 100 fuelCost=2 width=20` to try numeric overrides
+// of config.ts, or `--history match-history.json` to replace the assumed Research
+// incomes and attention with those measured in a rehearsal (the admin's Match history
+// download). Bots use the same pure rules as the server.
 import { readFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import { commonsConfig } from './config.js'
-import { availableContracts, newBoats, newGrounds, resolve, type CommonsConfig, type MatchState } from './rules.js'
-import { contractModes, decide, strategies, type Bot, type ContractMode, type Strategy } from './bots.js'
+import { newMatch, rng, step, type CommonsConfig } from './rules.js'
+import { decide, strategies, type Bot, type Strategy } from './bots.js'
 import { DURATION_SECONDS } from '../competition.js'
 
-export interface Assumptions { incomes: { weak: number; average: number; strong: number }; attention: [number, number]; source: string }
+// `every`: the range of minutes between a team's looks at the game.
+export interface Assumptions { incomes: { weak: number; average: number; strong: number }; every: [number, number]; source: string }
 // Until a rehearsal is measured: Research per minute for about 2, 5 and 9 first-try
-// correct answers per 10 minutes, and teams that look in before 50–90% of resolutions.
-export const assumed: Assumptions = { incomes: { weak: 2, average: 5, strong: 9 }, attention: [0.5, 0.9], source: 'assumed' }
+// correct answers per 10 minutes, and teams that look in every 1 to 4 minutes.
+export const assumed: Assumptions = { incomes: { weak: 2, average: 5, strong: 9 }, every: [1, 4], source: 'assumed' }
 export const sizes = [3, 6, 8, 12, 20]
+export const looks = [1, 2, 5, 10]
 const fixedStrategies = strategies.filter(s => s !== 'planner')
-
-export function rng(seed: number) {
-  return () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296 }
-}
-// Fisher–Yates: every order equally likely (sorting by a random comparator is not).
-export function shuffle<T>(items: T[], random: () => number) {
-  const out = [...items]
-  for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(random() * (i + 1)); [out[i], out[j]] = [out[j]!, out[i]!] }
-  return out
-}
 
 // Standings with ties: teams level on points share a place, so no team leads just by
 // having the lower index. Here, each team's share of first place.
@@ -33,41 +25,33 @@ export function winShares(scores: number[]) {
   const best = Math.max(...scores), tied = scores.filter(s => s === best).length
   return scores.map(s => s === best ? 1 / tied : 0)
 }
-// The top three as a leaderboard shows them: each team's place (1 + teams strictly
-// ahead) if it scores at least the third-highest score, otherwise 0. Places, not
-// just membership, so a 3-team field still shows its order changing.
-export function podium(scores: number[]) {
-  const sorted = [...scores].sort((a, b) => b - a), third = sorted[Math.min(2, scores.length - 1)]!
-  return scores.map(s => s >= third ? sorted.indexOf(s) + 1 : 0)
-}
 // Chance that a team drawn from those leading at halfway is the one drawn from the final winners.
 export const leaderHolds = (half: number[], final: number[]) => { const f = winShares(final); return winShares(half).reduce((p, h, i) => p + h * f[i]!, 0) }
-// The last resolution (1-based) after which the top three differ from the resolution before; 0 if never.
-export const lastChange = (standings: number[][]) => standings.reduce((last, s, k) => k && podium(s).join() !== podium(standings[k - 1]!).join() ? k + 1 : last, 0)
 
+// One match. Teams earn Research every minute and look in now and then, at random
+// times averaging `every` minutes apart; in between, their boats carry on alone.
 export function play(bots: Bot[], config: CommonsConfig, seed: number) {
-  const random = rng(seed), rounds = Math.floor(DURATION_SECONDS / config.resolutionSeconds), minutes = config.resolutionSeconds / 60
-  let state: MatchState = { grounds: newGrounds(bots.length, config), teams: bots.map((_, i) => ({ id: String(i), research: config.startingResearch, boats: newBoats(), fish: 0, bonus: 0, contract: null, completed: [] })) }
-  const paid = bots.map(() => 0), wanted = bots.map(() => 0), taken: string[][] = bots.map(() => []), standings: number[][] = [], biomass: number[] = []
-  // Resolutions whose locked orders or contract differ from the previous one's, as a rehearsal history records them.
-  const changes = bots.map(() => 0), locked = bots.map(() => '')
-  for (let round = 1; round <= rounds; round++) {
-    state.teams.forEach((team, i) => { team.research += bots[i]!.income * minutes * (0.5 + random()) })
-    const scores = new Map(state.teams.map(t => [t.id, t.fish + t.bonus]))
-    // Teams look in occasionally, in no fixed order, and see orders given before theirs.
-    for (const i of shuffle(state.teams.map((_, i) => i), random)) {
-      const me = state.teams[i]!, before = me.contract?.id
-      if (round === 1 || random() < bots[i]!.attention) decide({ state, me, config, scores, left: rounds - round + 1, random }, bots[i]!)
-      if (me.contract && me.contract.id !== before) taken[i]!.push(me.contract.id)
-    }
-    state.teams.forEach((t, i) => { const now = JSON.stringify([t.boats.map(b => b.order), t.contract?.id]); if (round > 1 && now !== locked[i]) changes[i]!++; locked[i] = now })
-    const result = resolve(state, config)
-    for (const boat of result.report.boats) if (boat.action === 'fish' || boat.action === 'unpaid') { wanted[Number(boat.team)]!++; if (boat.action === 'fish') paid[Number(boat.team)]!++ }
-    state = result.state
-    standings.push(state.teams.map(t => t.fish + t.bonus))
-    biomass.push(state.grounds.reduce((sum, g) => sum + g.biomass, 0) / state.grounds.length)
+  const random = rng(seed), ticks = Math.floor(DURATION_SECONDS / config.tickSeconds), minute = Math.max(1, Math.round(60 / config.tickSeconds))
+  const state = newMatch(bots.map((_, i) => String(i)), config, seed)
+  state.boats.forEach(b => { b.research = config.startingResearch })
+  const look = bots.map(() => 1), moved = bots.map(() => 0), stalled = bots.map(() => 0), orders = bots.map(() => 0), standings: number[][] = []
+  const golden = { appeared: 0, caught: 0, gone: 0 }
+  for (let tick = 1; tick <= ticks; tick++) {
+    if (tick % minute === 1 % minute) state.boats.forEach((b, i) => { b.research += bots[i]!.income * (0.5 + random()) })
+    state.boats.forEach((me, i) => {
+      if (tick < look[i]!) return
+      const bot = bots[i]!, interval = bot.every * minute
+      const target = decide({ state, me, config, horizon: Math.max(minute, interval) }, bot)
+      if (target) { me.target = target; orders[i]!++ }
+      look[i] = tick + Math.max(1, Math.round(interval * (0.5 + random())))
+    })
+    const report = step(state, config)
+    for (const team of report.moved) moved[Number(team)]!++
+    for (const team of report.stalled) stalled[Number(team)]!++
+    for (const e of report.events) golden[e.kind]++
+    if (tick % minute === 0) standings.push(state.boats.map(b => b.fish + b.bonus))
   }
-  return { scores: state.teams.map(t => t.fish + t.bonus), fish: state.teams.map(t => t.fish), completed: state.teams.map(t => t.completed), taken, paid, wanted, changes, standings, biomass, rounds }
+  return { scores: state.boats.map(b => b.fish + b.bonus), bonus: state.boats.map(b => b.bonus), moved, stalled, orders, standings, golden, minutes: ticks / minute }
 }
 
 class Stat {
@@ -76,179 +60,151 @@ class Stat {
   get mean() { return this.n ? this.sum / this.n : 0 }
   // Half-width of a 95% confidence interval for the mean.
   get error() { return this.n > 1 ? 1.96 * Math.sqrt(Math.max(0, this.squares / this.n - this.mean ** 2) / (this.n - 1)) : 0 }
-  toString() { return this.n ? `${this.mean >= 0 ? ' ' : ''}${this.mean.toFixed(1)} ±${this.error.toFixed(1)}` : '-' }
+  toString() { return this.n ? `${this.mean.toFixed(1)} ±${this.error.toFixed(1)}` : '-' }
 }
 const statMap = () => new Map<string, Stat>()
 const stat = (map: Map<string, Stat>, key: string) => map.get(key) ?? map.set(key, new Stat()).get(key)!
 const percent = (s: Stat) => s.n ? `${Math.round(s.mean * 100)}%` : '-'
-const convergence = () => ({ leaderHolds: new Stat(), lastChange: new Stat() })
-function converge(into: ReturnType<typeof convergence>, standings: number[][]) {
-  into.leaderHolds.add(leaderHolds(standings[Math.max(0, Math.floor(standings.length / 2) - 1)]!, standings.at(-1)!)); into.lastChange.add(lastChange(standings))
-}
-
-let assumptions = assumed
-const middle = (using: Assumptions) => (using.attention[0] + using.attention[1]) / 2
-function team(random: () => number, strategy: Strategy, contracts: ContractMode, income = assumptions.incomes.average): Bot {
-  const [low, high] = assumptions.attention
-  return { strategy, contracts, income, attention: low + random() * (high - low) }
-}
+const mean = (values: number[]) => values.reduce((a, b) => a + b, 0) / values.length
 
 export function evaluate(config: CommonsConfig, runs: number, fieldSizes = sizes, using = assumed) {
-  assumptions = using
-  const incomes = using.incomes, attention = middle(using)
+  const { incomes } = using, [low, high] = using.every
+  const team = (random: () => number, strategy: Strategy, income = incomes.average): Bot => ({ strategy, income, every: low + random() * (high - low) })
   return fieldSizes.map(size => {
-    const research = statMap(), invasion = statMap(), mixed = statMap(), wins = statMap(), contracts = statMap(), bonus = statMap(), completion = statMap()
-    const settling = { mixed: convergence(), identical: convergence() }, pressure = statMap()
+    const research = statMap(), attention = statMap(), invasion = statMap(), mixed = statMap(), wins = statMap(), golden = statMap(), herding = statMap()
+    const settling = { mixed: new Stat(), identical: new Stat() }
+    const halfway = (standings: number[][]) => leaderHolds(standings[Math.floor(standings.length / 2) - 1]!, standings.at(-1)!)
     for (let run = 0; run < runs; run++) {
       const random = rng(run * 7919 + size * 104729), seed = run * 31 + size
-      // 1. Research: thoughtful teams at three income levels.
+      // 1. Research: thoughtful teams at three income levels; score relative to the field.
       const levels = Object.entries(incomes)
-      let bots = Array.from({ length: size }, (_, i) => team(random, 'planner', 'opportunistic', levels[i % 3]![1]))
-      let result = play(bots, config, seed)
-      bots.forEach((_, i) => stat(research, levels[i % 3]![0]).add(result.paid[i]! / Math.max(1, result.wanted[i]!)))
-      // 2. Invasion: one fixed-strategy team, placed at random, among thoughtful ones
+      let bots = Array.from({ length: size }, (_, i) => team(random, 'planner', levels[(i + run) % 3]![1]))
+      let result = play(bots, config, seed), field = mean(result.scores)
+      bots.forEach((_, i) => {
+        const level = levels[(i + run) % 3]![0]
+        stat(research, `${level} paid`).add(result.moved[i]! / Math.max(1, result.moved[i]! + result.stalled[i]!))
+        stat(research, level).add(result.scores[i]! / field)
+      })
+      stat(golden, 'share').add(result.bonus.reduce((a, b) => a + b, 0) / Math.max(1, field * size))
+      stat(golden, 'missed').add(result.golden.gone / Math.max(1, result.golden.appeared))
+      // 2. Attention: thoughtful teams that look in every 1, 2, 5 or 10 minutes; score relative to the field.
+      bots = Array.from({ length: size }, (_, i): Bot => ({ strategy: 'planner', income: incomes.average, every: looks[(i + run) % looks.length]! }))
+      result = play(bots, config, seed); field = mean(result.scores)
+      bots.forEach((bot, i) => stat(attention, String(bot.every)).add(result.scores[i]! / field))
+      // 3. Invasion: one rule-of-thumb team, placed at random, among thoughtful ones
       // (score minus the field's mean). It needs at least one thoughtful team.
       if (size > 1) for (const strategy of fixedStrategies) {
         const at = Math.floor(random() * size)
-        bots = Array.from({ length: size }, (_, i) => team(random, i === at ? strategy : 'planner', 'opportunistic'))
+        bots = Array.from({ length: size }, (_, i) => team(random, i === at ? strategy : 'planner'))
         result = play(bots, config, seed)
         stat(invasion, strategy).add(result.scores[at]! - (result.scores.reduce((a, b) => a + b, 0) - result.scores[at]!) / (size - 1))
       }
-      // 3. Mixed field: strategies drawn at random. Teams tied for the win share it.
-      bots = Array.from({ length: size }, () => team(random, strategies[Math.floor(random() * strategies.length)]!, 'opportunistic'))
+      // 4. Mixed field: strategies drawn at random. Teams tied for the win share it.
+      bots = Array.from({ length: size }, () => team(random, strategies[Math.floor(random() * strategies.length)]!))
       result = play(bots, config, seed)
       const shares = winShares(result.scores)
       bots.forEach((bot, i) => { stat(mixed, bot.strategy).add(result.scores[i]!); stat(wins, bot.strategy).add(shares[i]!) })
-      if (size > 1) converge(settling.mixed, result.standings)
-      // 4. Contracts: thoughtful teams with every contract attitude, relative to the field.
-      bots = Array.from({ length: size }, (_, i) => team(random, 'planner', contractModes[(i + run) % contractModes.length]!))
-      result = play(bots, config, seed)
-      const mean = result.scores.reduce((a, b) => a + b, 0) / size
-      bots.forEach((bot, i) => {
-        stat(contracts, bot.contracts).add(result.scores[i]! - mean); stat(bonus, bot.contracts).add(result.scores[i]! - result.fish[i]!)
-        // Per attempt: was it completed? Abandoned or unfinished attempts count as failures.
-        if (bot.contracts === 'rational' || bot.contracts === 'opportunistic') for (const id of result.taken[i]!) stat(completion, `${bot.contracts} ${id}`).add(0)
-        if (bot.contracts === 'rational' || bot.contracts === 'opportunistic') for (const id of result.completed[i]!) { const s = stat(completion, `${bot.contracts} ${id}`); s.sum++; s.squares++ }
-      })
-      // 5. Pressure: uniform fields, without contracts.
-      for (const strategy of ['greedy', 'planner'] as const) {
-        result = play(Array.from({ length: size }, () => team(random, strategy, 'none')), config, seed)
-        stat(pressure, `${strategy} catch`).add(result.fish.reduce((a, b) => a + b, 0) / size)
-        stat(pressure, `${strategy} biomass`).add(result.biomass.at(-1)!)
-        stat(pressure, `${strategy} middle`).add(result.biomass[Math.floor(result.rounds / 2) - 1]!)
-      }
-      // 6. Identical thoughtful teams (same income, contract attitude and attention):
-      // does a lead persist when no team is better than another? Chance is 1 / size.
-      if (size > 1) converge(settling.identical, play(Array.from({ length: size }, (): Bot => ({ strategy: 'planner', contracts: 'opportunistic', income: incomes.average, attention })), config, seed).standings)
+      if (size > 1) settling.mixed.add(halfway(result.standings))
+      // 5. Herding: uniform fields of teams that all go for the biggest school, or all plan.
+      for (const strategy of ['biggest', 'planner'] as const) stat(herding, strategy).add(mean(play(Array.from({ length: size }, () => team(random, strategy)), config, seed).scores))
+      // 6. Identical thoughtful teams (same income and attention): does a lead persist
+      // when no team is better than another? Chance is 1 / size.
+      if (size > 1) settling.identical.add(halfway(play(Array.from({ length: size }, (): Bot => ({ strategy: 'planner', income: incomes.average, every: (low + high) / 2 })), config, seed).standings))
     }
-    return { size, grounds: config.groundCount(size), research, invasion, mixed, wins, contracts, bonus, completion, convergence: settling, pressure }
+    return { size, research, attention, invasion, mixed, wins, golden, herding, settling }
   })
 }
 
 export function report(config: CommonsConfig, runs: number, using = assumed, fieldSizes = sizes) {
-  const rounds = Math.floor(DURATION_SECONDS / config.resolutionSeconds), results = evaluate(config, runs, fieldSizes, using), checks: [boolean, string][] = [], incomes = using.incomes
-  const line = (label: string, values: string[]) => console.log(`  ${label.padEnd(30)}${values.map(v => v.padStart(20)).join('')}`)
-  console.log(`The Commons: ${rounds} resolutions; cost ${config.fishingCost}, catch ${config.catchAmount}, max ${config.maximumBiomass}, start ${config.startingBiomass}, growth cap ${config.growthCap}, bonus ${config.contractBonus}; ${runs} runs per size; ±95% intervals`)
-  console.log(`Teams (${using.source}): Research per minute ${incomes.weak.toFixed(1)} / ${incomes.average.toFixed(1)} / ${incomes.strong.toFixed(1)} (weak / average / strong); look in before ${Math.round(using.attention[0] * 100)}–${Math.round(using.attention[1] * 100)}% of resolutions\n`)
+  const results = evaluate(config, runs, fieldSizes, using), checks: [boolean, string][] = [], { incomes } = using
+  const line = (label: string, values: string[]) => console.log(`  ${label.padEnd(30)}${values.map(v => v.padStart(16)).join('')}`)
+  console.log(`The Commons: ${config.width}×${config.height} map, ${DURATION_SECONDS / 60} minutes in ${config.tickSeconds}-second ticks; fuel ${config.fuelCost}/tile, a fish every ${config.catchTicks} ticks, schools ${config.schoolStart}–${config.schoolMax} (+${config.growthCap} per ${config.growthTicks} ticks), golden ${config.goldenFish}×${config.goldenValue} every ${config.goldenEvery} ticks for ${config.goldenTicks}; ${runs} runs per size; ±95% intervals`)
+  console.log(`Teams (${using.source}): Research per minute ${incomes.weak.toFixed(1)} / ${incomes.average.toFixed(1)} / ${incomes.strong.toFixed(1)} (weak / average / strong); look in every ${using.every[0].toFixed(1)}–${using.every[1].toFixed(1)} minutes\n`)
   line('Teams', results.map(r => String(r.size)))
-  line('Grounds (sustainable : demand)', results.map(r => `${r.grounds} (${r.grounds * config.growthCap}:${r.size * 2 * config.catchAmount})`))
-  console.log('\n1. Research: share of wanted fishing paid for (thoughtful teams)')
-  for (const level of Object.keys(incomes)) line(`${level} (${incomes[level as keyof typeof incomes].toFixed(1)}/min)`, results.map(r => percent(stat(r.research, level))))
-  console.log('\n2. Strategies')
-  console.log('  One fixed-strategy team among thoughtful teams: its score minus theirs (the commons rewards one free rider)')
+  console.log('\n1. Research (thoughtful teams): share of wanted sailing they could pay for / score relative to the field')
+  for (const level of Object.keys(incomes)) line(`${level} (${incomes[level as keyof typeof incomes].toFixed(1)}/min)`, results.map(r => `${percent(stat(r.research, `${level} paid`))} / ${percent(stat(r.research, level))}`))
+  console.log('\n2. Attention (thoughtful teams, average income): score relative to the field')
+  for (const every of looks) line(`looks in every ${every} min`, results.map(r => percent(stat(r.attention, String(every)))))
+  console.log('\n3. Strategies')
+  console.log('  One rule-of-thumb team among thoughtful teams: its score minus theirs')
   for (const s of fixedStrategies) line(s, results.map(r => String(stat(r.invasion, s))))
   console.log('  Mixed fields: mean score (win share)')
-  for (const s of strategies) line(s, results.map(r => stat(r.mixed, s).n ? `${stat(r.mixed, s).mean.toFixed(1)} (${percent(stat(r.wins, s))})` : '-'))
-  console.log('\n3. Contracts (thoughtful teams): score relative to the field (bonus earned)')
-  for (const m of contractModes) line(m, results.map(r => `${stat(r.contracts, m)}  (${stat(r.bonus, m).mean.toFixed(1)})`))
-  console.log('  Attempts per team, and share of attempts completed (timing / steering teams)')
-  for (const c of config.contracts) line(c.id, results.map(r => ['opportunistic', 'rational'].map(m => { const s = r.completion.get(`${m} ${c.id}`); return s ? `${(s.n / (runs * r.size / 4)).toFixed(1)}:${Math.round(s.mean * 100)}%` : '-' }).join(' ')))
-  const lastAt = (s: Stat) => s.n ? `${s.mean.toFixed(1)} of ${rounds}` : '-'
-  console.log('\n4. Convergence: how often the halfway leader wins, and when the top three last changed (tied teams share a place)')
-  console.log('  Mixed fields')
-  line('Halfway leader wins', results.map(r => percent(r.convergence.mixed.leaderHolds)))
-  line('Top three last changed at', results.map(r => lastAt(r.convergence.mixed.lastChange)))
-  console.log(`  Identical thoughtful teams: average income, opportunistic contracts, look in before ${Math.round(middle(using) * 100)}% of resolutions`)
-  line('Halfway leader wins (chance)', results.map(r => r.convergence.identical.leaderHolds.n ? `${percent(r.convergence.identical.leaderHolds)} (${Math.round(100 / r.size)}%)` : '-'))
-  line('Top three last changed at', results.map(r => lastAt(r.convergence.identical.lastChange)))
-  console.log('\n5. Pressure on the grounds: mean catch per team / mean stock halfway / at the end')
-  for (const s of ['greedy', 'planner']) line(`all ${s}`, results.map(r => `${stat(r.pressure, `${s} catch`).mean.toFixed(1)} / ${stat(r.pressure, `${s} middle`).mean.toFixed(1)} / ${stat(r.pressure, `${s} biomass`).mean.toFixed(1)}`))
+  for (const s of strategies) line(s, results.map(r => stat(r.mixed, s).n ? `${stat(r.mixed, s).mean.toFixed(0)} (${percent(stat(r.wins, s))})` : '-'))
+  console.log('\n4. Golden fish (thoughtful teams): share of all points / share of golden schools that swam off')
+  line('golden', results.map(r => `${percent(stat(r.golden, 'share'))} / ${percent(stat(r.golden, 'missed'))}`))
+  console.log('\n5. Herding: mean score when every team goes for the biggest school, or every team plans')
+  for (const s of ['biggest', 'planner']) line(`all ${s}`, results.map(r => stat(r.herding, s).mean.toFixed(0)))
+  console.log('\n6. Convergence: how often the halfway leader wins (tied teams share a place)')
+  line('Mixed fields', results.map(r => percent(r.settling.mixed)))
+  line('Identical teams (chance)', results.map(r => r.settling.identical.n ? `${percent(r.settling.identical)} (${Math.round(100 / r.size)}%)` : '-'))
 
   for (const r of results) {
-    const field = stat(r.mixed, 'planner').mean
-    checks.push([stat(r.research, 'average').mean >= 0.8, `${r.size} teams: an average team can pay for at least 80% of its fishing`])
+    const field = stat(r.mixed, 'planner').mean, look = (every: number) => stat(r.attention, String(every)).mean
+    checks.push([stat(r.research, 'average paid').mean >= 0.9, `${r.size} teams: an average team can pay for at least 90% of the sailing it wants`])
+    const gap = stat(r.research, 'strong').mean - stat(r.research, 'weak').mean
+    checks.push([gap >= 0.05 && gap <= 0.5, `${r.size} teams: Research matters without deciding everything (strong teams score ${Math.round(gap * 100)}% of the field more than weak ones; 5–50%)`])
+    // Mostly golden-fish races, which the team that looks first wins.
+    checks.push([look(2) >= 0.8 * look(1) && look(5) >= 0.65 * look(1), `${r.size} teams: no constant attention needed (looking every 2 minutes scores ${Math.round(100 * look(2) / look(1))}% and every 5 minutes ${Math.round(100 * look(5) / look(1))}% of every minute; at least 80% and 65%)`])
+    checks.push([look(10) < 0.95 * look(5), `${r.size} teams: looking in still pays (every 10 minutes scores ${Math.round(100 * look(10) / look(5))}% of every 5)`])
     // Confidently: the gap minus the combined 95% margin of both means still exceeds 3% of a score.
-    const planner = stat(r.mixed, 'planner'), gap = (s: Strategy) => stat(r.mixed, s).mean - planner.mean
-    const ahead = fixedStrategies.filter(s => gap(s) - Math.hypot(stat(r.mixed, s).error, planner.error) > 0.03 * field)
-    const closest = fixedStrategies.reduce((a, s) => gap(s) > gap(a) ? s : a)
-    checks.push([!ahead.length, `${r.size} teams: in mixed fields no fixed strategy beats thoughtful play by more than 3% (closest: ${closest} ${gap(closest) >= 0 ? '+' : ''}${gap(closest).toFixed(1)})`])
-    const gain = stat(r.contracts, 'rational').mean - stat(r.contracts, 'none').mean
-    const timed = stat(r.contracts, 'opportunistic').mean - stat(r.contracts, 'none').mean
-    checks.push([[gain, timed].every(x => x > 0.03 * field && x < 0.15 * field), `${r.size} teams: well-timed contracts gain 3–15% of a score (${timed.toFixed(1)} taking aligned ones, ${gain.toFixed(1)} steering, of ${field.toFixed(0)})`])
-    checks.push([stat(r.contracts, 'zealot').mean < Math.min(stat(r.contracts, 'rational').mean, stat(r.contracts, 'opportunistic').mean), `${r.size} teams: chasing contracts regardless of timing does worse than timing them`])
-    // Any contract-taking team: pooled attempts per available contract.
-    const pooled = availableContracts(config, r.grounds).map(c => ['opportunistic', 'rational'].map(m => r.completion.get(`${m} ${c.id}`)).reduce((a, s) => ({ n: a.n + (s?.n ?? 0), done: a.done + (s?.sum ?? 0) }), { n: 0, done: 0 }))
-    checks.push([pooled.every(p => p.n > 0 && p.done / p.n >= 0.1 && p.done / p.n <= 0.9), `${r.size} teams: every contract is attempted, and completed in 10–90% of attempts`])
-    if (r.size > 1) checks.push([r.convergence.mixed.leaderHolds.mean < 0.7, `${r.size} teams: the halfway leader does not usually hold on`])
-    const greedy = stat(r.pressure, 'greedy catch').mean, planned = stat(r.pressure, 'planner catch').mean
-    checks.push([greedy < 0.9 * planned && stat(r.pressure, 'planner middle').mean >= 4, `${r.size} teams: the commons bites (all-greedy fields catch ${greedy.toFixed(0)}, thoughtful fields ${planned.toFixed(0)}) without collapsing under thoughtful play`])
+    const planner = stat(r.mixed, 'planner'), ahead = (s: Strategy) => stat(r.mixed, s).mean - planner.mean
+    const beating = fixedStrategies.filter(s => ahead(s) - Math.hypot(stat(r.mixed, s).error, planner.error) > 0.03 * field)
+    const closest = fixedStrategies.reduce((a, s) => ahead(s) > ahead(a) ? s : a)
+    checks.push([!beating.length, `${r.size} teams: in mixed fields no rule of thumb beats thoughtful play by more than 3% (closest: ${closest} ${ahead(closest) >= 0 ? '+' : ''}${ahead(closest).toFixed(1)})`])
+    const share = stat(r.golden, 'share').mean
+    checks.push([share >= 0.05 && share <= 0.25, `${r.size} teams: golden fish are worth chasing without deciding the match (${Math.round(share * 100)}% of points; 5–25%)`])
+    checks.push([stat(r.herding, 'biggest').mean < 0.9 * stat(r.herding, 'planner').mean, `${r.size} teams: crowding the biggest school is punished (${stat(r.herding, 'biggest').mean.toFixed(0)} against ${stat(r.herding, 'planner').mean.toFixed(0)} a team)`])
+    // In mixed fields the better team should win; among equals, an early lead should not settle the match.
+    if (r.size > 1) checks.push([r.settling.identical.mean < 0.75, `${r.size} teams: among identical teams the halfway leader is not locked in (wins ${percent(r.settling.identical)}; chance ${Math.round(100 / r.size)}%)`])
   }
   const topFixed = results.map(r => fixedStrategies.reduce((a, s) => stat(r.mixed, s).mean > stat(r.mixed, a).mean ? s : a))
-  checks.push([new Set(topFixed).size > 1, `no single fixed strategy is best in every field size (${topFixed.join(', ')})`])
+  checks.push([new Set(topFixed).size > 1, `no single rule of thumb is best in every field size (${topFixed.join(', ')})`])
   console.log('\nScorecard')
   for (const [ok, text] of checks) console.log(`  ${ok ? 'PASS ' : 'CHECK'} ${text}`)
-  // Two boats every resolution, 80% of the time, from an average team's income.
-  const affordable = Math.floor(incomes.average * config.resolutionSeconds / 60 / (2 * 0.8))
-  if (results.some(r => stat(r.research, 'average').mean < 0.8)) console.log(`\n  Hint: with these incomes, fishingCost ${Math.max(1, affordable)} or less lets an average team pay for about 80% of its fishing.`)
   return { results, checks }
 }
 
-interface HistoryTeam { id: string; name?: string; research: number; boats: { order: number | null }[]; contract: { id: string } | null }
 export interface MatchHistory {
-  config: { resolutionSeconds: number; startingResearch: number }
-  resolutions: { before: { teams: HistoryTeam[] }; report: { teams: { id: string; research: number }[] } }[]
+  config: { tickSeconds: number }
+  samples: { tick: number; teams: { id: string; name?: string; research: number; spent: number }[] }[]
+  orders: { tick: number; team: string }[]
 }
 const quantile = (values: number[], q: number) => { const v = [...values].sort((a, b) => a - b), i = (v.length - 1) * q, lo = Math.floor(i); return v[lo]! + (v[Math.ceil(i)]! - v[lo]!) * (i - lo) }
 
-// Measures each team of a rehearsal: Research earned per minute between resolutions
-// (after its fishing payments) and the share of resolutions before which it changed
-// an order or contract. Bot attention is then set so that bots change orders as often.
+// Measures each team of a rehearsal: Research earned per minute (what it holds plus
+// what it burnt, from the first to the last minute sample) and orders per minute.
+// Bot attention is then set so that thoughtful bots give orders as often.
 export function calibrate(history: MatchHistory, config: CommonsConfig) {
-  const records = history.resolutions, minutes = history.config.resolutionSeconds / 60
-  if (records.length < 3) throw new Error('The match history needs at least three resolutions.')
-  if (!records[0]!.before.teams.length) throw new Error('The match history has no teams.')
-  const teams = records[0]!.before.teams.map(first => {
-    let earned = 0, intervals = 0, changes = 0, compared = 0
-    records.forEach((record, k) => {
-      const now = record.before.teams.find(t => t.id === first.id)
-      const previous = k ? records[k - 1]!.report.teams.find(t => t.id === first.id)?.research : history.config.startingResearch
-      if (!now || previous === undefined) return
-      earned += now.research - previous; intervals++
-      const before = k ? records[k - 1]!.before.teams.find(t => t.id === first.id) : undefined
-      if (before) { compared++; if (JSON.stringify([before.boats.map(b => b.order), before.contract?.id]) !== JSON.stringify([now.boats.map(b => b.order), now.contract?.id])) changes++ }
-    })
-    return { name: first.name ?? first.id, perMinute: Math.max(0, earned / (intervals * minutes)), changeRate: compared ? changes / compared : 0 }
+  const { samples } = history
+  if (samples.length < 3) throw new Error('The match history needs at least three minutes of play.')
+  const first = samples[0]!, last = samples.at(-1)!, minutes = (last.tick - first.tick) * history.config.tickSeconds / 60
+  if (!first.teams.length) throw new Error('The match history has no teams.')
+  const teams = first.teams.map(start => {
+    const end = last.teams.find(t => t.id === start.id) ?? start
+    const given = history.orders.filter(o => o.team === start.id && o.tick > first.tick && o.tick <= last.tick).length
+    return { name: start.name ?? start.id, perMinute: Math.max(0, (end.research + end.spent - start.research - start.spent) / minutes), ordersPerMinute: given / minutes }
   })
-  // How often thoughtful bots change orders at each attention level, in a field of this size.
-  const levels = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1].map(attention => {
-    let changes = 0, observed = 0
-    for (let run = 0; run < 12; run++) {
-      const result = play(teams.map(() => ({ strategy: 'planner', contracts: 'opportunistic', income: assumed.incomes.average, attention })), config, run)
-      changes += result.changes.reduce((a, b) => a + b, 0); observed += teams.length * (result.rounds - 1)
+  // How often thoughtful bots give orders when they look in every so many minutes, in a field of this size.
+  const levels = [0.5, 1, 1.5, 2, 3, 4, 6, 8, 12].map(every => {
+    let orders = 0, observed = 0
+    for (let run = 0; run < 6; run++) {
+      const result = play(teams.map((): Bot => ({ strategy: 'planner', income: assumed.incomes.average, every })), config, run)
+      orders += result.orders.reduce((a, b) => a + b, 0); observed += teams.length * result.minutes
     }
-    return { attention, rate: changes / observed }
+    return { every, rate: orders / observed }
   })
-  const attentionFor = (rate: number) => {
-    const above = levels.findIndex(l => l.rate >= rate)
-    if (above <= 0) return above === 0 ? levels[0]!.attention : 1
-    const a = levels[above - 1]!, b = levels[above]!
-    return a.attention + (b.attention - a.attention) * (rate - a.rate) / Math.max(1e-9, b.rate - a.rate)
+  // Rates fall as looks grow rarer: interpolate, clamped to the range measured.
+  const everyFor = (rate: number) => {
+    const below = levels.findIndex(l => l.rate <= rate)
+    if (below <= 0) return below === 0 ? levels[0]!.every : levels.at(-1)!.every
+    const a = levels[below - 1]!, b = levels[below]!
+    return a.every + (b.every - a.every) * (a.rate - rate) / Math.max(1e-9, a.rate - b.rate)
   }
-  const rates = teams.map(t => t.changeRate), incomes = teams.map(t => t.perMinute)
+  const rates = teams.map(t => t.ordersPerMinute), incomes = teams.map(t => t.perMinute)
   const assumptions: Assumptions = {
     incomes: { weak: quantile(incomes, 0.25), average: quantile(incomes, 0.5), strong: quantile(incomes, 0.75) },
-    attention: [attentionFor(quantile(rates, 0.25)), attentionFor(quantile(rates, 0.75))],
-    source: `measured from ${teams.length} team${teams.length === 1 ? '' : 's'} over ${records.length} resolutions`,
+    every: [everyFor(quantile(rates, 0.75)), everyFor(quantile(rates, 0.25))],
+    source: `measured from ${teams.length} team${teams.length === 1 ? '' : 's'} over ${Math.round(minutes)} minutes`,
   }
   return { teams, assumptions }
 }
@@ -257,21 +213,22 @@ export function calibrate(history: MatchHistory, config: CommonsConfig) {
 // as well as the report, whatever their order.
 export function setup(args: string[]) {
   const config: CommonsConfig = { ...commonsConfig }
-  let runs = 200, history: string | undefined
+  let runs = 100, history: string | undefined
   for (let i = 0; i < args.length; i++) {
     const arg = args[i]!
     if (arg === '--history') { history = args[++i]; if (history === undefined) throw new Error('--history needs a match history file.') }
     else if (/^\d+$/.test(arg)) runs = Number(arg)
     else {
       const [key = '', ...values] = arg.split('='), value = values.join('=')
-      if (!Object.hasOwn(config, key) || typeof config[key as keyof CommonsConfig] !== 'number') throw new Error(`Unknown numeric setting: ${arg}`)
+      if (!Object.hasOwn(config, key)) throw new Error(`Unknown setting: ${arg}`)
       // Number('') is 0, so an empty value would quietly zero the setting.
       if (values.length !== 1 || !value.trim() || !Number.isFinite(Number(value))) throw new Error(`${arg}: give ${key} a single number, as in ${key}=${commonsConfig[key as keyof CommonsConfig]}.`)
       Object.assign(config, { [key]: Number(value) })
     }
   }
-  // Every match needs at least one resolution: none leaves no standings to compare, and 0 seconds never ends.
-  if (!(config.resolutionSeconds > 0 && config.resolutionSeconds <= DURATION_SECONDS)) throw new Error(`resolutionSeconds must be more than 0 and at most ${DURATION_SECONDS} (the match length), so a match has at least one resolution.`)
+  // A match needs at least one tick, and the map and timers whole numbers of tiles and ticks.
+  if (!(config.tickSeconds > 0 && config.tickSeconds <= DURATION_SECONDS)) throw new Error(`tickSeconds must be more than 0 and at most ${DURATION_SECONDS} (the match length).`)
+  for (const key of ['width', 'height', 'catchTicks', 'growthTicks', 'goldenEvery'] as const) if (!(Number.isInteger(config[key]) && config[key] >= 1)) throw new Error(`${key} must be a whole number of at least 1.`)
   const calibrated = history === undefined ? null : calibrate(JSON.parse(readFileSync(history, 'utf8')) as MatchHistory, config)
   // The rehearsal's team count joins the field sizes. A lone team still calibrates
   // income and attention, but one team is no field to evaluate.
@@ -281,7 +238,7 @@ export function setup(args: string[]) {
 
 if (import.meta.url === pathToFileURL(process.argv[1]!).href) {
   const { config, runs, teams, using, fieldSizes } = setup(process.argv.slice(2))
-  for (const t of teams) console.log(`  ${t.name.padEnd(30)} ${t.perMinute.toFixed(1).padStart(5)} Research/min, changed orders before ${Math.round(t.changeRate * 100)}% of resolutions`)
+  for (const t of teams) console.log(`  ${t.name.padEnd(30)} ${t.perMinute.toFixed(1).padStart(5)} Research/min, ${t.ordersPerMinute.toFixed(2)} orders/min`)
   if (teams.length) console.log('')
   report(config, runs, using, fieldSizes)
 }

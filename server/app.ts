@@ -8,7 +8,7 @@ import type { DatabaseSync } from 'node:sqlite'
 import { TEAM_SKIP_LIMIT, ages, subjects, type Team, type TeamState, type Subject, type AgeCategory } from '../shared/domain.js'
 import { ApiError, transaction } from './db.js'
 import { isCorrect, parseNumber, publicQuestion, type QuestionBank } from './questions.js'
-import { gameState, setOrder, orderSchema, setContract, contractSchema, initializeGame, createTeamGame, resetTeamGame, resetGame, startGame, teamScore, matchHistory } from './game/commons.js'
+import { gameState, setOrder, orderSchema, initializeGame, createTeamGame, resetTeamGame, resetGame, startGame, teamScore, matchHistory } from './game/commons.js'
 import { competitionState, requireRunning, startCompetition } from './competition.js'
 import { advanceGame, catchUp, standingsState } from './game/standings.js'
 import { answerReward } from '../shared/scoring.js'
@@ -130,10 +130,6 @@ export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: s
     const input = orderSchema.parse(req.body)
     res.json(change(now => { requireRunning(db, now); setOrder(db, res.locals.teamId, input); return snapshot(res.locals.teamId, now) }))
   })
-  app.post('/api/team/game/contract', (req, res) => {
-    const input = contractSchema.parse(req.body)
-    res.json(change(now => { requireRunning(db, now); setContract(db, res.locals.teamId, input); return snapshot(res.locals.teamId, now) }))
-  })
   app.use('/api/admin', auth('admin'))
   // Only a waiting competition starts, so there is nothing to catch up first.
   app.post('/api/admin/start', (_req, res) => res.json(transaction(db, () => { const state = startCompetition(db); startGame(db); return state })))
@@ -172,8 +168,7 @@ export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: s
   app.delete('/api/admin/teams/:id', (req, res) => { change(() => { teamRow(String(req.params.id)); db.prepare('DELETE FROM teams WHERE id = ?').run(String(req.params.id)) }); res.json({ ok: true }) })
   // Reset discards the match, so it does not catch up first: it stays the way out
   // when catch-up fails, and a finished match is not replayed just to be deleted.
-  app.post('/api/admin/reset', (req, res) => {
-    z.object({ confirmation: z.literal('RESET') }).parse(req.body)
+  app.post('/api/admin/reset', (_req, res) => {
     transaction(db, () => {
       db.prepare("DELETE FROM config WHERE key IN ('started_at', 'standings_snapshot')").run()
       db.exec('UPDATE teams SET research = 0, earned = 0, skips_used = 0; UPDATE progress SET completed = 0, attempts = 0;')
