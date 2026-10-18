@@ -8,11 +8,11 @@ import { teamState, refreshState, connectionError, clearState } from '../state'
 import CompetitionTimer from '../components/CompetitionTimer.vue'
 import { competitionStatus } from '../competition'
 const router = useRouter()
-// Flags the Game tab while a golden school is out or the boat has nothing to do, so a team busy with questions notices.
+// Flags the Game tab while the boat waits for fuel or has nothing to do, so a team busy with questions notices.
 const gameAlert = computed(() => {
   const game = teamState.value?.game, boat = game?.boats.find(b => b.team === teamState.value!.team.id)
   if (!game?.map || !boat) return ''
-  if (game.schools.some(s => s.golden)) return 'A golden school is out'
+  if (boat.route.length && teamState.value!.team.research < game.rules.fuelCost) return 'Your boat is out of Research'
   return !boat.route.length && !game.schools.some(s => s.x === boat.x && s.y === boat.y) ? 'Your boat is idle' : ''
 })
 watch(competitionStatus, () => { void refreshState() })

@@ -53,10 +53,12 @@ test('real browser: admin, multiple sessions, subject progress, shared game and 
   await a.reload(); await expect(a.locator('.team-heading')).toContainText('Photon Pigeons')
   await a.screenshot({ path: testInfo.outputPath('questions-desktop.png'), fullPage: true })
   await a.getByRole('link', { name: /^Game/ }).click(); await c.getByRole('link', { name: /^Game/ }).click()
-  // Two teams: a school each plus two. The boat waits in the harbour, and the Game tab says so.
-  const list = (p: Page) => p.getByRole('region', { name: 'Schools' }).getByRole('button')
-  await expect(list(a)).toHaveCount(4)
-  await expect(a.locator('.hud-status')).toHaveText('Idle. Tap a school on the map to send your boat.')
+  // Two teams: a fishing ground each, two spare and one golden. The boat waits in the harbour, and the Game tab says so.
+  const list = (p: Page) => p.getByRole('region', { name: 'Fishing grounds' }).getByRole('button')
+  await expect(list(a)).toHaveCount(5)
+  await expect(a.locator('.hud-status')).toHaveText('Idle. Tap a fishing ground on the map to send your boat.')
+  // Only the frame loop moves boats: no CSS transition fights it.
+  expect(await a.locator('.boat').first().evaluate(el => getComputedStyle(el).transitionProperty)).not.toContain('transform')
   await expect(a.locator('.tab-alert')).toHaveCount(1)
   const pigeons = async (p: Page) => ((await (await p.request.get('/api/team/state')).json()) as TeamState).game.boats.find(boat => boat.name === 'Photon Pigeons')!
   // On a slow network, orders given while one is in flight wait, and only the latest follows.
@@ -72,12 +74,22 @@ test('real browser: admin, multiple sessions, subject progress, shared game and 
   expect(orders[1]).not.toEqual(orders[0])
   // Every team sees the boat's order at once.
   expect((await pigeons(c)).target).toEqual(orders[1])
-  await expect(a.locator('.hud-status')).toContainText(/^Sailing to a school/)
+  await expect(a.locator('.hud-status')).toContainText(/^Sailing to a fishing ground/)
   await expect(a.locator('.tab-alert')).toHaveCount(0)
   // A minute on, the boat has burnt Research getting there and is fishing.
   await a.request.post('/__test/rewind/60000')
-  await expect(a.locator('.hud-status')).toContainText(/^Fishing! Next catch in \d+ s/)
+  await expect(a.locator('.hud-status')).toContainText(/^Fishing: next fish in about \d+ s/)
+  // Sprites sit on their tiles: the fishing boat is drawn centred on its ground.
+  const offset = await a.evaluate(() => {
+    const centre = (r: DOMRect) => [r.left + r.width / 2, r.top + r.height / 2, r.width]
+    const [bx, by] = centre(document.querySelector('.boat.own .hull')!.parentElement!.getBoundingClientRect()), [gx, gy, tile] = centre(document.querySelector('.ground.aim rect')!.getBoundingClientRect())
+    return Math.hypot(bx! - gx!, by! - gy!) / tile!
+  })
+  expect(offset).toBeLessThan(0.1)
   expect(Number(await a.locator('.hud-fuel strong').textContent())).toBeLessThan(40)
+  // The bait switch is its own order, and it stays on.
+  await a.getByRole('switch', { name: 'Bait' }).check()
+  await expect.poll(async () => ((await (await a.request.get('/api/team/state')).json()) as TeamState).game.own.bait).toBe(true)
   await a.request.post('/__test/rewind/10000')
   await expect(a.locator('.hud-score strong')).not.toHaveText('0')
   await a.screenshot({ path: testInfo.outputPath('game-desktop.png'), fullPage: true })
@@ -111,12 +123,13 @@ test('real browser: admin, multiple sessions, subject progress, shared game and 
   await a.setViewportSize({ width: 390, height: 844 }); await a.screenshot({ path: testInfo.outputPath('questions-mobile.png'), fullPage: true })
   expect(await a.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await a.getByRole('button', { name: 'Skip question', exact: true }).scrollIntoViewIfNeeded(); expect(await a.locator('.research').evaluate(el => el.getBoundingClientRect().top)).toBeGreaterThanOrEqual(0); await a.getByRole('button', { name: 'Skip question', exact: true }).click(); await a.getByRole('button', { name: 'Yes, skip' }).click(); await expect(a.getByText('4 team skips left')).toBeVisible()
-  await a.getByRole('link', { name: /^Game/ }).click(); await a.screenshot({ path: testInfo.outputPath('game-mobile.png'), fullPage: true }); expect(await a.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-  await expect(page.getByRole('row', { name: /Photon Pigeons/ }).getByRole('cell').nth(3)).toHaveText(score)
+  // A boat that runs out of Research on its way home fishes wherever it stops, so compare with the live score.
+  const live = async () => { const own = ((await (await a.request.get('/api/team/state')).json()) as TeamState).game.own; return String(own.fish + own.bonus) }
+  await expect.poll(async () => await page.getByRole('row', { name: /Photon Pigeons/ }).getByRole('cell').nth(3).textContent() === await live()).toBe(true)
   await page.screenshot({ path: testInfo.outputPath('admin.png'), fullPage: true })
   await a.getByRole('link', { name: 'Standings', exact: true }).click()
   await expect(a.getByRole('heading', { name: 'Standings', exact: true })).toBeVisible()
-  await expect(a.getByRole('region', { name: 'Scores' }).getByRole('row', { name: /Photon Pigeons/ }).getByRole('cell')).toHaveText(score)
+  await expect.poll(async () => await a.getByRole('region', { name: 'Scores' }).getByRole('row', { name: /Photon Pigeons/ }).getByRole('cell').textContent() === await live()).toBe(true)
   await a.screenshot({ path: testInfo.outputPath('standings-mobile.png'), fullPage: true })
   expect(await a.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   // The game above moved the shared start 70 seconds back.
@@ -239,9 +252,10 @@ test('Czech UI and grading share progress without changing drafts or attempts', 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.screenshot({ path: testInfo.outputPath('czech-questions-mobile.png'), fullPage: true })
   await page.getByRole('link', { name: /^Hra/ }).click()
-  const czechList = page.getByRole('region', { name: 'Hejna' }).getByRole('button')
-  await expect(czechList.first()).toHaveText(/^(Hejno: \d+ (ryba|ryby|ryb)|Zlaté hejno: .*)\d+ políč(ko|ka|ek)/)
-  await expect(page.locator('.hud-status')).toHaveText('Kotví. Klepnutím na hejno v mapě tam pošlete svou loď.')
+  const czechList = page.getByRole('region', { name: 'Loviště' }).getByRole('button')
+  await expect(czechList.first()).toHaveText(/^(Zlaté l|L)oviště \d+\/\d+ · .+\d+ políč(ko|ka|ek) · cesta vyložit a zpět: výzkum \d+/)
+  await expect(page.locator('.hud-status')).toHaveText('Kotví. Klepnutím na loviště v mapě tam pošlete svou loď.')
+  await expect(page.getByRole('switch', { name: 'Návnada' })).not.toBeChecked()
   await expect(page.getByText('Jak hrát', { exact: true })).toBeVisible()
   await expect(page.locator('.hud-fuel .hud-sub')).toHaveText('výzkum; 1 za políčko')
   await page.getByRole('link', { name: 'Pořadí', exact: true }).click()

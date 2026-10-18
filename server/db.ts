@@ -1,4 +1,4 @@
-import { TEAM_SKIP_LIMIT } from '../shared/domain.js'
+import { TEAM_SKIP_LIMIT, subjects } from '../shared/domain.js'
 import { DatabaseSync } from 'node:sqlite'
 import { mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
@@ -22,25 +22,8 @@ export function openDatabase(path: string) {
     );
     CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT NOT NULL);
   `)
-  // Existing installations had a non-negative balance constraint. Rebuild only
-  // that table, preserving IDs and all child rows, so penalties can create debt.
-  const teamSql = String(db.prepare("SELECT sql FROM sqlite_master WHERE name = 'teams'").get()!.sql)
-  if (/CHECK\s*\(research\s*>=\s*0\)/i.test(teamSql)) {
-    db.exec('PRAGMA foreign_keys = OFF')
-    try {
-      transaction(db, () => {
-        db.exec(`CREATE TABLE teams_updated (
-          id TEXT PRIMARY KEY, name TEXT NOT NULL, age TEXT NOT NULL, code TEXT NOT NULL UNIQUE COLLATE NOCASE,
-          research REAL NOT NULL DEFAULT 0, earned REAL NOT NULL DEFAULT 0,
-          skips_used INTEGER NOT NULL DEFAULT 0 CHECK(skips_used BETWEEN 0 AND ${TEAM_SKIP_LIMIT}), color TEXT NOT NULL
-        );
-        INSERT INTO teams_updated SELECT * FROM teams;
-        DROP TABLE teams;
-        ALTER TABLE teams_updated RENAME TO teams;`)
-        if (db.prepare('PRAGMA foreign_key_check').all().length) throw new Error('Team migration failed its foreign-key check.')
-      })
-    } finally { db.exec('PRAGMA foreign_keys = ON') }
-  }
+  // Teams created before a subject was added start it from its first question.
+  for (const subject of subjects) db.prepare('INSERT OR IGNORE INTO progress (team_id, subject, completed, attempts) SELECT id, ?, 0, 0 FROM teams').run(subject)
   return db
 }
 export function transaction<T>(db: DatabaseSync, action: () => T): T {

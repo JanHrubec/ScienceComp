@@ -1,7 +1,7 @@
 export const TEAM_SKIP_LIMIT = 5
-export const subjects = ['physics', 'computer-science', 'biology', 'chemistry', 'ess'] as const
+export const subjects = ['physics', 'computer-science', 'biology', 'chemistry', 'ess', 'math'] as const
 export type Subject = typeof subjects[number]
-export const subjectNames: Record<Subject, string> = { physics: 'Physics', 'computer-science': 'Computer Science', biology: 'Biology', chemistry: 'Chemistry', ess: 'ESS' }
+export const subjectNames: Record<Subject, string> = { physics: 'Physics', 'computer-science': 'Computer Science', biology: 'Biology', chemistry: 'Chemistry', ess: 'ESS', math: 'Mathematics' }
 export const ages = ['11–13', '14–16', '17–18'] as const
 export type AgeCategory = typeof ages[number]
 export type Language = 'en' | 'cs'
@@ -10,21 +10,20 @@ export interface QuestionProgress { completed: number; total: number; attempts: 
 export interface Team { id: string; name: string; age: AgeCategory; research: number; earned: number; skipsUsed: number; color: string }
 // The Commons: a live map. Tiles are { x, y }; `land` rows use '#' for island and '.' for sea.
 export interface Tile { x: number; y: number }
-// A boat is sent to a tile, or to a school by id, which it then follows.
+// A boat is sent to a tile, or to a fishing ground (a "school") by id.
 export type BoatOrder = Tile | { school: number }
+// Orders the game endpoint accepts: a destination, or the bait switch.
+export type GameOrder = BoatOrder | { bait: boolean }
 export interface GameState {
-  rules: { tickSeconds: number; fuelCost: number; catchTicks: number; goldenValue: number }
-  // `nextAt`: when the next tick is due, or null once the match is over.
-  clock: { tick: number; total: number; nextAt: number | null }
+  rules: { tickSeconds: number; fuelCost: number; catchEffort: number; hold: number; schoolMax: number; growthTicks: number; growthCap: number; goldenMax: number; goldenCap: number; goldenValue: number; baitBoost: number; baitCost: number; baitReserve: number }
+  clock: { tick: number; total: number }
   map: { width: number; height: number; land: string[]; harbour: Tile } | null
-  // A golden school swims off at tick `until`. `sail`: tiles from this team's boat.
-  schools: { id: number; x: number; y: number; fish: number; golden: boolean; until: number | null; sail: number }[]
-  // Every boat, its order and route are public. Research and scores are not sent,
-  // though a determined team could estimate scores by watching.
-  boats: { team: string; name: string; color: string; x: number; y: number; target: BoatOrder | null; route: Tile[]; hauling: number }[]
-  own: { fish: number; bonus: number }
-  // The latest golden-school events, newest first.
-  golden: { tick: number; kind: 'appeared' | 'caught' | 'gone'; x: number; y: number; team: string | null; name: string | null }[]
+  // Fixed fishing grounds. `sail`: tiles from this team's boat; `home`: tiles from the harbour.
+  schools: { id: number; x: number; y: number; fish: number; golden: boolean; sail: number; home: number }[]
+  // Every boat, its order and route are public. `ahead`: its tiles over the next 3 ticks
+  // if nobody gives an order. Research, scores, catch meter, hold and bait are not sent for other teams.
+  boats: { team: string; name: string; color: string; x: number; y: number; target: BoatOrder | null; route: Tile[]; ahead: Tile[] }[]
+  own: { fish: number; bonus: number; hauling: number; hold: number; bait: boolean }
 }
 export interface StandingsState {
   frozenAt: number | null
