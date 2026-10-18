@@ -10,7 +10,7 @@ Mix calculations with predictions, experiments, model comparisons, classificatio
 
 Short text is welcome for familiar scientific words, directions, inferred outcomes, formulas, sequences and code output. Constrain the requested answer and explicitly accept sensible English and Czech variants, including accentless Czech where helpful. Avoid obscure terminology recalled without context and anything requiring prose or semantic grading. Multiple choice is useful for comparing explanations, including the meaning of a supplied technical term.
 
-The current bank has 160 numerical, 128 multiple-choice and 72 short-text questions, with all three types in every track. These are editorial choices, not required quotas. [Coverage and progression](COVERAGE.md) maps the questions to broad IB subject areas and records what this short competition does not assess.
+The current bank has 160 numerical, 128 multiple-choice and 72 short-text questions, with all three types in every track. These are editorial choices, not required quotas.
 
 Fair traps concern what is requested: change versus final value, distance versus displacement, pairs versus individuals, bits versus bytes, total versus per-item rate, or the order of two percentage changes. Keep each sentence necessary, specify units, and use distractors that reflect plausible mistakes. Avoid hidden assumptions and long puzzles that mostly test reading endurance.
 

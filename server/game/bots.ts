@@ -1,6 +1,7 @@
 // Bot teams for the balance simulation. They decide only from what players see:
 // the map, every ground, every boat and its order, and their own Research and hold.
-import { distance, growth, type Boat, type CommonsConfig, type MatchState, type Order, type School } from './rules.js'
+import { distance, growth, type Boat, type CommonsConfig, type MatchState, type School } from './rules.js'
+import type { BoatOrder } from '../../shared/domain.js'
 
 // `planner` approximates a thoughtful team: it values each ground by the points it
 // expects there, counting the sail, the boats already heading for it, the trips home
@@ -16,7 +17,7 @@ const STICKINESS = 1.1 // a move must promise 10% more than staying
 const PRICE = 1.4 // each Research burnt costs (PRICE / income)² points: dear for weak teams, nearly free for strong ones
 const BAIT_AT = 30 // planners bait while they hold at least this much Research
 
-const ground = (o: Order | null) => o && 'school' in o ? o.school : null
+const ground = (o: BoatOrder | null) => o && 'school' in o ? o.school : null
 const rivals = (v: View, s: School) => v.state.boats.filter(b => b !== v.me && ground(b.target) === s.id)
 // Points expected at `s` over the horizon if the boat goes there now, minus the Research it burns.
 export function value(v: View, s: School, income: number): number {
@@ -37,7 +38,7 @@ const reachable = (v: View) => v.state.schools.filter(s => distance(v.state.map,
 const nearest = (v: View) => reachable(v).sort((a, b) => distance(v.state.map, v.me, a) - distance(v.state.map, v.me, b))[0]
 
 // Returns the boat's new order, or null to leave it as it is.
-export function decide(v: View, bot: Bot): Order | null {
+export function decide(v: View, bot: Bot): BoatOrder | null {
   const order = decideGround(v, bot)
   return order && { school: order.id }
 }

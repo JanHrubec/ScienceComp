@@ -29,7 +29,7 @@ const status = computed(() => {
   if (stuck.value) return t('Out of Research! Answer questions to refuel.')
   if (boat.route.length && game.value.own.hold >= r.hold) return t('Hold full: sailing home to unload ({tiles} to go)', left)
   if (boat.route.length) return t(goal.value ? 'Sailing to a fishing ground: {tiles} to go' : 'Sailing: {tiles} to go', left)
-  if (ground?.fish) return t('Fishing: next fish in about {seconds} s', { seconds: Math.ceil((r.catchEffort - boat.hauling) / (ground.fish * (game.value.own.bait && !baitPaused.value ? r.baitBoost : 1))) * r.tickSeconds })
+  if (ground?.fish) return t('Fishing: next fish in about {seconds} s', { seconds: Math.ceil((r.catchEffort - game.value.own.hauling) / (ground.fish * (game.value.own.bait && !baitPaused.value ? r.baitBoost : 1))) * r.tickSeconds })
   if (ground) return t('Fishing, but this ground is empty and regrows slowly.')
   return t('Idle. Tap a fishing ground on the map to send your boat.')
 })
@@ -211,7 +211,7 @@ onMounted(start); onActivated(start); onDeactivated(stop); onUnmounted(stop)
               <g :transform="`${b.face < 0 ? 'scale(-1 1) ' : ''}translate(-0.375 -0.42) scale(0.09375)`">
                 <path class="outline" :d="sprite.outline" /><path class="sail" :d="sprite.sail" /><path class="mast" :d="sprite.mast" /><path class="hull" :d="sprite.hull" />
               </g>
-              <rect v-if="b.own && b.hauling" class="haul" x="-0.4" y="0.36" :width="0.8 * Math.min(1, b.hauling / rules.catchEffort)" height="0.08" />
+              <rect v-if="b.own && game.own.hauling" class="haul" x="-0.4" y="0.36" :width="0.8 * Math.min(1, game.own.hauling / rules.catchEffort)" height="0.08" />
             </g>
             <template v-if="b.own"><text v-for="p in pops" :key="p.id" class="glyph pop" :class="{ golden: p.golden }" y="-0.6">{{ p.text }}</text></template>
             <title>{{ b.name }}</title>

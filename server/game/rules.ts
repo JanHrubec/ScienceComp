@@ -1,5 +1,6 @@
 // The Commons: pure, deterministic rules for the live map game. No database, HTTP
 // or UI code, so the server, tests and simulation all run exactly the same ticks.
+import type { BoatOrder, Tile } from '../../shared/domain.js'
 export interface CommonsConfig {
   tickSeconds: number
   width: number
@@ -21,17 +22,14 @@ export interface CommonsConfig {
   baitReserve: number
   startingResearch: number
 }
-export interface Tile { x: number; y: number }
 // `land` rows use '#' for island and '.' for sea. Boats start in the harbour, a sea tile.
 export interface GameMap { width: number; height: number; land: string[]; harbour: Tile }
 // A school is a fixed fishing ground: it never moves or vanishes. Golden ones pay goldenValue a fish.
 export interface School extends Tile { id: number; fish: number; golden: boolean }
-// A boat is sent to a tile or to a fishing ground.
-export type Order = Tile | { school: number }
 // `hauling`: the catch meter on ground `fishing`. `hold`: fish aboard (when full, the boat
 // sails home to unload). `bait`: the team's switch. `spent`: Research burnt on fuel and bait.
 // `research`, `fish` and `bonus` are the team's.
-export interface Boat extends Tile { team: string; target: Order | null; fishing: number | null; hauling: number; hold: number; bait: boolean; spent: number; research: number; fish: number; bonus: number }
+export interface Boat extends Tile { team: string; target: BoatOrder | null; fishing: number | null; hauling: number; hold: number; bait: boolean; spent: number; research: number; fish: number; bonus: number }
 export interface MatchState { seed: number; tick: number; map: GameMap; schools: School[]; nextId: number; boats: Boat[] }
 // `stalled`: teams whose boat had somewhere to go but not the Research to sail.
 export interface TickReport { tick: number; moved: string[]; stalled: string[]; caught: Record<string, number> }

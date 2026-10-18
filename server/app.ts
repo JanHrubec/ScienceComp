@@ -38,7 +38,7 @@ export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: s
     next()
   })
   app.use((req, res, next) => { res.set('X-Content-Type-Options', 'nosniff'); res.set('Referrer-Policy', 'same-origin'); next() })
-  const loginLimiter = rateLimit({ windowMs: 60_000, limit: 60, standardHeaders: 'draft-8', legacyHeaders: false, message: { error: 'Too many login attempts. Wait a minute and try again.' } })
+  const loginLimiter = rateLimit({ windowMs: 60_000, limit: 60, skipSuccessfulRequests: true, standardHeaders: 'draft-8', legacyHeaders: false, message: { error: 'Too many login attempts. Wait a minute and try again.' } })
   const cookieName = (role: string) => role === 'admin' ? 'science_admin' : 'science_team'
   function sessionHash(req: Request, role: string) {
     const value = req.headers.cookie?.split(';').map(v => v.trim()).find(v => v.startsWith(`${cookieName(role)}=`))?.split('=')[1]
@@ -72,7 +72,7 @@ export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: s
     return { competition, team: teamPublic(team), progress: Object.fromEntries(subjects.map(subject => {
       const p = progress(id, subject), track = bank[subject][team.age], question = track[p.completed]
       return [subject, { ...p, total: track.length, question: question && competition.status === 'running' ? publicQuestion(question) : null }]
-    })) as TeamState['progress'], game: gameState(db, id, competition.startedAt), standings: standingsState(db) }
+    })) as TeamState['progress'], game: gameState(db, id), standings: standingsState(db) }
   }
   function generateCode(): string {
     const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
@@ -173,7 +173,6 @@ export function createApp(db: DatabaseSync, bank: QuestionBank, adminPassword: s
       db.prepare("DELETE FROM config WHERE key IN ('started_at', 'standings_snapshot')").run()
       db.exec('UPDATE teams SET research = 0, earned = 0, skips_used = 0; UPDATE progress SET completed = 0, attempts = 0;')
       resetGame(db)
-      db.prepare("INSERT OR REPLACE INTO config (key, value) VALUES ('last_reset', ?)").run(new Date().toISOString())
     }); res.json({ ok: true })
   })
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Endpoint not found.' }))

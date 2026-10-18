@@ -13,10 +13,8 @@ const AHEAD_TICKS = 3
 export const totalTicks = () => Math.floor(DURATION_SECONDS / config.tickSeconds)
 // Ticks between the per-minute samples of every team kept for the match history.
 const sampleTicks = Math.max(1, Math.round(60 / config.tickSeconds))
-// Tables of earlier minigames: the diamond prototype and the three-ground Commons.
-const legacyTables = ['grid_cells', 'grid_scores', 'grid_positions', 'commons_grounds', 'commons_boats', 'commons_resolutions']
 
-export function initializeGame(db: DatabaseSync, now = Date.now()) {
+export function initializeGame(db: DatabaseSync) {
   db.exec(`
     CREATE TABLE IF NOT EXISTS commons_teams (
       team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE,
@@ -26,27 +24,6 @@ export function initializeGame(db: DatabaseSync, now = Date.now()) {
     CREATE TABLE IF NOT EXISTS commons_log (id INTEGER PRIMARY KEY, tick INTEGER NOT NULL, kind TEXT NOT NULL, record TEXT NOT NULL);
     INSERT OR IGNORE INTO commons_teams (team_id) SELECT id FROM teams;
   `)
-  const legacy = db.prepare(`SELECT name FROM sqlite_master WHERE type = 'table' AND name IN (${legacyTables.map(() => '?').join(', ')})`).all(...legacyTables).map(row => String(row.name))
-  const { startedAt } = competitionState(db, now)
-  if (legacy.length && startedAt !== null) endLegacyRound(db, startedAt, legacy.includes('grid_scores'), now)
-  // Between rounds, the old tables and any snapshot of their scores are obsolete.
-  else if (legacy.length) { dropLegacyTables(db); db.prepare("DELETE FROM config WHERE key = 'standings_snapshot'").run() }
-}
-const dropLegacyTables = (db: DatabaseSync) => { for (const table of legacyTables) db.exec(`DROP TABLE IF EXISTS ${table}`) }
-interface LegacyStandings { frozenAt: number; teams: { id: string; name: string; color: string; score?: number; diamonds?: number }[] }
-// A round of an earlier minigame that started but was not reset must neither run on
-// as this one nor lose its results. It ends now, gets no map, and keeps its tables
-// and standings until the next reset. Scores stay in commons_teams: the three-ground
-// Commons kept them there, and the diamond prototype's final diamonds are counted
-// there as fish. Repeating this is harmless, so the reminder is logged on every start until then.
-function endLegacyRound(db: DatabaseSync, startedAt: number, diamonds: boolean, now: number) {
-  db.prepare("UPDATE config SET value = ? WHERE key = 'started_at'").run(String(Math.min(startedAt, now - DURATION_SECONDS * 1000)))
-  const final = diamonds ? db.prepare('SELECT t.id, t.name, t.color, s.diamonds FROM teams t JOIN grid_scores s ON s.team_id = t.id ORDER BY s.diamonds DESC, t.name COLLATE NOCASE, t.id').all() as unknown as LegacyStandings['teams'] : []
-  const saved = db.prepare("SELECT value FROM config WHERE key = 'standings_snapshot'").get()
-  const standings: LegacyStandings | null = saved ? JSON.parse(String(saved.value)) : diamonds ? { frozenAt: now, teams: final } : null
-  if (standings) db.prepare("INSERT OR REPLACE INTO config (key, value) VALUES ('standings_snapshot', ?)").run(JSON.stringify({ frozenAt: standings.frozenAt, teams: standings.teams.map(({ diamonds, ...team }) => ({ ...team, score: team.score ?? diamonds ?? 0 })) }))
-  if (diamonds) db.exec('UPDATE commons_teams SET fish = COALESCE((SELECT s.diamonds FROM grid_scores s WHERE s.team_id = commons_teams.team_id), 0), bonus = 0')
-  console.warn(`The database holds a round of an earlier minigame that was never reset. It has been ended instead of continuing as the map game, and its results stay until you reset the competition in admin, which you must do before the next round.${final.length ? ` Final diamonds: ${final.map(t => `${t.name} ${t.diamonds}`).join(', ')}.` : ''}`)
 }
 
 // The match is one JSON row: map, grounds and boats. Research stays in `teams` and
@@ -93,8 +70,6 @@ export function resetTeamGame(db: DatabaseSync, teamId: string) {
 export function resetGame(db: DatabaseSync) {
   db.exec('DELETE FROM commons_match; DELETE FROM commons_log;')
   clearTeam(db)
-  // Including the results of an earlier minigame's round the upgrade ended.
-  dropLegacyTables(db)
 }
 // Called in the same transaction that records the start time: a fresh map for every match.
 export function startGame(db: DatabaseSync) {
@@ -132,7 +107,7 @@ export function setOrder(db: DatabaseSync, teamId: string, order: z.infer<typeof
   log(db, state.tick, 'order', { tick: state.tick, team: teamId, name: teamNames(db).get(teamId), ...order })
 }
 
-export function gameState(db: DatabaseSync, teamId: string, startedAt: number | null): GameState {
+export function gameState(db: DatabaseSync, teamId: string): GameState {
   const state = load(db), total = totalTicks(), tick = state?.tick ?? 0
   const colors = new Map(db.prepare('SELECT id, name, color FROM teams').all().map(r => [String(r.id), { name: String(r.name), color: String(r.color) }]))
   const own = state?.boats.find(b => b.team === teamId)
@@ -141,16 +116,16 @@ export function gameState(db: DatabaseSync, teamId: string, startedAt: number | 
   const { tickSeconds, fuelCost, catchEffort, hold, schoolMax, growthTicks, growthCap, goldenMax, goldenCap, goldenValue, baitBoost, baitCost, baitReserve } = config
   return {
     rules: { tickSeconds, fuelCost, catchEffort, hold, schoolMax, growthTicks, growthCap, goldenMax, goldenCap, goldenValue, baitBoost, baitCost, baitReserve },
-    clock: { tick, total, nextAt: startedAt !== null && state && tick < total ? startedAt + (tick + 1) * config.tickSeconds * 1000 : null },
+    clock: { tick, total },
     map: state && { width: state.map.width, height: state.map.height, land: state.map.land, harbour: state.map.harbour },
     // `sail`: tiles from this team's boat; `home`: tiles from the harbour.
     schools: state?.schools.map(({ id, x, y, fish, golden }) => ({ id, x, y, fish, golden, sail: own ? distance(state.map, own, { x, y }) : 0, home: distance(state.map, { x, y }, state.map.harbour) })) ?? [],
-    // Every boat, its order and its route are public; Research, scores, hold and bait are not.
+    // Every boat, its order and its route are public; Research, scores, catch meter, hold and bait are not.
     boats: state?.boats.map(b => {
       const to = destination(state, b, config)
-      return { team: b.team, ...colors.get(b.team)!, x: b.x, y: b.y, target: b.target, route: to ? route(state.map, b, to) : [], hauling: b.hauling, ahead: ahead.get(b.team) ?? [] }
+      return { team: b.team, ...colors.get(b.team)!, x: b.x, y: b.y, target: b.target, route: to ? route(state.map, b, to) : [], ahead: ahead.get(b.team) ?? [] }
     }) ?? [],
-    own: { fish: own?.fish ?? 0, bonus: own?.bonus ?? 0, hold: own?.hold ?? 0, bait: own?.bait ?? false },
+    own: { fish: own?.fish ?? 0, bonus: own?.bonus ?? 0, hauling: own?.hauling ?? 0, hold: own?.hold ?? 0, bait: own?.bait ?? false },
   }
 }
 export function liveScores(db: DatabaseSync): StandingsState['teams'] {
