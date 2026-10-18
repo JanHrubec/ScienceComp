@@ -25,9 +25,8 @@ One Vue client and one Express process share TypeScript domain types. SQLite is 
 | `src/state.ts` | Shared snapshot and stale-poll protection |
 | `src/views/ParticipantView.vue` | Persistent header, Questions/Game/Standings tabs (the Game tab flags an idle boat or one out of Research), polling |
 | `src/views/QuestionsView.vue` | Subject switching, answers, feedback, skips |
-| `src/components/CommonsGame.vue` | The Commons screen: score, fuel, hold and bait, the SVG sea map drawn every frame, the fishing-ground list, leaderboard |
+| `src/components/CommonsGame.vue` | The Commons screen: score, fuel, hold and bait, the grid map (flat SVG tiles, ASCII glyphs, pixel-sprite boats moved every frame), the fishing-ground list, leaderboard |
 | `src/motion.ts` | Pure helpers that place a boat along its tiles, and join an old and a new path without crossing land |
-| `src/coast.ts` | Smooth island coastlines traced from the land grid |
 | `src/views/StandingsView.vue` | Third tab with all team scores and freeze indicator |
 | `src/components/TeamScores.vue` | Score table for Standings and the in-game leaderboard |
 | `server/game/standings.ts` | Lazy catch-up (due ticks and the five-minute snapshot, in order), live rankings and the persisted snapshot |

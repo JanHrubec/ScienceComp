@@ -116,14 +116,13 @@ test('real browser: admin, multiple sessions, subject progress, shared game and 
   await a.setViewportSize({ width: 390, height: 844 }); await a.screenshot({ path: testInfo.outputPath('questions-mobile.png'), fullPage: true })
   expect(await a.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await a.getByRole('button', { name: 'Skip question', exact: true }).scrollIntoViewIfNeeded(); expect(await a.locator('.research').evaluate(el => el.getBoundingClientRect().top)).toBeGreaterThanOrEqual(0); await a.getByRole('button', { name: 'Skip question', exact: true }).click(); await a.getByRole('button', { name: 'Yes, skip' }).click(); await expect(a.getByText('4 team skips left')).toBeVisible()
-  // Phones turn the map a quarter, so it fills a tall screen.
-  await a.getByRole('link', { name: /^Game/ }).click(); await expect(a.locator('svg.sea')).toHaveAttribute('viewBox', '0 0 10 16')
-  await a.screenshot({ path: testInfo.outputPath('game-mobile.png'), fullPage: true }); expect(await a.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-  await expect(page.getByRole('row', { name: /Photon Pigeons/ }).getByRole('cell').nth(3)).toHaveText(score)
+  // A boat that runs out of Research on its way home fishes wherever it stops, so compare with the live score.
+  const live = async () => { const own = ((await (await a.request.get('/api/team/state')).json()) as TeamState).game.own; return String(own.fish + own.bonus) }
+  await expect.poll(async () => await page.getByRole('row', { name: /Photon Pigeons/ }).getByRole('cell').nth(3).textContent() === await live()).toBe(true)
   await page.screenshot({ path: testInfo.outputPath('admin.png'), fullPage: true })
   await a.getByRole('link', { name: 'Standings', exact: true }).click()
   await expect(a.getByRole('heading', { name: 'Standings', exact: true })).toBeVisible()
-  await expect(a.getByRole('region', { name: 'Scores' }).getByRole('row', { name: /Photon Pigeons/ }).getByRole('cell')).toHaveText(score)
+  await expect.poll(async () => await a.getByRole('region', { name: 'Scores' }).getByRole('row', { name: /Photon Pigeons/ }).getByRole('cell').textContent() === await live()).toBe(true)
   await a.screenshot({ path: testInfo.outputPath('standings-mobile.png'), fullPage: true })
   expect(await a.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   // The game above moved the shared start 70 seconds back.

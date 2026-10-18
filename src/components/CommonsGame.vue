@@ -5,7 +5,6 @@ import { teamState, acceptState, refreshState, session } from '../state'
 import { competition, serverTime } from '../competition'
 import { api, errorMessage } from '../api'
 import { along, detour, partway } from '../motion'
-import { coastPath, hash } from '../coast'
 import type { BoatOrder, GameOrder, GameState, TeamState, Tile } from '../../shared/domain'
 import TeamScores from './TeamScores.vue'
 type School = GameState['schools'][number]
@@ -42,8 +41,6 @@ const radar = computed(() => [...game.value.schools].sort((a, b) => a.sail - b.s
 const label = (s: School) => s.golden
   ? `${t('Golden ground {count}/{max}', { count: s.fish, max: maxOf(s) })} · ${t('{points} a fish', { points: points(rules.value.goldenValue) })}`
   : `${t('Ground {count}/{max}', { count: s.fish, max: maxOf(s) })} · ${t(health(s))}`
-const spots = [[-0.2, -0.16, 0], [0.2, -0.1, 180], [-0.02, 0.24, 0]] as const
-const shown = (s: School) => s.fish ? spots.slice(0, { healthy: 3, low: 2, overfished: 1 }[health(s)]) : []
 
 // "+1" rises from your boat when a catch comes in.
 const pops = ref<{ id: number; text: string; golden: boolean }[]>([])
@@ -80,20 +77,11 @@ async function setBait(on: boolean) {
 // Waiting orders belong to the session that gave them.
 watch(session, () => { waiting = null }, { flush: 'sync' })
 
-// Phones turn the map a quarter, so it fills a tall screen.
-const narrow = matchMedia('(max-width: 700px)'), portrait = ref(narrow.matches)
-const turn = (e: MediaQueryListEvent) => { portrait.value = e.matches }
-narrow.addEventListener('change', turn)
-onUnmounted(() => narrow.removeEventListener('change', turn))
-const H = computed(() => map.value.height)
-const view = (x: number, y: number): [number, number] => portrait.value ? [H.value - y, x] : [x, y]
-const box = computed(() => portrait.value ? [map.value.height, map.value.width] : [map.value.width, map.value.height])
-const place = (p: Tile) => `translate(${view(p.x + 0.5, p.y + 0.5).join(' ')})`
+const place = (p: Tile) => `translate(${p.x + 0.5} ${p.y + 0.5})`
 // A tap near a fishing ground sends the boat there; elsewhere on open sea, to that tile.
 function tap(event: MouseEvent) {
   const rect = (event.currentTarget as SVGSVGElement).getBoundingClientRect()
-  const vx = (event.clientX - rect.left) / rect.width * box.value[0], vy = (event.clientY - rect.top) / rect.height * box.value[1]
-  const [fx, fy] = portrait.value ? [vy, H.value - vx] : [vx, vy]
+  const fx = (event.clientX - rect.left) / rect.width * map.value.width, fy = (event.clientY - rect.top) / rect.height * map.value.height
   const near = game.value.schools.map(s => ({ s, d: Math.hypot(s.x + 0.5 - fx, s.y + 0.5 - fy) })).sort((a, b) => a.d - b.d)[0]
   if (near && near.d < 0.8) return send({ school: near.s.id })
   const x = Math.floor(fx), y = Math.floor(fy)
@@ -105,28 +93,34 @@ const flag = computed(() => {
   return order && !('school' in order) ? { ...order, faded: !!sending.value } : null
 })
 
-// Terrain, redrawn only when the map or its orientation changes.
-const grid = computed(() => map.value.land.join('\n'))
-const coast = computed(() => coastPath(grid.value.split('\n'), view))
-const cells = computed(() => grid.value.split('\n').flatMap((row, y) => [...row].map((c, x) => ({ x, y, sea: c === '.' }))))
-const wavelets = computed(() => cells.value.filter(c => c.sea && hash(c.x, c.y, 1) < 0.33).map(({ x, y }) => {
-  const [cx, cy] = view(x + 0.3 + hash(x, y, 2) * 0.4, y + 0.3 + hash(x, y, 3) * 0.4)
-  return `M${(cx - 0.14).toFixed(3)} ${cy.toFixed(3)}q.07 -.06 .14 0t.14 0`
-}).join(''))
-const trees = computed(() => cells.value.filter(c => !c.sea && hash(c.x, c.y, 4) < 0.44).map(({ x, y }) => view(x + 0.5 + (hash(x, y, 5) - 0.5) * 0.3, y + 0.5 + (hash(x, y, 6) - 0.5) * 0.2).map(v => +v.toFixed(3))))
-const canopies = computed(() => trees.value.map(([x, y]) => `M${x - 0.17} ${y}a.17 .17 0 1 0 .34 0a.17 .17 0 1 0 -.34 0`).join(''))
-const trunks = computed(() => trees.value.map(([x, y]) => `M${x} ${y + 0.08}v.16`).join(''))
+// Terrain: flat tiles on a visible grid, with a few ASCII glyphs picked by position so every device draws the same.
+const hash = (x: number, y: number, salt: number) => ((Math.imul(x + 31 * salt, 73856093) ^ Math.imul(y, 19349663)) >>> 0) % 1000 / 1000
+const cells = computed(() => map.value.land.flatMap((row, y) => [...row].map((c, x) => ({ x, y, sea: c === '.' }))))
+const landPath = computed(() => cells.value.filter(c => !c.sea).map(c => `M${c.x} ${c.y}h1v1h-1z`).join(''))
+const gridPath = computed(() => {
+  const { width: w, height: h } = map.value
+  return Array.from({ length: w + 1 }, (_, x) => `M${x} 0V${h}`).join('') + Array.from({ length: h + 1 }, (_, y) => `M0 ${y}H${w}`).join('')
+})
+const glyphs = computed(() => cells.value.filter(c => !same(c, map.value.harbour) && hash(c.x, c.y, c.sea ? 1 : 4) < (c.sea ? 0.25 : 0.45)))
+// An 8 × 8 pixel boat facing right: sail (team colour), mast, hull, each with a dark outline.
+const BOAT = ['....S...', '....SS..', '....SSS.', '....SSSS', '....M...', 'HHHHHHHH', '.HHHHHH.', '..HHHH..']
+const pixels = (test: (x: number, y: number) => boolean) => Array.from({ length: 100 }, (_, i) => [i % 10 - 1, Math.floor(i / 10) - 1]).filter(([x, y]) => test(x!, y!)).map(([x, y]) => `M${x} ${y}h1v1h-1z`).join('')
+const lit = (x: number, y: number) => BOAT[y]?.[x] !== undefined && BOAT[y]![x] !== '.'
+const sprite = {
+  outline: pixels((x, y) => !lit(x, y) && [-1, 0, 1].some(dx => [-1, 0, 1].some(dy => lit(x + dx, y + dy)))),
+  sail: pixels((x, y) => BOAT[y]?.[x] === 'S'), mast: pixels((x, y) => BOAT[y]?.[x] === 'M'), hull: pixels((x, y) => BOAT[y]?.[x] === 'H'),
+}
 
 // Boats face where they sail next; your boat is drawn last. Boats sharing a tile spread out in a small spiral.
 const facing = new Map<string, number>()
 const fleet = computed(() => {
   const boats = [...game.value.boats].sort((a, b) => Number(a.team === myId.value) - Number(b.team === myId.value))
-  return boats.map((b, i) => {
-    const next = b.ahead[0], dx = next ? view(next.x, next.y)[0] - view(b.x, b.y)[0] : 0
+  return boats.map(b => {
+    const next = b.ahead[0], dx = next ? next.x - b.x : 0
     if (dx) facing.set(b.team, Math.sign(dx))
     const crowd = boats.filter(o => same(o, b)), n = crowd.length, k = crowd.indexOf(b), r = 0.22 * Math.sqrt((k + 0.5) / n), own = b.team === myId.value
     const [ox, oy] = n > 1 ? [r * Math.cos(2.4 * k), r * Math.sin(2.4 * k) * 0.65] : [0, 0], scale = (n > 6 ? 0.6 : n > 2 ? 0.8 : 1) * (own ? 1.1 : 1)
-    return { ...b, own, face: facing.get(b.team) ?? 1, moving: !!next && !same(next, b), nudge: { color: b.color, transform: `translate(${ox.toFixed(3)}px, ${oy.toFixed(3)}px) scale(${scale})` }, delay: `${(-i * 0.83 % 2.6).toFixed(2)}s` }
+    return { ...b, own, face: facing.get(b.team) ?? 1, nudge: { color: b.color, transform: `translate(${ox.toFixed(3)}px, ${oy.toFixed(3)}px) scale(${scale})` } }
   })
 })
 
@@ -161,8 +155,7 @@ function draw(now: number) {
   svg.querySelectorAll<SVGGElement>('[data-sprite]').forEach(el => {
     const d = drawn.get(el.dataset.sprite!)
     if (!d) return
-    const [x, y] = view(d.at.x + 0.5, d.at.y + 0.5)
-    el.style.transform = `translate(${x}px, ${y}px)`
+    el.style.transform = `translate(${d.at.x + 0.5}px, ${d.at.y + 0.5}px)`
     if (d.jump) { el.animate([{ opacity: 0 }, { opacity: 1 }], 250); d.jump = false }
   })
   // Each route starts at the drawn boat, without the tiles it has already sailed.
@@ -171,7 +164,7 @@ function draw(now: number) {
     if (!d || !route) return
     let moved = 0
     for (let i = 1; i <= Math.min(Math.floor(tau - d.tick), d.path.length - 1); i++) if (!same(d.path[i]!, d.path[i - 1]!)) moved++
-    el.setAttribute('points', [d.at, ...route.slice(moved)].map(p => view(p.x + 0.5, p.y + 0.5).map(v => v.toFixed(3)).join(',')).join(' '))
+    el.setAttribute('points', [d.at, ...route.slice(moved)].map(p => `${(p.x + 0.5).toFixed(3)},${(p.y + 0.5).toFixed(3)}`).join(' '))
   })
 }
 const start = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(draw) }
@@ -200,46 +193,30 @@ onMounted(start); onActivated(start); onDeactivated(stop); onUnmounted(stop)
     <p class="feedback error" role="status">{{ t(error) }}</p>
     <div class="commons-layout">
       <div class="sea-frame">
-        <svg v-if="game.map" ref="sea" class="sea" :viewBox="`0 0 ${box[0]} ${box[1]}`" :style="{ aspectRatio: `${box[0]} / ${box[1]}`, '--ratio': box[0] / box[1] }" :aria-label="t('Map. Use the list of fishing grounds to send your boat.')" @click="tap">
-          <defs>
-            <path id="commons-coast" :d="coast" />
-            <radialGradient id="commons-glow"><stop offset="0" stop-color="#fff6b0" stop-opacity=".95" /><stop offset=".55" stop-color="#ffd23f" stop-opacity=".55" /><stop offset="1" stop-color="#ffd23f" stop-opacity="0" /></radialGradient>
-            <g id="commons-fish"><path d="M-0.15 0C-0.09 -0.09 0.05 -0.09 0.09 0C0.05 0.09 -0.09 0.09 -0.15 0ZM0.07 0L0.17 -0.075L0.17 0.075Z" /><circle class="fish-eye" cx="-0.085" cy="-0.015" r="0.017" /></g>
-            <path id="commons-spark" d="M0 -0.08L0.02 -0.02L0.08 0L0.02 0.02L0 0.08L-0.02 0.02L-0.08 0L-0.02 -0.02Z" />
-            <g id="commons-hull-shape"><path d="M-0.4 -0.02H0.4Q0.36 0.2 0.22 0.24H-0.24Q-0.36 0.2 -0.4 -0.02Z" /><path d="M0.04 -0.46Q0.36 -0.24 0.33 -0.06H0.04Z" /><path d="M-0.04 -0.36L-0.27 -0.06H-0.04Z" /></g>
-            <g id="commons-boat"><path class="hull" d="M-0.4 -0.02H0.4Q0.36 0.2 0.22 0.24H-0.24Q-0.36 0.2 -0.4 -0.02Z" /><path class="mast" d="M0 -0.02V-0.48" /><path class="sail" d="M0.04 -0.46Q0.36 -0.24 0.33 -0.06H0.04Z" /><path class="sail" d="M-0.04 -0.36L-0.27 -0.06H-0.04Z" /><path class="pennant" d="M0 -0.48L0.16 -0.44L0 -0.4Z" /></g>
-          </defs>
-          <rect class="water" :width="box[0]" :height="box[1]" />
-          <path class="wavelets" :d="wavelets" />
-          <use v-for="layer in ['foam', 'shallows', 'grass', 'grass-rim', 'beach']" :key="layer" href="#commons-coast" class="coast" :class="layer" />
-          <path class="trunks" :d="trunks" /><path class="canopies" :d="canopies" />
-          <g class="harbour" :transform="place(map.harbour)">
-            <path class="pier" d="M-0.72 0.26H0.46V0.46H-0.72Z" /><path class="planks" d="M-0.62 0.27V0.45M-0.46 0.27V0.45M-0.3 0.27V0.45M-0.14 0.27V0.45M0.02 0.27V0.45M0.18 0.27V0.45M0.34 0.27V0.45" />
-            <circle class="post" cx="-0.2" cy="0.27" r="0.05" /><circle class="post" cx="0.4" cy="0.27" r="0.05" />
-            <g transform="translate(-0.6 0.34)"><path class="tower" d="M-0.075 0L-0.05 -0.4H0.05L0.075 0Z" /><path class="stripe" d="M-0.066 -0.13H0.066M-0.058 -0.26H0.058" /><path class="cap" d="M-0.07 -0.4H0.07L0 -0.5Z" /><circle class="lamp" cy="-0.43" r="0.04" /></g>
+        <svg v-if="game.map" ref="sea" class="sea" :viewBox="`0 0 ${map.width} ${map.height}`" :style="{ aspectRatio: `${map.width} / ${map.height}` }" :aria-label="t('Map. Use the list of fishing grounds to send your boat.')" @click="tap">
+          <rect class="water" :width="map.width" :height="map.height" />
+          <path class="land" :d="landPath" />
+          <text v-for="c in glyphs" :key="`t${c.x}-${c.y}`" class="glyph" :class="c.sea ? 'wave' : 'tree'" :x="c.x + 0.5" :y="c.y + 0.5">{{ c.sea ? '~' : '♣' }}</text>
+          <g class="harbour" :transform="place(map.harbour)"><rect x="-0.5" y="-0.5" width="1" height="1" /><text class="glyph">H</text></g>
+          <g v-for="s in game.schools" :key="`g${s.id}`" class="ground" :class="[health(s), { golden: s.golden, aim: s.id === goal?.id }]" :transform="place(s)">
+            <rect x="-0.5" y="-0.5" width="1" height="1" /><text class="glyph" y="-0.12">{{ s.fish ? '><>' : '...' }}</text>
           </g>
+          <path class="grid" :d="gridPath" />
           <polyline v-for="b in game.boats.filter(b => b.route.length)" :key="`r${b.team}`" class="route" :class="{ own: b.team === myId }" :stroke="b.color" :data-route="b.team" />
-          <g v-for="s in game.schools" :key="`g${s.id}`" class="ground" :class="[health(s), { golden: s.golden }]" :transform="place(s)">
-            <circle v-if="s.golden" r="0.7" fill="url(#commons-glow)" /><circle v-else class="shoal" r="0.4" />
-            <circle class="track" r="0.44" />
-            <circle class="fill" r="0.44" pathLength="1" :stroke-dasharray="`${s.fish / maxOf(s)} 1`" transform="rotate(-90)" />
-            <use v-for="([x, y, angle], i) in shown(s)" :key="i" href="#commons-fish" :transform="`translate(${x} ${y}) rotate(${angle})`" />
-            <template v-if="s.golden"><use class="spark" href="#commons-spark" transform="translate(0.34 -0.34)" /><use class="spark" href="#commons-spark" transform="translate(-0.36 0.1) scale(0.7)" /></template>
-            <circle v-if="s.id === goal?.id" class="aim" r="0.5" />
-          </g>
-          <g v-if="flag" class="flag" :class="{ faded: flag.faded }" :transform="place(flag)"><ellipse class="flag-foot" cy="0.25" rx="0.12" ry="0.05" /><path class="flag-pole" d="M0 0.25V-0.42" /><path class="flag-cloth" d="M0 -0.42L0.32 -0.31L0 -0.2Z" /></g>
+          <text v-if="flag" class="glyph flag" :class="{ faded: flag.faded }" :x="flag.x + 0.5" :y="flag.y + 0.5">X</text>
           <g v-for="b in fleet" :key="`b${b.team}`" class="boat" :class="{ own: b.own }" :data-sprite="b.team">
             <g class="nudge" :style="b.nudge">
-              <template v-if="b.own"><ellipse class="ring-ink" cy="0.2" rx="0.5" ry="0.22" /><ellipse class="ring" cy="0.2" rx="0.5" ry="0.22" /><ellipse v-if="b.hauling" class="haul" cy="0.2" rx="0.5" ry="0.22" pathLength="1" :stroke-dasharray="`${b.hauling / rules.catchEffort} 1`" /></template>
-              <g class="bob" :style="{ animationDelay: b.delay }">
-                <g :transform="b.face < 0 ? 'scale(-1 1)' : undefined"><path v-if="b.moving" class="wake" d="M-0.42 0.14l-0.2 -0.07M-0.42 0.22l-0.2 0.07" /><use class="sticker" href="#commons-hull-shape" /><use href="#commons-boat" /></g>
+              <rect v-if="b.own" class="cursor" x="-0.5" y="-0.5" width="1" height="1" />
+              <g :transform="`${b.face < 0 ? 'scale(-1 1) ' : ''}translate(-0.375 -0.42) scale(0.09375)`">
+                <path class="outline" :d="sprite.outline" /><path class="sail" :d="sprite.sail" /><path class="mast" :d="sprite.mast" /><path class="hull" :d="sprite.hull" />
               </g>
+              <rect v-if="b.own && b.hauling" class="haul" x="-0.4" y="0.36" :width="0.8 * Math.min(1, b.hauling / rules.catchEffort)" height="0.08" />
             </g>
-            <template v-if="b.own"><text v-for="p in pops" :key="p.id" class="pop" :class="{ golden: p.golden }" x="-0.2" y="-0.62">{{ p.text }}</text></template>
+            <template v-if="b.own"><text v-for="p in pops" :key="p.id" class="glyph pop" :class="{ golden: p.golden }" y="-0.6">{{ p.text }}</text></template>
             <title>{{ b.name }}</title>
           </g>
           <!-- Counts go above the boats, which often sit on them. -->
-          <g v-for="s in game.schools" :key="`n${s.id}`" class="count" :transform="`${place(s)} translate(0.34 0.34)`"><circle r="0.21" /><text dy="0.1">{{ s.fish }}</text></g>
+          <text v-for="s in game.schools" :key="`n${s.id}`" class="glyph count" :x="s.x + 0.5" :y="s.y + 0.78">{{ s.fish }}</text>
         </svg>
       </div>
       <aside class="commons-side">
