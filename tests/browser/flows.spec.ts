@@ -79,6 +79,13 @@ test('real browser: admin, multiple sessions, subject progress, shared game and 
   // A minute on, the boat has burnt Research getting there and is fishing.
   await a.request.post('/__test/rewind/60000')
   await expect(a.locator('.hud-status')).toContainText(/^Fishing: next fish in about \d+ s/)
+  // Sprites sit on their tiles: the fishing boat is drawn centred on its ground.
+  const offset = await a.evaluate(() => {
+    const centre = (r: DOMRect) => [r.left + r.width / 2, r.top + r.height / 2, r.width]
+    const [bx, by] = centre(document.querySelector('.boat.own .hull')!.parentElement!.getBoundingClientRect()), [gx, gy, tile] = centre(document.querySelector('.ground.aim rect')!.getBoundingClientRect())
+    return Math.hypot(bx! - gx!, by! - gy!) / tile!
+  })
+  expect(offset).toBeLessThan(0.1)
   expect(Number(await a.locator('.hud-fuel strong').textContent())).toBeLessThan(40)
   // The bait switch is its own order, and it stays on.
   await a.getByRole('switch', { name: 'Bait' }).check()

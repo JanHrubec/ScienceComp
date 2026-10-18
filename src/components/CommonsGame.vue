@@ -120,7 +120,7 @@ const fleet = computed(() => {
     if (dx) facing.set(b.team, Math.sign(dx))
     const crowd = boats.filter(o => same(o, b)), n = crowd.length, k = crowd.indexOf(b), r = 0.22 * Math.sqrt((k + 0.5) / n), own = b.team === myId.value
     const [ox, oy] = n > 1 ? [r * Math.cos(2.4 * k), r * Math.sin(2.4 * k) * 0.65] : [0, 0], scale = (n > 6 ? 0.6 : n > 2 ? 0.8 : 1) * (own ? 1.1 : 1)
-    return { ...b, own, face: facing.get(b.team) ?? 1, nudge: { color: b.color, transform: `translate(${ox.toFixed(3)}px, ${oy.toFixed(3)}px) scale(${scale})` } }
+    return { ...b, own, face: facing.get(b.team) ?? 1, nudge: `translate(${ox.toFixed(3)} ${oy.toFixed(3)}) scale(${scale})` }
   })
 })
 
@@ -155,7 +155,8 @@ function draw(now: number) {
   svg.querySelectorAll<SVGGElement>('[data-sprite]').forEach(el => {
     const d = drawn.get(el.dataset.sprite!)
     if (!d) return
-    el.style.transform = `translate(${d.at.x + 0.5}px, ${d.at.y + 0.5}px)`
+    // The SVG attribute, not CSS `transform`: browsers agree on its units and origin, so sprites stay on their tiles.
+    el.setAttribute('transform', `translate(${(d.at.x + 0.5).toFixed(3)} ${(d.at.y + 0.5).toFixed(3)})`)
     if (d.jump) { el.animate([{ opacity: 0 }, { opacity: 1 }], 250); d.jump = false }
   })
   // Each route starts at the drawn boat, without the tiles it has already sailed.
@@ -205,7 +206,7 @@ onMounted(start); onActivated(start); onDeactivated(stop); onUnmounted(stop)
           <polyline v-for="b in game.boats.filter(b => b.route.length)" :key="`r${b.team}`" class="route" :class="{ own: b.team === myId }" :stroke="b.color" :data-route="b.team" />
           <text v-if="flag" class="glyph flag" :class="{ faded: flag.faded }" :x="flag.x + 0.5" :y="flag.y + 0.5">X</text>
           <g v-for="b in fleet" :key="`b${b.team}`" class="boat" :class="{ own: b.own }" :data-sprite="b.team">
-            <g class="nudge" :style="b.nudge">
+            <g :style="{ color: b.color }" :transform="b.nudge">
               <rect v-if="b.own" class="cursor" x="-0.5" y="-0.5" width="1" height="1" />
               <g :transform="`${b.face < 0 ? 'scale(-1 1) ' : ''}translate(-0.375 -0.42) scale(0.09375)`">
                 <path class="outline" :d="sprite.outline" /><path class="sail" :d="sprite.sail" /><path class="mast" :d="sprite.mast" /><path class="hull" :d="sprite.hull" />

@@ -207,8 +207,7 @@ thead small { font-weight: 400; }
 .route.own { stroke: #fff; stroke-width: .1; opacity: 1; }
 .flag { fill: #fff; font-size: .5px; }
 .flag.faded { opacity: .5; }
-/* The frame loop alone moves a .boat (its inline transform), so it has no CSS transform or transition. */
-.nudge { transition: transform .4s steps(4); }
+/* The frame loop alone moves a .boat (its transform attribute), so it has no CSS transform or transition. */
 .outline { fill: #0b1622; }
 .sail { fill: currentColor; }
 .mast { fill: #3b2a1a; }
