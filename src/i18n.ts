@@ -58,31 +58,40 @@ const czech: Record<string, string> = {
   "Score": "Skóre",
   " (you)": " (vy)",
   "Out of Research! Answer questions to refuel.": "Došel výzkum! Odpovídejte na otázky a doplňte palivo.",
-  "Sailing to a school: {tiles} to go": "Pluje k hejnu: zbývá {tiles}",
+  "Hold full: sailing home to unload ({tiles} to go)": "Náklad je plný: loď pluje vyložit do přístavu (zbývá {tiles})",
+  "Sailing to a fishing ground: {tiles} to go": "Pluje k lovišti: zbývá {tiles}",
   "Sailing: {tiles} to go": "Pluje: zbývá {tiles}",
-  "Fishing! Next catch in {seconds} s": "Loví! Další úlovek za {seconds} s",
-  "Idle. Tap a school on the map to send your boat.": "Kotví. Klepnutím na hejno v mapě tam pošlete svou loď.",
-  "Golden school: {fish}, swims off in {time}": "Zlaté hejno: {fish}, odpluje za {time}",
-  "School: {fish}": "Hejno: {fish}",
-  "A golden school has appeared!": "Objevilo se zlaté hejno!",
-  "A golden school swam off.": "Zlaté hejno odplulo.",
-  "You caught a golden fish! +{points}": "Ulovili jste zlatou rybu! +{points}",
-  "{team} caught a golden fish!": "Zlatou rybu ulovil tým {team}!",
+  "Fishing: next fish in about {seconds} s": "Loví: další ryba asi za {seconds} s",
+  "Fishing, but this ground is empty and regrows slowly.": "Loví, ale loviště je prázdné a dorůstá jen pomalu.",
+  "Idle. Tap a fishing ground on the map to send your boat.": "Kotví. Klepnutím na loviště v mapě tam pošlete svou loď.",
+  "Fishing grounds": "Loviště",
+  "Ground {count}/{max}": "Loviště {count}/{max}",
+  "Golden ground {count}/{max}": "Zlaté loviště {count}/{max}",
+  "healthy": "zdravé",
+  "low": "slabé",
+  "overfished": "přelovené",
+  "crowded": "přeplněné",
+  "{points} a fish": "{points} za rybu",
+  "round trip to unload: {n} Research": "cesta vyložit a zpět: výzkum {n}",
   "{fish} + {bonus} golden": "{fish} + {bonus} za zlaté",
   "Fuel": "Palivo",
+  "Hold": "Náklad",
+  "Bait": "Návnada",
+  "Catch {boost}% faster; {cost} Research a fish": "Lov o {boost} % rychlejší; výzkum {cost} za rybu",
+  "Paused below {reserve} Research to keep fuel for sailing": "Pozastaveno: výzkum pod {reserve} šetří na plavbu",
   "Sending…": "Odesílání…",
   "Research; {cost} per tile": "výzkum; {cost} za políčko",
   "Go to questions": "K otázkám",
-  "Map. Use the list of schools to send your boat.": "Mapa. Loď můžete poslat i ze seznamu hejn.",
-  "Schools": "Hejna",
+  "Map. Use the list of fishing grounds to send your boat.": "Mapa. Loď můžete poslat i ze seznamu lovišť.",
   "Leaderboard": "Průběžné pořadí",
   "How to play": "Jak hrát",
-  "Tap a school of fish to send your boat. It sails one tile every {seconds} s by the shortest route and follows the school as it swims. Everyone sees every boat.": "Klepnutím na hejno ryb tam pošlete svou loď. Pluje nejkratší cestou rychlostí jedno políčko za {seconds} s a hejno, které se pohybuje, sleduje. Všichni vidí všechny lodě.",
-  "Every tile sailed burns {cost} Research. Out of Research, your boat waits: answer questions to refuel.": "Plavba spaluje výzkum: {cost} za každé propluté políčko. Když výzkum dojde, loď čeká: odpovídejte na otázky a doplňte palivo.",
-  "On a school, your boat catches a fish every {seconds} s by itself. Schools regrow slowly, but boats sharing one empty it fast. An emptied school vanishes and a new one appears elsewhere.": "U hejna loď sama uloví rybu každých {seconds} s. Ryb v hejnech pomalu přibývá, ale více lodí u jednoho hejna ho rychle vyloví. Vylovené hejno zmizí a jinde se objeví nové.",
-  "Golden schools appear every few minutes and swim off after a while. Each golden fish is worth {points} points.": "Každých pár minut se objeví zlatá hejna, která po chvíli odplují. Každá zlatá ryba má hodnotu {points} bodů.",
-  "Score: fish caught plus golden points. Unused Research is worth nothing.": "Skóre: ulovené ryby plus body za zlaté ryby. Nevyužitý výzkum nemá žádnou hodnotu.",
-  "A golden school is out": "Je venku zlaté hejno",
+  "Tap a fishing ground to send your boat. It sails one tile every {seconds} s by the shortest route, and every tile burns {cost} Research: answer questions to refuel. Everyone sees every boat.": "Klepnutím na loviště tam pošlete svou loď. Pluje nejkratší cestou rychlostí jedno políčko za {seconds} s a každé políčko spálí výzkum ({cost}): palivo doplníte odpovídáním na otázky. Všichni vidí všechny lodě.",
+  "On a ground your boat fishes by itself, and the more fish the ground has, the faster it catches them. Grounds never move. Each regrows up to {fish} every {seconds} s (just one when nearly empty, none when full), so boats sharing a ground empty it fast and then all catch slowly.": "Na lovišti loď loví sama, a čím víc ryb loviště má, tím rychleji je chytá. Loviště se nehýbou. Každé doroste až o {fish} za {seconds} s (téměř prázdné jen o jednu, plné vůbec), takže lodě, které se o loviště dělí, ho rychle vyloví a pak všechny loví pomalu.",
+  "Your boat holds {fish}. When it is full it sails home to the harbour by itself to unload, then goes back, burning Research both ways. Grounds far from the harbour cost more fuel per fish.": "Do lodi se vejde {fish}. Když je plná, sama dopluje do přístavu vyložit a pak se vrátí, a výzkum spaluje oběma směry. Loviště daleko od přístavu proto stojí víc paliva na rybu.",
+  "Golden grounds lie far out. Each golden fish is worth {points}, but a golden ground holds at most {max} and regrows only {growth} every {seconds} s.": "Zlatá loviště leží daleko. Každá zlatá ryba má hodnotu {points}, ale zlaté loviště má nejvýš {max} a doroste jen o {growth} za {seconds} s.",
+  "Bait makes your boat catch {boost}% faster, but each fish caught with bait costs {cost} Research. Bait never takes you below {reserve} Research, which stays for sailing.": "S návnadou loď loví o {boost} % rychleji, ale každá ryba ulovená s návnadou stojí výzkum ({cost}). Návnada nikdy nesníží výzkum pod {reserve}; ten zůstane na plavbu.",
+  "Score: fish caught plus golden points. Unused Research is worth nothing, and being first or fastest earns nothing: look in every few minutes and decide whether to stay or move.": "Skóre: ulovené ryby plus body za zlaté ryby. Nevyužitý výzkum nemá žádnou hodnotu a být první nebo nejrychlejší nic nepřináší: podívejte se do hry každých pár minut a rozhodněte, jestli zůstat, nebo se přesunout.",
+  "Your boat is out of Research": "Vaší lodi došel výzkum",
   "Your boat is idle": "Vaše loď kotví",
   "Time remaining: {time}": "Zbývající čas: {time}",
   "Login": "Přihlášení",
@@ -137,7 +146,7 @@ const czech: Record<string, string> = {
   "That code is already used by another team.": "Tento kód už používá jiný tým.",
   "Invalid JSON request.": "Neplatný požadavek JSON.",
   "The server could not complete this request. Please try again.": "Server nemohl požadavek dokončit. Zkuste to prosím znovu.",
-  "That school has gone. Choose another one.": "Toto hejno už zmizelo. Vyberte jiné.",
+  "Choose a fishing ground on the map.": "Vyberte loviště na mapě.",
   "Choose a sea tile.": "Vyberte políčko moře.",
   "The game has not started.": "Hra ještě nezačala."
 }
@@ -145,7 +154,7 @@ export function t(english: string, values: Record<string, string | number> = {})
   const text = language.value === 'cs' ? czech[english] ?? english : english
   return text.replace(/\{(\w+)\}/g, (match, key: string) => String(values[key] ?? match))
 }
-const czechSubjects: Record<Subject, string> = { physics: 'Fyzika', 'computer-science': 'Informatika', biology: 'Biologie', chemistry: 'Chemie', ess: 'ESS' }
+const czechSubjects: Record<Subject, string> = { physics: 'Fyzika', 'computer-science': 'Informatika', biology: 'Biologie', chemistry: 'Chemie', ess: 'ESS', math: 'Matematika' }
 export const subjectLabel = (subject: Subject) => language.value === 'cs' ? czechSubjects[subject] : subjectNames[subject]
 // Czech needs the accusative after verbs such as "catch" (1 rybu, 2 ryby, 5 ryb).
 export function fish(count: number, accusative = false): string {
@@ -156,4 +165,8 @@ export function fish(count: number, accusative = false): string {
 export function tiles(count: number): string {
   if (language.value === 'en') return `${count} ${count === 1 ? 'tile' : 'tiles'}`
   return `${count} ${count === 1 ? 'políčko' : count >= 2 && count <= 4 ? 'políčka' : 'políček'}`
+}
+export function points(count: number): string {
+  if (language.value === 'en') return `${count} ${count === 1 ? 'point' : 'points'}`
+  return `${count} ${count === 1 ? 'bod' : count >= 2 && count <= 4 ? 'body' : 'bodů'}`
 }

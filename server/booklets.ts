@@ -7,4 +7,5 @@ export const subjectBooklets: CompetitionState['booklets'] = {
   'chemistry': 'https://www.ibchem.com/root_pdf/DataBook2025.pdf',
   'computer-science': '',
   'ess': '',
+  'math': '',
 }

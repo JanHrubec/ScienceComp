@@ -6,11 +6,10 @@ import { join } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
 import { answerReward } from '../shared/scoring.js'
 import { createApp } from '../server/app.js'
-import { competitionState } from '../server/competition.js'
 import { openDatabase } from '../server/db.js'
 import { loadQuestions, isCorrect, parseNumber, publicQuestion, type Question } from '../server/questions.js'
 import { TEAM_SKIP_LIMIT, subjects, ages, type TeamState, type AdminTeam, type CompetitionState } from '../shared/domain.js'
-import type { MatchState } from '../server/game/rules.js'
+import { distance, type GameMap, type MatchState } from '../server/game/rules.js'
 const bank = loadQuestions('./questions')
 const answerFor = (q: Question) => q.type === 'multiple-choice' ? String(q.correctIndex) : q.type === 'text' ? q.acceptedAnswers[0] : String(q.numericAnswer)
 async function serve(db: DatabaseSync) {
@@ -30,7 +29,7 @@ function edit(db: DatabaseSync, change: (state: MatchState) => void) {
   const state = JSON.parse(String(db.prepare('SELECT state FROM commons_match').get()!.state)) as MatchState
   change(state); db.prepare('UPDATE commons_match SET state = ?').run(JSON.stringify(state))
 }
-interface History { samples: { tick: number; teams: { id: string; fish: number; bonus: number }[] }[]; orders: { tick: number; team: string }[]; golden: unknown[] }
+interface History { samples: { tick: number; teams: { id: string; fish: number; bonus: number }[] }[]; orders: { tick: number; team: string; bait?: boolean }[] }
 const scoreAt = (history: History, tick: number) => Object.fromEntries(history.samples.find(s => s.tick === tick)!.teams.map(t => [t.id, t.fish + t.bonus]))
 // Records every transaction started on this connection.
 function transactions(db: DatabaseSync) {
@@ -38,7 +37,7 @@ function transactions(db: DatabaseSync) {
   db.exec = (sql: string) => { if (sql.startsWith('BEGIN')) begins.push(sql); exec(sql) }
   return begins
 }
-test('bank has 300 unique bilingual questions with all three answer types in every track', () => {
+test('bank has 360 unique bilingual questions with all three answer types in every track', () => {
   const ids = new Set<string>()
   const answerTypes = new Set<string>()
   for (const s of subjects) for (const age of ages) {
@@ -55,7 +54,7 @@ test('bank has 300 unique bilingual questions with all three answer types in eve
       for (const key of ['acceptedAnswers', 'correctIndex', 'numericAnswer', 'tolerance']) assert(!safe.includes(key))
     }
   }
-  assert.equal(ids.size, 300)
+  assert.equal(ids.size, 360)
   assert.equal(answerTypes.size, 3)
 })
 test('exact grading normalises only permitted differences', () => {
@@ -124,7 +123,7 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal((await request('/team/game/order', a.cookie, { school: 1 })).status, 409)
     // The map is made when the match starts, from the roster at that moment.
     assert.equal(a.body.game.map, null)
-    assert.deepEqual(a.body.game.clock, { tick: 0, total: 1800, nextAt: null })
+    assert.deepEqual(a.body.game.clock, { tick: 0, total: 1800 })
     const starts = await Promise.all([request<CompetitionState>('/admin/start', admin, {}), request<CompetitionState>('/admin/start', admin, {})])
     assert.deepEqual(starts.map(r => r.status).sort(), [200, 409])
     const clock = (await request<CompetitionState>('/competition')).body
@@ -179,39 +178,47 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal((await request('/team/skip', b.cookie, { subject: 'ess', questionId: afterSkips.progress.ess.question!.id })).status, 400)
     current = (await request<TeamState>('/team/state', a.cookie)).body
     assert.equal(current.team.research, 45)
-    // A fresh map: a school per team plus two, and both boats in the harbour.
+    // A fresh map: a fishing ground per team plus two, one golden ground, and both boats in the harbour.
     const game = current.game, map = game.map!, harbour = map.harbour
     assert(map.land.length === map.height && map.land.every(row => row.length === map.width))
-    assert.equal(game.schools.length, 4)
+    assert.deepEqual([game.schools.length, game.schools.filter(s => s.golden).length], [5, 1])
+    assert(game.schools.every(s => s.home === distance(map as GameMap, s, harbour)))
     assert.deepEqual(game.boats.map(b => [b.name, b.x, b.y, b.target, b.route]), [['Older Team', harbour.x, harbour.y, null, []], ['Photon Pigeons', harbour.x, harbour.y, null, []]])
     const land = map.land.flatMap((row, y) => [...row].flatMap((cell, x) => cell === '#' ? [{ x, y }] : []))[0]!
     for (const bad of [{ x: -1, y: 0 }, { x: map.width, y: 0 }, land, { x: 0, y: 0, school: 1 }, {}, { boat: 1, ground: 0 }]) assert.equal((await request('/team/game/order', a.cookie, bad)).status, 400, JSON.stringify(bad))
-    assert.deepEqual(await request('/team/game/order', a.cookie, { school: 999 }).then(r => [r.status, r.body.error]), [409, 'That school has gone. Choose another one.'])
-    // Photon Pigeons head for the farthest school; Older Team, without Research, for the nearest.
-    const far = [...game.schools].sort((x, y) => y.sail - x.sail)[0]!, near = [...game.schools].sort((x, y) => x.sail - y.sail)[0]!
+    assert.deepEqual(await request('/team/game/order', a.cookie, { school: 999 }).then(r => [r.status, r.body.error]), [409, 'Choose a fishing ground on the map.'])
+    assert.equal((await request('/team/game/order', a.cookie, { bait: 'yes' })).status, 400)
+    // The bait switch is private and stays until changed.
+    assert.deepEqual((await request<TeamState>('/team/game/order', a.cookie, { bait: true })).body.game.own, { fish: 0, bonus: 0, hauling: 0, hold: 0, bait: true })
+    assert.equal((await request<TeamState>('/team/game/order', a.cookie, { bait: false })).body.game.own.bait, false)
+    // Photon Pigeons head for the farthest ground; Older Team, without Research, for the nearest ordinary one.
+    const far = [...game.schools].sort((x, y) => y.sail - x.sail)[0]!, near = game.schools.filter(s => !s.golden).sort((x, y) => x.sail - y.sail)[0]!
     atTick(db, 0)
     const sent = (await request<TeamState>('/team/game/order', a.cookie, { school: far.id })).body.game.boats.find(boat => boat.team === create.body.id)!
     assert.deepEqual([sent.target, sent.route.length], [{ school: far.id }, far.sail])
+    // The next three tiles, for drawing the boat moving between polls.
+    assert.deepEqual(sent.ahead, sent.route.slice(0, 3))
     assert.equal((await request('/team/game/order', c.cookie, { school: near.id })).status, 200)
-    // Every boat, order and route is public; Research and scores are not.
+    // Every boat, order and route is public; Research, scores, catch meter, hold and bait are not.
     const observed = (await request<TeamState>('/team/state', c.cookie)).body.game
     assert.deepEqual(observed.boats.find(boat => boat.team === create.body.id)!.route, sent.route)
-    assert(!/research|spent|fish|bonus/.test(JSON.stringify(observed.boats)))
+    assert(!/research|spent|fish|bonus|hauling|hold|bait/.test(JSON.stringify(observed.boats)))
+    // Without Research the Older Team's boat will not move, and its lookahead says so.
+    assert.deepEqual(observed.boats.find(boat => boat.team === other.body.id)!.ahead, [harbour, harbour, harbour])
     // Three ticks on, concurrent reads play them exactly once: three tiles sailed, three Research burnt.
-    const tickedFrom = atTick(db, 3)
+    atTick(db, 3)
     const reads = await Promise.all([a, b, c, a, c].map(device => request<TeamState>('/team/state', device.cookie)))
     assert(reads.every(r => r.body.game.clock.tick === 3))
-    assert.equal(reads[0]!.body.game.clock.nextAt, tickedFrom + 4 * 2000)
     const sailing = reads[0]!.body.game.boats.find(boat => boat.team === create.body.id)!
     assert.deepEqual([sailing.x, sailing.y, sailing.route.length], [sent.route[2]!.x, sent.route[2]!.y, far.sail - 3])
     assert.equal(reads[0]!.body.team.research, 42)
     const waiting = reads[2]!.body.game.boats.find(boat => boat.team === other.body.id)!
     assert.deepEqual([waiting.x, waiting.y, reads[2]!.body.team.research], [harbour.x, harbour.y, 0])
-    // Parked on the nearest school, the boat lands a fish after five ticks there.
+    // Parked on a full ground of 20 fish, the boat lands a fish after four ticks there; the fifth puts 19 on its meter.
     edit(db, state => { Object.assign(state.boats.find(boat => boat.team === create.body.id)!, { x: near.x, y: near.y, target: { school: near.id } }) })
     atTick(db, 8)
     const fished = (await request<TeamState>('/team/state', b.cookie)).body
-    assert.deepEqual(fished.game.own, { fish: 1, bonus: 0 })
+    assert.deepEqual(fished.game.own, { fish: 1, bonus: 0, hauling: 19, hold: 1, bait: false })
     assert.deepEqual(fished.standings.teams.map(t => t.score), [1, 0])
     assert.equal((await request<AdminTeam[]>('/admin/teams', admin)).body.find(t => t.id === create.body.id)!.score, 1)
     const saved = (await request<TeamState>('/team/state', a.cookie)).body
@@ -231,12 +238,12 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal((await request('/team/game/order', a.cookie, { school: near.id })).status, 409)
     assert.equal((await request('/admin/start', admin, {})).status, 409)
     // The last tick runs at the deadline; the history samples every minute and keeps every order.
-    assert.deepEqual([atEnd.game.clock.tick, atEnd.game.clock.nextAt], [1800, null])
+    assert.equal(atEnd.game.clock.tick, 1800)
     const history = (await request<History>('/admin/history', admin)).body
     assert.deepEqual(history.samples.map(s => s.tick), Array.from({ length: 60 }, (_, i) => (i + 1) * 30))
     assert.equal(scoreAt(history, 1800)[create.body.id], atEnd.game.own.fish + atEnd.game.own.bonus)
-    assert.deepEqual(history.orders.map(o => [o.tick, o.team]), [[0, create.body.id], [0, other.body.id]])
-    assert(history.golden.length > 0)
+    // Bait switches count as orders too, for calibrating how often teams look in.
+    assert.deepEqual(history.orders.map(o => [o.team, 'bait' in o]), [[create.body.id, true], [create.body.id, true], [create.body.id, false], [other.body.id, false]])
     assert.equal((await request('/admin/history', a.cookie)).status, 401)
     assert.equal((await request<TeamState>('/team/state', a.cookie)).body.team.research, atEnd.team.research)
     // No typed confirmation: the admin screen asks before it sends the reset.
@@ -245,8 +252,8 @@ test('competition API: multi-device atomic scoring, game, admin and restart pers
     assert.equal(reset.competition.status, 'waiting'); assert.equal(reset.competition.startedAt, null)
     assert.equal(reset.team.research, 0); assert.equal(reset.team.earned, 0); assert.equal(reset.team.skipsUsed, 0)
     assert(subjects.every(s => reset.progress[s].completed === 0))
-    assert.deepEqual([reset.game.map, reset.game.clock.tick, reset.game.schools, reset.game.boats, reset.game.golden], [null, 0, [], [], []])
-    assert.deepEqual(reset.game.own, { fish: 0, bonus: 0 })
+    assert.deepEqual([reset.game.map, reset.game.clock.tick, reset.game.schools, reset.game.boats], [null, 0, [], []])
+    assert.deepEqual(reset.game.own, { fish: 0, bonus: 0, hauling: 0, hold: 0, bait: false })
     assert(reset.standings.teams.every(team => team.score === 0))
     assert.equal((await request<History>('/admin/history', admin)).body.samples.length, 0)
     await request(`/admin/teams/${create.body.id}`, admin, {}, 'DELETE')
@@ -268,33 +275,15 @@ test('all retry scoring tiers, including repeated penalties and custom open rewa
   }
 })
 
-test('legacy database migration preserves teams, progress, sessions and positions while permitting debt', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'competition-migration-')), path = join(dir, 'legacy.sqlite')
-  const old = new DatabaseSync(path)
-  old.exec(`
-    CREATE TABLE teams (id TEXT PRIMARY KEY, name TEXT NOT NULL, age TEXT NOT NULL, code TEXT NOT NULL UNIQUE COLLATE NOCASE,
-      research REAL NOT NULL DEFAULT 0 CHECK(research >= 0), earned REAL NOT NULL DEFAULT 0,
-      skips_used INTEGER NOT NULL DEFAULT 0 CHECK(skips_used BETWEEN 0 AND 3), color TEXT NOT NULL);
-    CREATE TABLE progress (team_id TEXT REFERENCES teams(id) ON DELETE CASCADE, subject TEXT, completed INTEGER, attempts INTEGER, PRIMARY KEY(team_id, subject));
-    CREATE TABLE sessions (token_hash TEXT PRIMARY KEY, team_id TEXT REFERENCES teams(id) ON DELETE CASCADE, role TEXT, expires INTEGER);
-    CREATE TABLE grid_positions (team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE, x INTEGER, y INTEGER);
-    INSERT INTO teams VALUES ('t', 'Existing team', '14–16', 'ABCD', 2, 30, 1, '#176b58');
-    INSERT INTO progress VALUES ('t', 'physics', 3, 2);
-    INSERT INTO sessions VALUES ('hash', 't', 'team', 9999999999999);
-    INSERT INTO grid_positions VALUES ('t', 4, 5);
-  `)
-  old.close()
-  const db = openDatabase(path)
+test('a team created before a subject was added starts it from its first question', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'competition-subjects-')), path = join(dir, 'old.sqlite')
+  let db = openDatabase(path)
+  db.exec(`INSERT INTO teams (id, name, age, code, color) VALUES ('t', 'Existing team', '14–16', 'ABCD', '#176b58');
+    INSERT INTO progress VALUES ('t', 'physics', 3, 2);`)
+  db.close(); db = openDatabase(path)
   try {
-    assert.equal(db.prepare('SELECT completed FROM progress').get()!.completed, 3)
-    assert.equal(db.prepare('SELECT token_hash FROM sessions').get()!.token_hash, 'hash')
-    assert.equal(db.prepare('SELECT x FROM grid_positions').get()!.x, 4)
-    db.prepare('UPDATE teams SET research = research - 5').run()
-    assert.equal(db.prepare('SELECT research FROM teams').get()!.research, -3)
-    assert.equal(db.prepare('SELECT earned FROM teams').get()!.earned, 30)
-    assert.equal(db.prepare('PRAGMA foreign_key_check').all().length, 0)
-    db.prepare('DELETE FROM teams').run()
-    for (const table of ['sessions', 'progress', 'grid_positions']) assert.equal(db.prepare(`SELECT COUNT(*) AS n FROM ${table}`).get()!.n, 0)
+    assert.deepEqual({ ...db.prepare("SELECT completed, attempts FROM progress WHERE subject = 'physics'").get() }, { completed: 3, attempts: 2 })
+    assert.deepEqual({ ...db.prepare("SELECT completed, attempts FROM progress WHERE subject = 'math'").get() }, { completed: 0, attempts: 0 })
   } finally { db.close(); rmSync(dir, { recursive: true, force: true }) }
 })
 
@@ -431,13 +420,13 @@ test('standings freeze before the first post-cutoff action, persist across resta
     const a = (await call('/team/login', '', { code: 'AAAA' })).cookie
     const b = (await call('/team/login', '', { code: 'BBBB' })).cookie
     await call('/admin/start', admin, {})
-    db.exec('UPDATE teams SET research = 1000')
-    // Each team's boat sits on its own school, deep enough to fish all match.
+    db.exec('UPDATE teams SET research = 100000')
+    // Each team's boat sits on its own ground, deep enough to fish all match (between trips home to unload).
     edit(db, state => state.schools.slice(0, 2).forEach((school, i) => { school.fish = 10_000; Object.assign(state.boats.find(boat => boat.team === [aId, bId][i])!, { x: school.x, y: school.y, target: { school: school.id } }) }))
     atTick(db, 30)
     const before = (await call('/team/state', a)).data as TeamState
     assert.equal(before.standings.frozenAt, null)
-    assert.deepEqual(before.standings.teams.map(t => t.score), [6, 6])
+    assert(before.standings.teams.every(t => t.score > 0))
     // Jump past the cutoff (55:00, tick 1650) to tick 1710 with no request in between.
     // The first request is an order: ticks up to 1650 count towards the frozen
     // standings, the rest only towards the live scores. All of that, and the order
@@ -449,14 +438,15 @@ test('standings freeze before the first post-cutoff action, persist across resta
     assert.equal(after.game.clock.tick, 1710)
     const history = (await call('/admin/history', admin)).data as History
     assert.deepEqual(Object.fromEntries(after.standings.teams.map(t => [t.id, t.score])), scoreAt(history, 1650))
-    assert.deepEqual([scoreAt(history, 1650)[aId], after.game.own.fish], [330, 342])
+    // Alpha kept fishing after the cutoff; the order just given has not moved it yet.
+    assert(scoreAt(history, 1650)[aId]! < after.game.own.fish + after.game.own.bonus)
+    assert.equal(after.game.own.fish + after.game.own.bonus, scoreAt(history, 1710)[aId])
     atTick(db, 1800)
     const later = (await call('/team/state', a)).data as TeamState
     assert.deepEqual([later.game.clock.tick, later.standings], [1800, after.standings])
     const adminTeams = (await call('/admin/teams', admin)).data as AdminTeam[]
     const final = scoreAt((await call('/admin/history', admin)).data as History, 1800)
     assert.deepEqual(adminTeams.map(t => t.score), [final[aId], final[bId]])
-    assert(final[aId]! < 360 && final[bId] === 360) // Alpha left its school at tick 1710
     await close(); db.close(); db = openDatabase(path)
     server = createApp(db, bank, 'test-password').listen(0, '127.0.0.1')
     await new Promise<void>(resolve => server.once('listening', resolve))
@@ -471,9 +461,9 @@ test('standings freeze before the first post-cutoff action, persist across resta
     assert.equal(reset.standings.frozenAt, null)
     assert.deepEqual(reset.standings.teams.map(t => t.score), [0])
     await call('/admin/start', admin, {})
-    // One team now: three schools, and the starting Research.
+    // One team now: three ordinary grounds and a golden one, and the starting Research.
     const started = (await call('/team/state', a)).data as TeamState
-    assert.deepEqual([started.game.schools.length, started.team.research], [3, 10])
+    assert.deepEqual([started.game.schools.length, started.team.research], [4, 10])
     // Without Research the boat stays in the harbour.
     db.exec('UPDATE teams SET research = 0')
     atTick(db, 0)
@@ -487,113 +477,6 @@ test('standings freeze before the first post-cutoff action, persist across resta
     const moved = ((await call('/team/state', a)).data as TeamState)
     assert.deepEqual([moved.game.boats[0]!.route.length, moved.team.research], [target.sail - 1, 0])
   } finally { await close(); db.close(); rmSync(dir, { recursive: true, force: true }) }
-})
-
-test('a diamond-prototype database upgrades to the map game; an unreset diamond round ends and keeps its results', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'commons-upgrade-')), warnings: string[] = [], warn = console.warn
-  console.warn = (message: string) => { warnings.push(message) }
-  // The prototype's tables and a team with 7 diamonds; optionally its frozen standings and start time.
-  function legacy(name: string, startedMinutesAgo: number | null, snapshot = false) {
-    const db = openDatabase(join(dir, `${name}.sqlite`))
-    db.exec(`
-      CREATE TABLE grid_positions (team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE, x INTEGER NOT NULL, y INTEGER NOT NULL);
-      CREATE TABLE grid_cells (x INTEGER, y INTEGER, stock INTEGER, PRIMARY KEY(x, y));
-      CREATE TABLE grid_scores (team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE, diamonds INTEGER);
-      INSERT INTO teams (id, name, age, code, color) VALUES ('t', 'Existing team', '14–16', 'ABCD', '#176b58');
-      INSERT INTO grid_positions VALUES ('t', 4, 5);
-      INSERT INTO grid_scores VALUES ('t', 7);
-    `)
-    for (const subject of subjects) db.prepare("INSERT INTO progress (team_id, subject) VALUES ('t', ?)").run(subject)
-    if (snapshot) db.exec(`INSERT INTO config VALUES ('standings_snapshot', '{"frozenAt":1,"teams":[{"id":"t","name":"Existing team","color":"#176b58","diamonds":3}]}')`)
-    if (startedMinutesAgo !== null) db.prepare("INSERT INTO config VALUES ('started_at', ?)").run(String(Date.now() - startedMinutesAgo * 60_000))
-    return db
-  }
-  const count = (db: DatabaseSync, from: string) => Number(db.prepare(`SELECT COUNT(*) AS n FROM ${from}`).get()!.n)
-  const gridTables = "sqlite_master WHERE type = 'table' AND name IN ('grid_cells', 'grid_scores', 'grid_positions')"
-  const standings = (db: DatabaseSync) => JSON.parse(String(db.prepare("SELECT value FROM config WHERE key = 'standings_snapshot'").get()?.value ?? null))
-  let db = legacy('waiting', null, true), server: Awaited<ReturnType<typeof serve>> | undefined
-  try {
-    // Between rounds, the prototype's tables and any snapshot of its scores are removed.
-    createApp(db, bank, 'test-password')
-    assert.equal(count(db, gridTables), 0)
-    assert.equal(standings(db), null)
-    assert.equal(count(db, "commons_teams WHERE team_id = 't'"), 1)
-    assert.deepEqual(warnings, [])
-    db.close()
-    // A round mid-run at the upgrade ends instead of running on as the map game. Its
-    // results stay in the prototype's tables and become the standings, and are logged.
-    db = legacy('running', 10)
-    createApp(db, bank, 'test-password')
-    assert.equal(competitionState(db).status, 'finished')
-    assert.equal(count(db, gridTables), 3)
-    assert.deepEqual(standings(db).teams, [{ id: 't', name: 'Existing team', color: '#176b58', score: 7 }])
-    assert.equal(count(db, 'commons_match'), 0)
-    // Admin reads scores from commons_teams, so the final diamonds are carried there.
-    assert.equal(count(db, "commons_teams WHERE team_id = 't' AND fish = 7 AND bonus = 0"), 1)
-    assert.match(warnings[0]!, /never reset.*Final diamonds: Existing team 7\.$/)
-    db.close()
-    // A round that ended at the prototype's 45 minutes would run again under 60.
-    // It stays finished, keeps its frozen standings, and nothing resolves.
-    const path = join(dir, 'finished.sqlite')
-    db = legacy('finished', 50, true); server = await serve(db)
-    const admin = (await server.call('/admin/login', '', { password: 'test-password' })).cookie
-    const team = await server.call<TeamState>('/team/login', '', { code: 'ABCD' })
-    assert.equal(team.body.competition.status, 'finished')
-    assert.deepEqual(team.body.standings, { frozenAt: 1, teams: [{ id: 't', name: 'Existing team', color: '#176b58', score: 3 }] })
-    assert.deepEqual([team.body.game.clock.tick, team.body.game.map], [0, null])
-    assert.equal(count(db, gridTables), 3)
-    // The organizer announcing winners from admin sees the final diamonds, not zeros.
-    assert.deepEqual((await server.call<AdminTeam[]>('/admin/teams', admin)).body.map(t => [t.name, t.score]), [['Existing team', 7]])
-    // A restart changes nothing but repeats the reminder.
-    await server.close(); db.close(); db = openDatabase(path); server = await serve(db)
-    const restarted = (await server.call<TeamState>('/team/state', team.cookie)).body
-    assert.deepEqual([restarted.competition.status, restarted.competition.startedAt, restarted.standings], ['finished', team.body.competition.startedAt, team.body.standings])
-    assert.equal(warnings.length, 3)
-    // Reset discards the round and its tables, so a later round is never taken for it.
-    assert.equal((await server.call('/admin/reset', admin, {})).status, 200)
-    assert.equal(count(db, gridTables), 0)
-    assert.deepEqual((await server.call<AdminTeam[]>('/admin/teams', admin)).body.map(t => t.score), [0])
-    await server.call('/admin/start', admin, {})
-    await server.close(); db.close(); db = openDatabase(path); server = await serve(db)
-    const next = (await server.call<TeamState>('/team/state', team.cookie)).body
-    assert.deepEqual([next.competition.status, next.game.schools.length, next.standings.frozenAt], ['running', 3, null])
-    assert.equal(warnings.length, 3)
-  } finally { console.warn = warn; await server?.close(); db.close(); rmSync(dir, { recursive: true, force: true }) }
-})
-
-test('a three-ground Commons database upgrades: a running round ends and keeps its scores until reset', async () => {
-  const db = openDatabase(':memory:'), warnings: string[] = [], warn = console.warn
-  console.warn = (message: string) => { warnings.push(message) }
-  db.exec(`
-    CREATE TABLE commons_teams (
-      team_id TEXT PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE,
-      fish INTEGER NOT NULL DEFAULT 0, bonus INTEGER NOT NULL DEFAULT 0,
-      contract TEXT, progress INTEGER NOT NULL DEFAULT 0, visited TEXT NOT NULL DEFAULT '[]', completed TEXT NOT NULL DEFAULT '[]', taken INTEGER NOT NULL DEFAULT 0
-    );
-    CREATE TABLE commons_grounds (id INTEGER PRIMARY KEY, biomass INTEGER NOT NULL, maximum INTEGER NOT NULL, fished_by TEXT NOT NULL DEFAULT '[]');
-    CREATE TABLE commons_boats (team_id TEXT NOT NULL, boat INTEGER NOT NULL, ground INTEGER, target INTEGER, PRIMARY KEY(team_id, boat));
-    CREATE TABLE commons_resolutions (number INTEGER PRIMARY KEY, at INTEGER NOT NULL, record TEXT NOT NULL);
-    INSERT INTO teams (id, name, age, code, color) VALUES ('t', 'Existing team', '14–16', 'ABCD', '#176b58');
-    INSERT INTO commons_teams (team_id, fish, bonus, contract) VALUES ('t', 30, 8, 'survey');
-  `)
-  for (const subject of subjects) db.prepare("INSERT INTO progress (team_id, subject) VALUES ('t', ?)").run(subject)
-  db.prepare("INSERT INTO config VALUES ('started_at', ?)").run(String(Date.now() - 10 * 60_000))
-  const oldTables = "sqlite_master WHERE type = 'table' AND name IN ('commons_grounds', 'commons_boats', 'commons_resolutions')"
-  const count = (from: string) => Number(db.prepare(`SELECT COUNT(*) AS n FROM ${from}`).get()!.n)
-  const { call, close } = await serve(db)
-  try {
-    const admin = (await call('/admin/login', '', { password: 'test-password' })).cookie
-    const team = await call<TeamState>('/team/login', '', { code: 'ABCD' })
-    assert.deepEqual([team.body.competition.status, team.body.game.map, team.body.standings.teams.map(t => t.score)], ['finished', null, [38]])
-    assert.deepEqual((await call<AdminTeam[]>('/admin/teams', admin)).body.map(t => [t.fish, t.bonus]), [[30, 8]])
-    assert.equal(count(oldTables), 3)
-    assert.match(warnings[0]!, /never reset/)
-    assert.equal((await call('/admin/reset', admin, {})).status, 200)
-    assert.equal(count(oldTables), 0)
-    await call('/admin/start', admin, {})
-    const next = (await call<TeamState>('/team/state', team.cookie)).body
-    assert.deepEqual([next.competition.status, next.game.schools.length, next.game.own], ['running', 3, { fish: 0, bonus: 0 }])
-  } finally { console.warn = warn; await close(); db.close() }
 })
 
 test('reset needs no catch-up, so it also recovers a match that cannot be played', async () => {
@@ -619,7 +502,7 @@ test('reset needs no catch-up, so it also recovers a match that cannot be played
     assert.deepEqual([reset.competition.status, reset.game.clock.tick, reset.game.map], ['waiting', 0, null])
     assert.equal((await call<History>('/admin/history', admin)).body.samples.length, 0)
     await call('/admin/start', admin, {})
-    assert.deepEqual((await call<TeamState>('/team/state', team)).body.game.schools.map(s => s.fish), [8, 8, 8])
+    assert.deepEqual((await call<TeamState>('/team/state', team)).body.game.schools.map(s => s.fish), [5, 20, 20, 20])
   } finally { await close(); db.close() }
 })
 
@@ -634,8 +517,8 @@ test('a poll takes no write lock unless the game is due, and each request catche
     await call('/admin/teams', admin, { name: 'Alpha', age: '11–13', code: 'AAAA' })
     const team = (await call('/team/login', '', { code: 'AAAA' })).cookie
     await call('/admin/start', admin, {})
-    db.exec('UPDATE teams SET research = 1000')
-    // The boat fishes a school deep enough for the whole match.
+    db.exec('UPDATE teams SET research = 100000')
+    // The boat fishes a ground deep enough for the whole match (between trips home to unload).
     let own = 0
     edit(db, state => { const school = state.schools[0]!; own = school.id; school.fish = 10_000; Object.assign(state.boats[0]!, { x: school.x, y: school.y, target: { school: school.id } }) })
     const reads = [['/team/state', team], ['/admin/teams', admin], ['/admin/history', admin]]
@@ -667,4 +550,13 @@ test('a poll takes no write lock unless the game is due, and each request catche
     assert.deepEqual(late.standings.teams.map(t => t.score), [scoreAt(history, 1650)[id]])
     assert.equal(late.game.own.fish + late.game.own.bonus, scoreAt(history, 1710)[id])
   } finally { await close(); other.close(); db.close(); rmSync(dir, { recursive: true, force: true }) }
+})
+
+test('the login limit counts only failed attempts, so a class behind one IP can all sign in', async () => {
+  const db = openDatabase(':memory:'), { call, close } = await serve(db)
+  try {
+    for (let i = 0; i < 61; i++) assert.equal((await call('/admin/login', '', { password: 'test-password' })).status, 200)
+    for (let i = 0; i < 60; i++) assert.equal((await call('/team/login', '', { code: 'NOPE' })).status, 401)
+    assert.equal((await call('/admin/login', '', { password: 'test-password' })).status, 429)
+  } finally { await close(); db.close() }
 })

@@ -1,0 +1,888 @@
+{
+  "subject": "math",
+  "tracks": {
+    "11–13": [
+      {
+        "id": "math-11-01",
+        "type": "multiple-choice",
+        "prompt": "A recipe makes 12 pancakes from 3 eggs. Keeping the same proportions, how many eggs are needed for 20 pancakes?",
+        "choices": [
+          "4",
+          "5",
+          "6",
+          "11"
+        ],
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Z receptu je 12 palačinek ze 3 vajec. Kolik vajec je potřeba na 20 palačinek, pokud zachováme stejný poměr?",
+          "choices": [
+            "4",
+            "5",
+            "6",
+            "11"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-02",
+        "type": "numerical",
+        "prompt": "Calculate 8 + 12 ÷ 4 × 2 − 3, following the usual order of operations.",
+        "numericAnswer": 11,
+        "cs": {
+          "prompt": "Vypočítejte 8 + 12 : 4 · 2 − 3 podle obvyklého pořadí operací."
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-03",
+        "type": "multiple-choice",
+        "prompt": "A shirt costs €40. Its price rises by 10%, and then the new price falls by 10%. What is the final price?",
+        "choices": [
+          "€36.00",
+          "€39.60",
+          "€40.00",
+          "€40.40"
+        ],
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Tričko stojí 40 €. Jeho cena vzroste o 10 % a pak nová cena klesne o 10 %. Jaká je konečná cena?",
+          "choices": [
+            "36,00 €",
+            "39,60 €",
+            "40,00 €",
+            "40,40 €"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-04",
+        "type": "text",
+        "prompt": "Which fraction is larger: 3/8 or 2/5? Enter it exactly as written here.",
+        "acceptedAnswers": [
+          "2/5"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Který zlomek je větší: 3/8, nebo 2/5? Zapište ho přesně tak, jak je uveden zde.",
+          "acceptedAnswers": [
+            "2/5"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-05",
+        "type": "numerical",
+        "prompt": "At 06:00 the temperature is −7 °C. By 14:00 it has risen by 12 °C, and by 22:00 it has fallen by 9 °C from the 14:00 value. What is the temperature at 22:00, in °C?",
+        "numericAnswer": -4,
+        "cs": {
+          "prompt": "V 6:00 je teplota −7 °C. Do 14:00 vzroste o 12 °C a do 22:00 klesne o 9 °C oproti hodnotě ve 14:00. Jaká je teplota ve 22:00 ve °C?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-06",
+        "type": "numerical",
+        "prompt": "A rectangle is 9 cm long and 4 cm wide. A square has the same perimeter as the rectangle. What is the area of the square, in cm²?",
+        "numericAnswer": 42.25,
+        "cs": {
+          "prompt": "Obdélník je 9 cm dlouhý a 4 cm široký. Čtverec má stejný obvod jako tento obdélník. Jaký je obsah čtverce v cm²?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-07",
+        "type": "multiple-choice",
+        "prompt": "Five test scores have a mean of 14. One score of 20 is removed. What is the mean of the remaining four scores?",
+        "choices": [
+          "10",
+          "12.5",
+          "14",
+          "17"
+        ],
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Pět výsledků testu má aritmetický průměr 14. Jeden výsledek, 20, vyřadíme. Jaký je průměr zbývajících čtyř výsledků?",
+          "choices": [
+            "10",
+            "12,5",
+            "14",
+            "17"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-08",
+        "type": "text",
+        "prompt": "Is 91 a prime number? Enter yes or no.",
+        "acceptedAnswers": [
+          "no"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Je 91 prvočíslo? Zadejte ano, nebo ne.",
+          "acceptedAnswers": [
+            "ne"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-09",
+        "type": "numerical",
+        "prompt": "What is the next number in the sequence 2, 6, 12, 20, 30, …?",
+        "numericAnswer": 42,
+        "cs": {
+          "prompt": "Jaké číslo následuje v posloupnosti 2, 6, 12, 20, 30, …?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-10",
+        "type": "multiple-choice",
+        "prompt": "An isosceles triangle has one angle of 40°. Which option lists ALL the possible sizes of its largest angle?",
+        "choices": [
+          "100° only",
+          "70° only",
+          "70° or 100°",
+          "40° or 100°"
+        ],
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Rovnoramenný trojúhelník má jeden úhel 40°. Která možnost uvádí VŠECHNY možné velikosti jeho největšího úhlu?",
+          "choices": [
+            "Jen 100°",
+            "Jen 70°",
+            "70° nebo 100°",
+            "40° nebo 100°"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-11",
+        "type": "numerical",
+        "prompt": "A tap drips 15 mL of water every minute. How many litres drip from it in one whole day?",
+        "numericAnswer": 21.6,
+        "cs": {
+          "prompt": "Z kohoutku ukápne každou minutu 15 ml vody. Kolik litrů z něj ukápne za celý den?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-12",
+        "type": "text",
+        "prompt": "Without calculating exactly: is 0.3 × 0.3 greater or less than 0.3? Enter greater or less.",
+        "acceptedAnswers": [
+          "less"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Bez přesného výpočtu: je 0,3 · 0,3 větší, nebo menší než 0,3? Zadejte větší, nebo menší.",
+          "acceptedAnswers": [
+            "menší",
+            "mensi"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-13",
+        "type": "numerical",
+        "prompt": "Emma is 3 times as old as her brother. In 4 years she will be twice as old as he will be then. How old is Emma now, in years?",
+        "numericAnswer": 12,
+        "cs": {
+          "prompt": "Emě je třikrát tolik let co jejímu bratrovi. Za 4 roky jí bude dvakrát tolik let co jemu. Kolik let je Emě teď?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-14",
+        "type": "multiple-choice",
+        "prompt": "A bag holds 4 red, 5 blue and 3 green marbles. One marble is taken at random. What is the probability that it is NOT blue?",
+        "choices": [
+          "5/12",
+          "7/12",
+          "7/5",
+          "1/3"
+        ],
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "V sáčku jsou 4 červené, 5 modrých a 3 zelené kuličky. Náhodně vytáhneme jednu. Jaká je pravděpodobnost, že NENÍ modrá?",
+          "choices": [
+            "5/12",
+            "7/12",
+            "7/5",
+            "1/3"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-15",
+        "type": "numerical",
+        "prompt": "A path 1 m wide runs all the way around the outside of a rectangular lawn measuring 10 m by 6 m. What is the area of the path, in m²?",
+        "numericAnswer": 36,
+        "cs": {
+          "prompt": "Kolem obdélníkového trávníku o rozměrech 10 m × 6 m vede po celém jeho vnějším okraji cesta široká 1 m. Jaký je obsah cesty v m²?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-16",
+        "type": "text",
+        "prompt": "Always, sometimes or never: the sum of two odd numbers is odd. Enter always, sometimes or never.",
+        "acceptedAnswers": [
+          "never"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Vždy, někdy, nebo nikdy: součet dvou lichých čísel je lichý. Zadejte vždy, někdy, nebo nikdy.",
+          "acceptedAnswers": [
+            "nikdy"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-17",
+        "type": "numerical",
+        "prompt": "A cyclist rides 12 km at 24 km/h and then another 12 km at 12 km/h. What is the average speed for the whole 24 km, in km/h?",
+        "numericAnswer": 16,
+        "cs": {
+          "prompt": "Cyklista ujede 12 km rychlostí 24 km/h a pak dalších 12 km rychlostí 12 km/h. Jaká je jeho průměrná rychlost na celých 24 km v km/h?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-18",
+        "type": "multiple-choice",
+        "prompt": "Ana and Ben share €60 in the ratio 2 : 3. Then Ben gives Ana €6. What is the ratio of Ana’s money to Ben’s money now?",
+        "choices": [
+          "1 : 1",
+          "2 : 3",
+          "4 : 5",
+          "5 : 4"
+        ],
+        "correctIndex": 0,
+        "cs": {
+          "prompt": "Ana a Ben si rozdělí 60 € v poměru 2 : 3. Potom Ben dá Aně 6 €. Jaký je teď poměr Aniných peněz k Benovým?",
+          "choices": [
+            "1 : 1",
+            "2 : 3",
+            "4 : 5",
+            "5 : 4"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-19",
+        "type": "numerical",
+        "prompt": "How many whole numbers from 1 to 120 (inclusive) are divisible by 3 or by 5, or by both?",
+        "numericAnswer": 56,
+        "cs": {
+          "prompt": "Kolik celých čísel od 1 do 120 (včetně) je dělitelných třemi nebo pěti, případně oběma?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-11-20",
+        "type": "numerical",
+        "prompt": "A two-digit number has digits that add up to 11. Swapping its two digits makes a number that is 27 larger. What is the original number?",
+        "numericAnswer": 47,
+        "cs": {
+          "prompt": "Dvojciferné číslo má ciferný součet 11. Když jeho dvě číslice prohodíme, vznikne číslo o 27 větší. Jaké je původní číslo?"
+        },
+        "reward": 10
+      }
+    ],
+    "14–16": [
+      {
+        "id": "math-14-01",
+        "type": "multiple-choice",
+        "prompt": "A phone plan costs €12 per month plus €0.05 for each minute of calls. Which expression gives the monthly cost in euros for m minutes?",
+        "choices": [
+          "12m + 0.05",
+          "12 + 0.05m",
+          "(12 + 0.05)m",
+          "12 + 5m"
+        ],
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Tarif stojí 12 € měsíčně plus 0,05 € za každou minutu hovorů. Který výraz udává měsíční cenu v eurech při m minutách?",
+          "choices": [
+            "12m + 0,05",
+            "12 + 0,05m",
+            "(12 + 0,05)m",
+            "12 + 5m"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-02",
+        "type": "numerical",
+        "prompt": "Solve 5(x − 3) = 2x + 9 for x.",
+        "numericAnswer": 8,
+        "cs": {
+          "prompt": "Vyřešte rovnici 5(x − 3) = 2x + 9 s neznámou x."
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-03",
+        "type": "numerical",
+        "prompt": "After a 20% discount a jacket costs €64. What was its price before the discount, in euros?",
+        "numericAnswer": 80,
+        "cs": {
+          "prompt": "Po slevě 20 % stojí bunda 64 €. Kolik stála před slevou v eurech?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-04",
+        "type": "text",
+        "prompt": "Does the point (3, −2) lie on the line y = −2x + 4? Enter yes or no.",
+        "acceptedAnswers": [
+          "yes"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Leží bod [3; −2] na přímce y = −2x + 4? Zadejte ano, nebo ne.",
+          "acceptedAnswers": [
+            "ano"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-05",
+        "type": "multiple-choice",
+        "prompt": "The mean of 4, 7, 7, 9 and x is 8. Which statement about the median of these five numbers is true?",
+        "choices": [
+          "The median is 7",
+          "The median is 8",
+          "The median is 9",
+          "It cannot be found without knowing x"
+        ],
+        "correctIndex": 0,
+        "cs": {
+          "prompt": "Aritmetický průměr čísel 4, 7, 7, 9 a x je 8. Které tvrzení o mediánu těchto pěti čísel platí?",
+          "choices": [
+            "Medián je 7",
+            "Medián je 8",
+            "Medián je 9",
+            "Bez znalosti x ho nelze určit"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-06",
+        "type": "numerical",
+        "prompt": "A 6.5 m ladder leans against a vertical wall. Its foot stands on level ground 2.5 m from the wall. How high up the wall does the top of the ladder reach, in m?",
+        "numericAnswer": 6,
+        "cs": {
+          "prompt": "Žebřík dlouhý 6,5 m je opřený o svislou zeď. Jeho pata stojí na vodorovné zemi 2,5 m od zdi. Do jaké výšky na zdi sahá horní konec žebříku v m?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-07",
+        "type": "numerical",
+        "prompt": "Calculate (6 × 10^5) × (4 × 10^−2). Enter the result as an ordinary number.",
+        "numericAnswer": 24000,
+        "cs": {
+          "prompt": "Vypočítejte (6 · 10^5) · (4 · 10^−2). Výsledek zadejte jako obyčejné číslo."
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-08",
+        "type": "text",
+        "prompt": "Which is greater: 2^10 or 10^3? Enter your answer exactly as written here.",
+        "acceptedAnswers": [
+          "2^10"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Co je větší: 2^10, nebo 10^3? Odpověď zapište přesně tak, jak je uvedena zde.",
+          "acceptedAnswers": [
+            "2^10"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-09",
+        "type": "multiple-choice",
+        "prompt": "Which values of x satisfy −2x + 5 > 11?",
+        "choices": [
+          "x > −3",
+          "x < −3",
+          "x > 3",
+          "x < 3"
+        ],
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Která x splňují nerovnici −2x + 5 > 11?",
+          "choices": [
+            "x > −3",
+            "x < −3",
+            "x > 3",
+            "x < 3"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-10",
+        "type": "numerical",
+        "prompt": "3 pens and 2 notebooks cost €13 in total. 1 pen and 2 notebooks cost €7 in total. What does one notebook cost, in euros?",
+        "numericAnswer": 2,
+        "cs": {
+          "prompt": "3 propisky a 2 sešity stojí dohromady 13 €. 1 propiska a 2 sešity stojí dohromady 7 €. Kolik eur stojí jeden sešit?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-11",
+        "type": "numerical",
+        "prompt": "Pipe A alone fills a tank in 6 hours; pipe B alone fills it in 3 hours. Starting empty, how many hours does the tank take to fill with both pipes open?",
+        "numericAnswer": 2,
+        "cs": {
+          "prompt": "Samotné potrubí A naplní nádrž za 6 hodin, samotné potrubí B za 3 hodiny. Za kolik hodin se prázdná nádrž naplní, když jsou otevřená obě potrubí?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-12",
+        "type": "text",
+        "prompt": "Always, sometimes or never: the square of a number is greater than the number itself. Enter always, sometimes or never.",
+        "acceptedAnswers": [
+          "sometimes"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Vždy, někdy, nebo nikdy: druhá mocnina čísla je větší než samotné číslo. Zadejte vždy, někdy, nebo nikdy.",
+          "acceptedAnswers": [
+            "někdy",
+            "nekdy"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-13",
+        "type": "numerical",
+        "prompt": "The nth term of a sequence is n² + 3n. What is the 10th term minus the 9th term?",
+        "numericAnswer": 22,
+        "cs": {
+          "prompt": "n-tý člen posloupnosti je n² + 3n. Kolik je 10. člen minus 9. člen?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-14",
+        "type": "numerical",
+        "prompt": "Two fair six-sided dice are rolled. What is the probability that their total is 8? Give a decimal rounded to 3 decimal places.",
+        "numericAnswer": 0.139,
+        "cs": {
+          "prompt": "Hodíme dvěma férovými šestistěnnými kostkami. Jaká je pravděpodobnost, že součet bude 8? Uveďte desetinné číslo zaokrouhlené na 3 desetinná místa."
+        },
+        "tolerance": 0.0005,
+        "reward": 10
+      },
+      {
+        "id": "math-14-15",
+        "type": "multiple-choice",
+        "prompt": "Which line is parallel to y = 3x − 2 and passes through the point (1, 4)?",
+        "choices": [
+          "y = 3x + 1",
+          "y = −x/3 + 13/3",
+          "y = 3x + 4",
+          "y = x + 3"
+        ],
+        "correctIndex": 0,
+        "cs": {
+          "prompt": "Která přímka je rovnoběžná s přímkou y = 3x − 2 a prochází bodem [1; 4]?",
+          "choices": [
+            "y = 3x + 1",
+            "y = −x/3 + 13/3",
+            "y = 3x + 4",
+            "y = x + 3"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-16",
+        "type": "text",
+        "prompt": "The sequence 3, 7, 11, 15, … continues by adding 4 each time. Is 101 a term of this sequence? Enter yes or no.",
+        "acceptedAnswers": [
+          "no"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Posloupnost 3, 7, 11, 15, … pokračuje vždy přičtením 4. Je 101 členem této posloupnosti? Zadejte ano, nebo ne.",
+          "acceptedAnswers": [
+            "ne"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-17",
+        "type": "numerical",
+        "prompt": "€2000 is invested at 5% interest per year, compounded once a year. How much is in the account after 3 years, in euros? Round to the nearest cent.",
+        "numericAnswer": 2315.25,
+        "cs": {
+          "prompt": "Na účet uložíme 2000 € s úrokem 5 % ročně, který se připisuje jednou za rok. Kolik eur bude na účtu po 3 letech? Zaokrouhlete na celé centy."
+        },
+        "tolerance": 0.005,
+        "reward": 10
+      },
+      {
+        "id": "math-14-18",
+        "type": "multiple-choice",
+        "prompt": "Two mathematically similar cylinders have heights 4 cm and 12 cm. The smaller one holds 50 mL. How much does the larger one hold?",
+        "choices": [
+          "150 mL",
+          "450 mL",
+          "1350 mL",
+          "600 mL"
+        ],
+        "correctIndex": 2,
+        "cs": {
+          "prompt": "Dva podobné válce mají výšky 4 cm a 12 cm. Do menšího se vejde 50 ml. Kolik se vejde do většího?",
+          "choices": [
+            "150 ml",
+            "450 ml",
+            "1350 ml",
+            "600 ml"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-14-19",
+        "type": "numerical",
+        "prompt": "A round pizza 30 cm in diameter is cut into 8 equal slices. What is the length of the curved crust edge of one slice, in cm? Round to one decimal place.",
+        "numericAnswer": 11.8,
+        "cs": {
+          "prompt": "Kulatá pizza o průměru 30 cm je rozkrojená na 8 stejných dílů. Jak dlouhý je zaoblený okraj kůrky jednoho dílu v cm? Zaokrouhlete na jedno desetinné místo."
+        },
+        "tolerance": 0.05,
+        "reward": 10
+      },
+      {
+        "id": "math-14-20",
+        "type": "numerical",
+        "prompt": "A straight ramp rises 1.2 m over a horizontal distance of 5 m. What angle does the ramp make with the horizontal, in degrees? Round to one decimal place.",
+        "numericAnswer": 13.5,
+        "cs": {
+          "prompt": "Rovná rampa stoupá o 1,2 m na vodorovné vzdálenosti 5 m. Jaký úhel svírá rampa s vodorovnou rovinou ve stupních? Zaokrouhlete na jedno desetinné místo."
+        },
+        "tolerance": 0.05,
+        "reward": 10
+      }
+    ],
+    "17–18": [
+      {
+        "id": "math-17-01",
+        "type": "multiple-choice",
+        "prompt": "f(x) = 2x + 3 and g(x) = x². Which expression is f(g(x))?",
+        "choices": [
+          "2x² + 3",
+          "(2x + 3)²",
+          "2x² + 3x",
+          "4x² + 3"
+        ],
+        "correctIndex": 0,
+        "cs": {
+          "prompt": "f(x) = 2x + 3 a g(x) = x². Kterému výrazu se rovná f(g(x))?",
+          "choices": [
+            "2x² + 3",
+            "(2x + 3)²",
+            "2x² + 3x",
+            "4x² + 3"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-02",
+        "type": "numerical",
+        "prompt": "An arithmetic sequence begins 5, 9, 13, … Find the sum of its first 20 terms.",
+        "numericAnswer": 860,
+        "cs": {
+          "prompt": "Aritmetická posloupnost začíná 5, 9, 13, … Určete součet jejích prvních 20 členů."
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-03",
+        "type": "multiple-choice",
+        "prompt": "What is the gradient of the curve y = x² − 4x + 1 at the point where x = 3?",
+        "choices": [
+          "−2",
+          "2",
+          "6",
+          "5"
+        ],
+        "correctIndex": 1,
+        "cs": {
+          "prompt": "Jaká je směrnice tečny ke křivce y = x² − 4x + 1 v bodě, kde x = 3?",
+          "choices": [
+            "−2",
+            "2",
+            "6",
+            "5"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-04",
+        "type": "text",
+        "prompt": "Is f(x) = x³ − 3x increasing at x = 0.5? Enter yes or no.",
+        "acceptedAnswers": [
+          "no"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Je funkce f(x) = x³ − 3x v bodě x = 0,5 rostoucí? Zadejte ano, nebo ne.",
+          "acceptedAnswers": [
+            "ne"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-05",
+        "type": "numerical",
+        "prompt": "A geometric sequence has first term 81 and common ratio 2/3. Find the sum to infinity.",
+        "numericAnswer": 243,
+        "cs": {
+          "prompt": "Geometrická posloupnost má první člen 81 a kvocient 2/3. Určete součet všech jejích členů (součet nekonečné řady)."
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-06",
+        "type": "numerical",
+        "prompt": "Find the area enclosed between the curve y = x², the x-axis and the line x = 3.",
+        "numericAnswer": 9,
+        "cs": {
+          "prompt": "Určete obsah plochy ohraničené křivkou y = x², osou x a přímkou x = 3."
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-07",
+        "type": "text",
+        "prompt": "Is f(x) = x⁴ − x² an even function, an odd function, or neither? Enter even, odd or neither.",
+        "acceptedAnswers": [
+          "even"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Je funkce f(x) = x⁴ − x² sudá, lichá, nebo ani jedno? Zadejte sudá, lichá, nebo ani jedno.",
+          "acceptedAnswers": [
+            "sudá",
+            "suda"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-08",
+        "type": "multiple-choice",
+        "prompt": "Which are the asymptotes of the graph of y = (2x + 1)/(x − 3)?",
+        "choices": [
+          "x = 3 and y = 2",
+          "x = −3 and y = 2",
+          "x = 3 and y = −1/3",
+          "x = −1/2 and y = 2"
+        ],
+        "correctIndex": 0,
+        "cs": {
+          "prompt": "Které přímky jsou asymptotami grafu y = (2x + 1)/(x − 3)?",
+          "choices": [
+            "x = 3 a y = 2",
+            "x = −3 a y = 2",
+            "x = 3 a y = −1/3",
+            "x = −1/2 a y = 2"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-09",
+        "type": "numerical",
+        "prompt": "For which positive value of k does x² + kx + 9 = 0 have exactly one real solution?",
+        "numericAnswer": 6,
+        "cs": {
+          "prompt": "Pro jakou kladnou hodnotu k má rovnice x² + kx + 9 = 0 právě jedno reálné řešení?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-10",
+        "type": "numerical",
+        "prompt": "Solve log₂(x) + log₂(x − 2) = 3 for x.",
+        "numericAnswer": 4,
+        "cs": {
+          "prompt": "Vyřešte rovnici log₂(x) + log₂(x − 2) = 3 s neznámou x."
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-11",
+        "type": "text",
+        "prompt": "As x grows without limit, which becomes larger and stays larger: x^10 or 1.1^x? Enter your answer exactly as written here.",
+        "acceptedAnswers": [
+          "1.1^x",
+          "1,1^x"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Když x roste nade všechny meze, co se stane větším a už větší zůstane: x^10, nebo 1,1^x? Odpověď zapište přesně tak, jak je uvedena zde.",
+          "acceptedAnswers": [
+            "1,1^x",
+            "1.1^x"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-12",
+        "type": "numerical",
+        "prompt": "In a class, 60% of students study French, 30% study Spanish and 20% study both. A student who studies Spanish is chosen at random. What is the probability that they also study French? Give a decimal rounded to 3 decimal places.",
+        "numericAnswer": 0.667,
+        "cs": {
+          "prompt": "Ve třídě studuje 60 % žáků francouzštinu, 30 % španělštinu a 20 % oba jazyky. Náhodně vybereme žáka, který studuje španělštinu. Jaká je pravděpodobnost, že studuje i francouzštinu? Uveďte desetinné číslo zaokrouhlené na 3 desetinná místa."
+        },
+        "tolerance": 0.0005,
+        "reward": 10
+      },
+      {
+        "id": "math-17-13",
+        "type": "multiple-choice",
+        "prompt": "A data set has mean 50 and standard deviation 8. Every value is multiplied by 2 and then increased by 5. What are the new mean and standard deviation?",
+        "choices": [
+          "Mean 105, standard deviation 16",
+          "Mean 105, standard deviation 21",
+          "Mean 100, standard deviation 16",
+          "Mean 105, standard deviation 8"
+        ],
+        "correctIndex": 0,
+        "cs": {
+          "prompt": "Soubor dat má aritmetický průměr 50 a směrodatnou odchylku 8. Každou hodnotu vynásobíme 2 a pak zvětšíme o 5. Jaký bude nový průměr a nová směrodatná odchylka?",
+          "choices": [
+            "Průměr 105, směrodatná odchylka 16",
+            "Průměr 105, směrodatná odchylka 21",
+            "Průměr 100, směrodatná odchylka 16",
+            "Průměr 105, směrodatná odchylka 8"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-14",
+        "type": "numerical",
+        "prompt": "A fair coin is tossed 6 times. Find the probability of getting exactly 2 heads. Round to 4 decimal places.",
+        "numericAnswer": 0.2344,
+        "cs": {
+          "prompt": "Férovou mincí hodíme 6krát. Určete pravděpodobnost, že padne právě 2krát panna. Zaokrouhlete na 4 desetinná místa."
+        },
+        "tolerance": 5e-05,
+        "reward": 10
+      },
+      {
+        "id": "math-17-15",
+        "type": "numerical",
+        "prompt": "A population is modelled by P = 500e^(0.2t), where t is in hours. Find t when P = 2000. Round to 2 decimal places.",
+        "numericAnswer": 6.93,
+        "cs": {
+          "prompt": "Populaci popisuje model P = 500e^(0,2t), kde t je v hodinách. Určete t, pro které P = 2000. Zaokrouhlete na 2 desetinná místa."
+        },
+        "tolerance": 0.005,
+        "reward": 10
+      },
+      {
+        "id": "math-17-16",
+        "type": "text",
+        "prompt": "Does the infinite series 1 + 1/2 + 1/3 + 1/4 + … converge? Enter yes or no.",
+        "acceptedAnswers": [
+          "no"
+        ],
+        "ignorePunctuation": false,
+        "cs": {
+          "prompt": "Konverguje nekonečná řada 1 + 1/2 + 1/3 + 1/4 + …? Zadejte ano, nebo ne.",
+          "acceptedAnswers": [
+            "ne"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-17",
+        "type": "multiple-choice",
+        "prompt": "A function f is continuous on [0, 4], with f(0) = −2 and f(4) = 3. Which statement MUST be true?",
+        "choices": [
+          "f(x) = 0 for at least one x between 0 and 4",
+          "f is increasing on [0, 4]",
+          "f(2) = 0.5",
+          "f(x) = 0 for exactly one x between 0 and 4"
+        ],
+        "correctIndex": 0,
+        "cs": {
+          "prompt": "Funkce f je spojitá na [0; 4] a platí f(0) = −2 a f(4) = 3. Které tvrzení MUSÍ platit?",
+          "choices": [
+            "f(x) = 0 pro alespoň jedno x mezi 0 a 4",
+            "f je na [0; 4] rostoucí",
+            "f(2) = 0,5",
+            "f(x) = 0 pro právě jedno x mezi 0 a 4"
+          ]
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-18",
+        "type": "numerical",
+        "prompt": "An open box is made from a 12 cm × 12 cm square sheet by cutting a square of side x cm from each corner and folding up the sides. Which value of x gives the largest volume, in cm?",
+        "numericAnswer": 2,
+        "cs": {
+          "prompt": "Ze čtvercového archu kartonu 12 cm × 12 cm vyrobíme krabici bez víka tak, že z každého rohu vystřihneme čtverec o straně x cm a boky ohneme nahoru. Pro jaké x v cm má krabice největší objem?"
+        },
+        "reward": 10
+      },
+      {
+        "id": "math-17-19",
+        "type": "numerical",
+        "prompt": "Find the angle between the vectors a = (1, 2, 2) and b = (2, −1, 2), in degrees. Round to one decimal place.",
+        "numericAnswer": 63.6,
+        "cs": {
+          "prompt": "Určete úhel mezi vektory a = (1; 2; 2) a b = (2; −1; 2) ve stupních. Zaokrouhlete na jedno desetinné místo."
+        },
+        "tolerance": 0.05,
+        "reward": 10
+      },
+      {
+        "id": "math-17-20",
+        "type": "numerical",
+        "prompt": "A particle moves along a line with velocity v(t) = 6 − 2t m/s. Find the total distance it travels between t = 0 and t = 5 s, in metres.",
+        "numericAnswer": 13,
+        "cs": {
+          "prompt": "Částice se pohybuje po přímce rychlostí v(t) = 6 − 2t m/s. Určete celkovou dráhu, kterou urazí mezi t = 0 a t = 5 s, v metrech."
+        },
+        "reward": 10
+      }
+    ]
+  }
+}

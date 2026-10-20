@@ -3,8 +3,11 @@ import type { CompetitionState } from '../shared/domain'
 import { api } from './api'
 export const competition = ref<CompetitionState | null>(null)
 const elapsed = ref(0)
-let receivedAt = 0
+let receivedAt = 0, offset = -Infinity
+// The fastest response gives the best estimate: a slow one can only make the server look behind.
+export const serverTime = () => performance.now() + offset
 export function acceptCompetition(value: CompetitionState) {
+  offset = Math.max(offset, value.serverNow - performance.now())
   // Discard responses produced before a more recent poll or admin action.
   if (competition.value && value.serverNow < competition.value.serverNow) return
   competition.value = value
